@@ -13,7 +13,7 @@ Github Pages（Jekyll）をEmacsで楽に管理できないかと以前から考
 例の設定は`defvar`つかっているので、`require`前にevalしてる。自分の
 `view-mode`のカスタマイズキーバインドとかぶっているのはいつものこと。
 
-```lisp
+```emacs-lisp
 ;; hyde (jekyll client)
 (defvar hyde-mode-map
   (let
