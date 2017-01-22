@@ -7,13 +7,14 @@ cover: false
 cover-image:
 ---
 
-Github Pages（Jekyll）をEmacsで楽に管理できないかと以前から考えていたのだが、
-いい塩梅のソフトを発見した。JekyllだからHyde。
+Github Pages（[Jekyll](https://jekyllrb.com/)）をEmacsで楽に管理できな
+いかと以前から考えていたのだが、いい塩梅のソフトを発見した。Jekyllだか
+らHyde。
 
 例の設定は`defvar`つかっているので、`require`前にevalしてる。自分の
 `view-mode`のカスタマイズキーバインドとかぶっているのはいつものこと。
 
-```lisp
+```emacs-lisp
 ;; hyde (jekyll client)
 (defvar hyde-mode-map
   (let
