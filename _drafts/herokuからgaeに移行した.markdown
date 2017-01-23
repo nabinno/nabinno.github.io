@@ -7,10 +7,17 @@ cover: false
 cover-image:
 ---
 
-[GAE](https://cloud.google.com/appengine/docs/flexible/)がRubyと東京リー
-ジョンをサポートしたので、[Utagaki](https://utagaki.com)をHerokuから移
-行した。料金的にはSSL適用分で若干高くなった。パフォーマンスはリージョ
-ンが近くなったので満足してる。
+# Problem
+
+- Herokuのリージョンが米国にある
+- AWSのデプロイが面倒
+
+# Solution
+
+そんなわけで[GAE](https://cloud.google.com/appengine/docs/flexible/)が
+Rubyと東京リージョンをサポートしたので、[Utagaki](https://utagaki.com)
+をHerokuから移行した。料金的にはSSL適用分で若干高くなった。レイテンシ
+はリージョンが近くなったので満足してる。
 
 *やったこと*
 - PostgreSQLをAWSからGCPへ移行
@@ -20,7 +27,7 @@ cover-image:
 - ドメインの向き先を変更（SSLも含む）
 - その他
 
-# PostgreSQLをAWSからGCPへ移行
+## PostgreSQLをAWSからGCPへ移行
 まずは、ダンプしてローカルで確認。
 
 ``` shell
@@ -39,17 +46,17 @@ PostgreSQLをえらぶのが手っ取り早い。スペックは最低限のも�
 [ユーザ作成](https://www.postgresql.org/docs/8.0/static/sql-createuser.html)
 は好みで。
 
-最後に、リストア。
+最後に、DBリストア。
 
 ``` shell
 rake db:create db:migrate --trace RAILS_ENV=production DATABASE_URL=postgres://postgres:JEuZ4jUp104.198.88.109:5432/utagaki_production
 pg_restore -h 104.198.88.109 -U postgres -d utagaki_production -c ~/db/utagaki_production.dump
 ```
 
-# Redis Cloudを東京リージョンに変更
+## Redis Cloudを東京リージョンに変更
 `asia-northeast`リージョンを選ぶ。
 
-# GAEにRuby用のインスタンスを作成
+## GAEにRuby用のインスタンスを作成
 まずは、プロジェクトを新規追加。
 
 次に、サービスを`app.yml`と`worker.yml`に分けてをレポジトリルートに設
@@ -82,7 +89,7 @@ automatic_scaling:
 skip_files:
 - ^(.*/)?\.wercker$
 - ^(.*/)?\Documentation$
-``
+```
 
 注意点は4つ。
 1. インスタンス数が値段がはねかえるので、`automatic_scaling >
@@ -101,16 +108,27 @@ skip_files:
 
 最後に、デプロイコマンド`gcloud app deploy`で挙動を確認。
 
-# GAEへのデプロイCIを作成
-CIはWerckerを使用。
+## GAEへのデプロイCIを作成
+CIはWerckerを使用。以前から使っていたのだが、今回はボックスがDockerに
+なったのでそちらに対応した。
 
-Werckerの特徴として
-- ローカル環境もふくめ（`wercker-cli`）、Dockerで環境
-をつくれる
-- 異なるサービス間のネットワークもWerckerが生成する
-環境変数で対応可能
+Wercker3つの特徴
+1. ローカル環境もふくめ（`wercker-cli`）、Dockerで環境を管理。
+2. 異なるサービス間のネットワークをWerckerが生成する環境変数で管理。
+3. タスクをワークフローとしてパイプラインで条件付け管理。パイプライン
+  ごとにコンテナを立ち上げているので、同じDocker環境でもパイプラインご
+  とに環境変数を分けることが可能。
 
-下記 `wercker.yml`。
+CI周りのいいところを押さえていると思う。
+
+下記 `wercker.yml`をパイプラインごとに記載する。
+
+### dev
+devパイプラインは`wercker dev`コマンドをローカルでたたく際につかう。下
+記の例だとRspec走らせているだけなのでおまけ程度。ただ、ローカル開発で
+Dockerつかうことになったらこういう提案もありかもしれない。プロジェクト
+レポジトリすべてをDockerにしてローカル開発する辛み（バージョン管理とか
+とか）はあるので代替案として。
 
 ``` yaml
 box: ruby:2.3.1
@@ -135,7 +153,13 @@ dev:
         code: |
           RAILS_ENV=test bundle exec rake spec
         reload: true
+```
 
+### build
+buildパイプラインもdevと同じDockerボックスつかってる。やっていることは
+devと変わらず。
+
+``` yaml
 build:
   steps:
     - bundle-install
@@ -159,7 +183,25 @@ build:
         name: Run rspec
         code: |
           RAILS_ENV=test bundle exec rake spec
+```
 
+### deploy
+
+deployパイプラインでは、いくつか注意点がある。
+1. デプロイ前に`db:migrate`を走らせるため、パイプラインごとの環境変数
+   を設定して処理に当てている。
+2. `gcloud`には公式のDockerコンテナがあるが環境をあわせるため、shellで
+   処理している。
+3. GAEは`gcloud app deploy`のデプロイステップ時に個別に環境変数を持つ
+   ことができないため、アセットプリコンパイルのステップの際、
+   `asset_sync`などで別サーバーに同期することができない。また、パイプ
+   ライン上の別ステップに環境変数を当てて行うことはできるが、
+   `gcloud`のデプロイステップとアセットプリコンパイルが重複して適切な
+   ダイジェストを発行できない。従って、GAEをつかう場合は`./public`ディ
+   レクトリをつかうのが現状の正解。HerokuのSlugの取り扱い方針と違うの
+   で注意。
+
+``` yaml
 deploy:
   steps:
     - bundle-install
@@ -175,15 +217,6 @@ deploy:
           echo "ruby version $(ruby --version) running!"
           echo "from location $(which ruby)"
           echo -p "gem list: $(gem list)"
-    - script:
-        name: Assets Precompile
-        code: |
-          RAILS_ENV=production \
-            S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID} \
-            S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY} \
-            S3_BUCKET=${S3_BUCKET} \
-            S3_REGION=${S3_REGION} \
-            bundle exec rake assets:precompile --trace
     - script:
         name: DB Migrate
         code: |
@@ -205,12 +238,12 @@ deploy:
         name: Deploy app to Google App Engine
         code: |
           gcloud app deploy ./app.yaml --promote
+    - add-ssh-key:
+        host: github.com
+        keyname: GITHUB
     - add-to-known_hosts:
         hostname: github.com
         fingerprint: f2:dd:ed:fb:91:f3:e2:e2:25:20:7b:e4:09:4a:4f:32
-    - add-ssh-key:
-        host: github.com
-        keyname: ${GITHUB_PRIVATE}
     - script:
         name: Add git-tag
         code: |
@@ -221,8 +254,6 @@ deploy:
         webhook_url: ${SLACK_WEBHOOK_URL}
         channel: general
 ```
-
-
 
 # ドメインの向き先を変更（SSLも含む）
 
