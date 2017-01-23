@@ -7,12 +7,28 @@ cover: false
 cover-image:
 ---
 
-Github Pages（[Jekyll](https://jekyllrb.com/)）をEmacsで楽に管理できな
-いかと以前から考えていたのだが、いい塩梅のソフトを発見した。Jekyllだか
-らHyde。
+# Problem
 
-例の設定は`defvar`つかっているので、`require`前にevalしてる。自分の
-`view-mode`のカスタマイズキーバインドとかぶっているのはいつものこと。
+- タスクメモがAsanaなどのタスク管理ツールに散在している
+- ブラウザをつかって文章を書くのがつらい
+
+# Solution
+
+そんなわけで[Github
+Pages](https://pages.github.com/)（[Jekyll](https://jekyllrb.com/)）を
+Emacsで楽に管理できないかと以前から考えていたのだが、いい塩梅のソフト
+を発見した。Jekyllだから[Hyde](https://github.com/nibrahim/Hyde)。
+
+*いいところ*
+- `git`の自動コメント
+- `jekyll build`、`jekyll serve`あたりのショートカッ
+トが便利。
+
+## Hydeの設定
+
+Hyde本体がキーバインドを`defvar`で割り当てているので、`init.el`の設定
+で`require`前に割り込みevalしてる。`view-mode`のオレオレキーバインドと
+かぶっているのはいつものこと。
 
 ```emacs-lisp
 ;; hyde (jekyll client)
@@ -33,7 +49,6 @@ Github Pages（[Jekyll](https://jekyllrb.com/)）をEmacsで楽に管理でき�
     (define-key hyde-mode-map (kbd "O") 'hyde/open-post-maybe)
     hyde-mode-map)
   "Keymap for Hyde")
-(require-package 'hyde)
 (require 'hyde)
 (defun hyde-nabinno ()
   "Run hyde with home parameter."
@@ -42,6 +57,31 @@ Github Pages（[Jekyll](https://jekyllrb.com/)）をEmacsで楽に管理でき�
 (global-set-key (kbd "C-c ; j") 'hyde-nabinno)
 ```
 
-`git`の自動コメント、`jekyll build`、`jekyll serve`あたりのコマンドが便利。
+Jekyllのルートにおく`.hyde.el`の中身はこんな感じ。JekyllはWebrickを使っ
+ているので、VMなどでホストをいじっている場合は`hyde/serve-command`にホ
+ストIPを0.0.0.0（`jekyll s -H 0.0.0.0`）に変更する必要がある。
 
-しばらくこれで運用してみる。
+```emacs-lisp
+(setq hyde-deploy-dir "_site"
+      hyde-posts-dir  "_posts"
+      hyde-drafts-dir "_drafts"
+      hyde-images-dir "images"
+      hyde/git/remote "upstream" ; The name of the remote to which we should push
+      hyde/git/branch "master"   ; The name of the branch on which your blog resides
+      hyde/jekyll-command "jekyll b"    ; Command to build
+      hyde/serve-command  "jekyll s -H 0.0.0.0 --force_polling"    ; Command to serve
+      hyde-custom-params '(("category" "personal")
+                           ("tags" "")
+                           ("cover" "false")
+                           ("cover-image" "")))
+```
+
+# Other
+## ついでにデプロイ時にTwitterと連動する
+
+デプロイ（`git push`）時にWerckerをからめてTwitterにメッセージを送信し
+てみた。Twitterアンケートが便利そうだなとおもったので試しに実装。
+
+-------------------------------------------------------------------------------
+
+- [ソースコード](https://github.com/nabinno/nabinno.github.io)
