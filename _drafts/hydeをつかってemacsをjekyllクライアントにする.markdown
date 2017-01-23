@@ -19,13 +19,17 @@ Pages](https://pages.github.com/)（[Jekyll](https://jekyllrb.com/)）を
 Emacsで楽に管理できないかと以前から考えていたのだが、いい塩梅のソフト
 を発見した。Jekyllだから[Hyde](https://github.com/nibrahim/Hyde)。
 
-*いいところ*
+*pros*
 - `git`の自動コメント
-- `jekyll build`、`jekyll serve`あたりのショートカッ
-トが便利。
+- `jekyll build`、`jekyll serve`のショートカット
+
+*cons*
+- キーバインドが既存のものとかぶる
+- `hyde-home`がカスタム変数ではない
+- `add-hook`が効かない
 
 ## Hydeの設定
-
+下記はconsつぶし。
 Hyde本体がキーバインドを`defvar`で割り当てているので、`init.el`の設定
 で`require`前に割り込みevalしてる。`view-mode`のオレオレキーバインドと
 かぶっているのはいつものこと。
