@@ -9,62 +9,51 @@ cover-image:
 
 # Problem
 
-- パフォーマンス改善のための開発環境の不備
-- 別PaaSへ移行するための開発環境汎用化の不備
+- パフォーマンス改善のための開発環境がいけてない。
+- 別PaaSへ移行するための開発環境が汎用化できてない。つらい。
 
-...
+-
 
 # Solution
 
-というわけで、まずはCI上のDockerに載せてから次の手（GAEあたり）を考え
-ることにした。CIはWerckerを使用。以前から使っていたのだが、今回はボッ
-クスがDockerになったのでそちらに対応した。
+というわけで、まずはCI上のDockerに載せてから次の手（GAEあたり）を考えることにした。CIはWerckerを使用。以前から使っていたのだが、今回はボックスがDockerになったのでそちらに対応した。
 
-Wercker3つの特徴
-1. Dockerで環境を管理。今回は対応してないが、GAEのコンテナ
-   （`gcr.io/google_appengine/ruby:xxx`）と共通化することもできる。た
-   だし、HerokuのHobby Dynosはプロセス数に制限があるのでコンテナ運用は
-   工夫が必要。
-2. 異なるサービス間のネットワークをWerckerが生成する環境変数で管理。
-   Dockerのネットワーク設定の煩雑さを解消。
-3. タスクをワークフローとしてパイプラインで条件付け管理。パイプライン
-   ごとにコンテナを立ち上げているので、同じDocker環境でもパイプライン
-   ごとに環境変数を分けることが可能。Herokuのパイプラインでもいいが、
-   今後別PaaSに移行する可能性を考えてCI管理にbetした。
+**Wercker3つの特徴**
 
-下記 `wercker.yml`をパイプラインごとに記載する。
+1. Dockerで環境を管理。今回は対応してないが、GAEのコンテナ（`gcr.io/google_appengine/ruby:xxx`）と共通化することもできる。ただし、HerokuのHobby Dynosはプロセス数に制限があるのでコンテナ運用は工夫が必要。
+2. 異なるサービス間のネットワークをWerckerが生成する環境変数で管理。Dockerのネットワーク設定の煩雑さを解消。
+3. タスクをワークフローとしてパイプラインで条件付け管理。パイプラインごとにコンテナを立ち上げているので、同じDocker環境でもパイプラインごとに環境変数を分けることが可能。Herokuのパイプラインでもいいが、今後別PaaSに移行する可能性を考えてCI管理にbetした。
 
-![Alt text](http://g.gravizo.com/g?
-@startuml;
-actor User;
-participant "dev" as A;
-participant "build" as B;
-participant "deploy-stage" as C;
-participant "deploy-prod-heroku" as D;
-participant "deploy-prod-gae" as E;
-participant "post-deploy" as F;
-User -> A: wercker-dev;
-activate A;
-A -> B: git-push;
-activate B;
-B -> C: git-push feature;
-activate C;
-B -> D: git-push master;
-activate D;
-B -> E: git-push master;
-activate E;
-D --> F: %28released%29;
-activate D;
-F --> User: %28done%29;
-deactivate F;
-@enduml)
+Werckerのふるまいを定義する`wercker.yml`は、下記のようにパイプラインごとに記述されている。
+
+{% plantuml %}
+skinparam monochrome true
+skinparam backgroundColor #EEEEFF
+actor User
+participant "dev" as A
+participant "build" as B
+participant "deploy-stage" as C
+participant "deploy-prod-heroku" as D
+participant "deploy-prod-gae" as E
+participant "post-deploy" as F
+User -> A: wercker-dev
+activate A
+A -> B: git-push
+activate B
+B -> C: git-push feature
+activate C
+B -> D: git-push master
+activate D
+B -> E: git-push master
+activate E
+D --> F: [released]
+activate D
+F --> User: [done]
+deactivate F
+{% endplantuml%}
 
 ## dev
-devパイプラインは`wercker dev`コマンドをローカルでたたく際につかう。下
-記の例だとRspec走らせているだけなのでおまけ程度。ただ、ローカル開発で
-Dockerつかうことになったらこういう提案もありかもしれない。プロジェクト
-レポジトリすべてをDockerにしてローカル開発する辛み、所謂git-dockerバー
-ジョン管理問題があるので代替案として。
+devパイプラインは`wercker dev`コマンドをローカルでたたく際につかう。下記の例だとRspec走らせているだけなのでおまけ程度。ただ、ローカル開発でDockerつかうことになったらこういう提案もありかもしれない。プロジェクトレポジトリすべてをDockerにしてローカル開発する辛み、所謂git-dockerバージョン管理問題があるので代替案として。
 
 ``` yaml
 box: ruby:2.3.1
@@ -92,8 +81,7 @@ dev:
 ```
 
 ## build
-buildパイプラインもdevと同じDockerボックスつかってる。やっていることは
-devパイプラインと変わらず。すべてのブランチで走る。
+buildパイプラインもdevと同じDockerボックスつかってる。やっていることはdevパイプラインと変わらず。すべてのブランチで走る。
 
 ``` yaml
 build:
@@ -122,8 +110,7 @@ build:
 ```
 
 ## deploy-stage
-deploy-stageパイプラインはステージング環境用。他のPaaSに移ったとして
-もしばらくHerokuで行う予定。
+deploy-stageパイプラインはステージング環境用。他のPaaSに移ったとしてもしばらくHerokuで行う予定。
 
 ``` yaml
 deploy-stage:
@@ -174,20 +161,11 @@ deploy-prod-heroku:
 ```
 
 ## deploy-prod-gae
-deploy-prod-gaeパイプラインはdeploy-prod-herokuパイプラインと同じく本
-番環境へのリリース用。GAEにいつでも移行できるように走らせている。
+deploy-prod-gaeパイプラインはdeploy-prod-herokuパイプラインと同じく本番環境へのリリース用。GAEにいつでも移行できるように走らせている。
 
-GAEのデプロイは癖があって、`gcloud app deploy`コマンドをつかってDocker
-ビルドを走らせるが、その時にDocker内に外部から環境変数を設定することが
-できない。そのため、アセットプリコンパイルのビルドの際、`asset_sync`を
-使っていると別サーバーへ同期に失敗する。また、パイプライン上の別ステッ
-プに環境変数を当てて行うことはできるが、`gcloud`のデプロイステップとア
-セットプリコンパイルが重複して適切なダイジェストを発行できない。従って、
-GAEをつかう場合は`./public`ディレクトリをつかうのが現状の正解である。
-HerokuのSlugの取り扱い方針と違うので注意。
+GAEのデプロイは癖があって、`gcloud app deploy`コマンドをつかってDockerビルドを走らせるが、その時にDocker内に外部から環境変数を設定することができない。そのため、アセットプリコンパイルのビルドの際、`asset_sync`を使っていると別サーバーへ同期に失敗する。また、パイプライン上の別ステップに環境変数を当てて行うことはできるが、`gcloud`のデプロイステップとアセットプリコンパイルが重複して適切なダイジェストを発行できない。従って、GAEをつかう場合は`./public`ディレクトリをつかうのが現状の正解である。HerokuのSlugの取り扱い方針と違うので注意。
 
-GAEのコンテナの中身は、`gcloud beta app gen-config --runtime=ruby
---custom`で出力されるDockerfileを参照。
+GAEのコンテナの中身は、`gcloud beta app gen-config --runtime=ruby --custom`で出力されるDockerfileを参照。
 
 ``` yaml
 deploy-prod-gae:
@@ -256,3 +234,7 @@ post-deploy:
         webhook_url: ${SLACK_WEBHOOK_URL}
         channel: general
 ```
+
+-
+
+以上:construction_worker:
