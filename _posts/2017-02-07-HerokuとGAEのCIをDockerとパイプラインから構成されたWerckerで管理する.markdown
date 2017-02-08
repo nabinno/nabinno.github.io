@@ -26,31 +26,7 @@ cover-image:
 
 Werckerのふるまいを定義する`wercker.yml`は、下記のようにパイプラインごとに記述されている。
 
-{% plantuml %}
-skinparam monochrome true
-skinparam backgroundColor #EEEEFF
-actor User
-participant "dev" as A
-participant "build" as B
-participant "deploy-stage" as C
-participant "deploy-prod-heroku" as D
-participant "deploy-prod-gae" as E
-participant "post-deploy" as F
-User -> A: wercker-dev
-activate A
-A -> B: git-push
-activate B
-B -> C: git-push feature
-activate C
-B -> D: git-push master
-activate D
-B -> E: git-push master
-activate E
-D --> F: [released]
-activate D
-F --> User: [done]
-deactivate F
-{% endplantuml%}
+![plantuml](/uml/22e97971a2a0026a0b80e1c82c418b78.svg)
 
 ## dev
 devパイプラインは`wercker dev`コマンドをローカルでたたく際につかう。下記の例だとRspec走らせているだけなのでおまけ程度。ただ、ローカル開発でDockerつかうことになったらこういう提案もありかもしれない。プロジェクトレポジトリすべてをDockerにしてローカル開発する辛み、所謂git-dockerバージョン管理問題があるので代替案として。
