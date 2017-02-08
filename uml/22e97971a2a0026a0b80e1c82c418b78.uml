@@ -1,0 +1,27 @@
+@startuml
+
+skinparam monochrome true
+skinparam backgroundColor #EEEEFF
+actor User
+participant "dev" as A
+participant "build" as B
+participant "deploy-stage" as C
+participant "deploy-prod-heroku" as D
+participant "deploy-prod-gae" as E
+participant "post-deploy" as F
+User -> A: wercker-dev
+activate A
+A -> B: git-push
+activate B
+B -> C: git-push feature
+activate C
+B -> D: git-push master
+activate D
+B -> E: git-push master
+activate E
+D --> F: [released]
+activate D
+F --> User: [done]
+deactivate F
+
+@enduml
