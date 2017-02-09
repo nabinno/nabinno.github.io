@@ -7,14 +7,14 @@ cover: false
 cover-image:
 ---
 
-# Problem
+# PROBLEM
 
 - パフォーマンス改善のための開発環境がいけてない。
 - 別PaaSへ移行するための開発環境が汎用化できてない。つらい。
 
 -
 
-# Solution
+# SOLUTION
 
 というわけで、まずはCI上のDockerに載せてから次の手（GAEあたり）を考えることにした。CIはWerckerを使用。以前から使っていたのだが、今回はボックスがDockerになったのでそちらに対応した。
 
