@@ -86,24 +86,90 @@ build:
 ```
 
 ## deploy-stage
-deploy-stageパイプラインはステージング環境用。他のPaaSに移ったとしてもしばらくHerokuで行う予定。
+deploy-stageパイプラインはステージング環境用。現在Herokuを本番環境で利用しているので、デプロイごとにそれをフォークして環境構築している。
+
+Railsのアセットプリコンパイルの時間短縮はほかのCIと同様にキャッシュを利用して時間短縮している。
+
+ステージング環境については、他のPaaSに移ったとしてもしばらくHerokuで行う予定なので、現在おこなっている本番環境のフォークをどうするか検討課題となる。
 
 ``` yaml
-deploy-stage:
+deploy-stage-heroku:
   steps:
+    - bundle-install
+    - script:
+        name: Install NodeJS
+        code: |
+          apt-get update
+          apt-get install -y nodejs
+    - nabinno/heroku-install:
+        key: $HEROKU_KEY
+        user: $HEROKU_USER
+        app-name: $HEROKU_APP_NAME
+    - script:
+        name: Fork Application - destroy application
+        code: |
+          heroku apps:destroy --app $HEROKU_APP_NAME --confirm $HEROKU_APP_NAME
+    - script:
+        name: Fork Application - fork
+        code: |
+          heroku fork --from $FROM_HEROKU_APP_NAME --to $HEROKU_APP_NAME
+    - script:
+        name: Fork Application - setup addons of rediscloud
+        code: |
+          heroku addons:create rediscloud:30 --app $HEROKU_APP_NAME
+    - script:
+        name: Fork Application -change dynos
+        code: |
+          heroku ps:scale web=1:Free worker=1:Free --app $HEROKU_APP_NAME
+    - script:
+        name: Fork Application - change environment variables
+        code: |
+          _rediscloud_url=$(heroku run 'env | grep -e REDISCLOUD_.*_URL' --app $HEROKU_APP_NAME | awk -F= '{print $2}')
+          heroku config:set \
+            S3_BUCKET=$S3_BUCKET \
+            HEROKU_APP=$HEROKU_APP_NAME \
+            REDISCLOUD_URL=$_rediscloud_url \
+            --app $HEROKU_APP_NAME
+    - script:
+        name: Assets Precompile - restore assets cache
+        code: |
+          [ -e $WERCKER_CACHE_DIR/public/assets ] && cp -fr $WERCKER_CACHE_DIR/public/assets $WERCKER_SOURCE_DIR/public || true
+          mkdir -p $WERCKER_SOURCE_DIR/tmp/cache
+          [ -e $WERCKER_CACHE_DIR/tmp/cache/assets ] && cp -fr $WERCKER_CACHE_DIR/tmp/cache/assets $WERCKER_SOURCE_DIR/tmp/cache || true
+    - script:
+        name: Assets Precompile - main process
+        code: |
+          RAILS_ENV=production bundle exec rake assets:precompile --trace
+    - script:
+        name: Assets Precompile - store assets cache
+        code: |
+          mkdir -p $WERCKER_CACHE_DIR/public/assets
+          cp -fr $WERCKER_SOURCE_DIR/public/assets $WERCKER_CACHE_DIR/public
+          mkdir -p $WERCKER_CACHE_DIR/tmp/cache/assets
+          cp -fr $WERCKER_SOURCE_DIR/tmp/cache/assets $WERCKER_CACHE_DIR/tmp/cache
+    - add-ssh-key:
+        host: github.com
+        keyname: GITHUB
+    - add-to-known_hosts:
+        hostname: github.com
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+    - script:
+        name: Assets Precompile - git commit
+        code: |
+          {
+            git add public/assets/.sprockets-manifest-*.json
+            git commit -m 'Run `rake assets:precompile` on Wercker.'
+          } || {
+            echo 'Skip: keep precompiled assets manifest.'
+          }
     - heroku-deploy:
         key: $HEROKU_KEY
         user: $HEROKU_USER
         app-name: $HEROKU_APP_NAME
-        install-toolbelt: true
-    - script:
-        name: Assets Precompile
-        code: |
-          heroku run rake assets:precompile --app $HEROKU_APP_NAME
     - script:
         name: DB Migrate
         code: |
-          heroku run rake db:migrate --app $HEROKU_APP_NAME
+          heroku run 'bundle exec rake db:migrate --trace' --app $HEROKU_APP_NAME
   after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: ${SLACK_WEBHOOK_URL}
@@ -111,25 +177,66 @@ deploy-stage:
 ```
 
 ## deploy-prod-heroku
-deploy-prod-herokuパイプラインは本番環境へのリリース用。環境変数以外は
-deploy-stageパイプラインと同じ。
+deploy-prod-herokuパイプラインは本番環境へのリリース用。環境変数以外はdeploy-stageパイプラインと同じ。
 
 ``` yaml
 deploy-prod-heroku:
   steps:
+    - bundle-install
+    - script:
+        name: Install NodeJS
+        code: |
+          apt-get update
+          apt-get install -y nodejs
+    - script:
+        name: Assets Precompile - restore assets cache
+        code: |
+          [ -e $WERCKER_CACHE_DIR/public/assets ] && cp -fr $WERCKER_CACHE_DIR/public/assets $WERCKER_SOURCE_DIR/public || true
+          mkdir -p $WERCKER_SOURCE_DIR/tmp/cache
+          [ -e $WERCKER_CACHE_DIR/tmp/cache/assets ] && cp -fr $WERCKER_CACHE_DIR/tmp/cache/assets $WERCKER_SOURCE_DIR/tmp/cache || true
+    - script:
+        name: Assets Precompile - main process
+        code: |
+          RAILS_ENV=production bundle exec rake assets:precompile --trace
+    - script:
+        name: Assets Precompile - store assets cache
+        code: |
+          mkdir -p $WERCKER_CACHE_DIR/public/assets
+          cp -fr $WERCKER_SOURCE_DIR/public/assets $WERCKER_CACHE_DIR/public
+          mkdir -p $WERCKER_CACHE_DIR/tmp/cache/assets
+          cp -fr $WERCKER_SOURCE_DIR/tmp/cache/assets $WERCKER_CACHE_DIR/tmp/cache
+    - add-ssh-key:
+        host: github.com
+        keyname: GITHUB
+    - add-to-known_hosts:
+        hostname: github.com
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+    - script:
+        name: Assets Precompile - git commit
+        code: |
+          {
+            git add public/assets/.sprockets-manifest-*.json
+            git commit -m 'Run `rake assets:precompile` on Wercker.'
+          } || {
+            echo 'Skip: keep precompiled assets manifest.'
+          }
+    - script:
+        name: Add git-tag
+        code: |
+          _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S)
+          git config --global user.email 'wercker@blahfe.com'
+          git config --global user.name 'Wercker Bot'
+          git tag -a $_tag master -m 'wercker deploy'
+          git push origin $_tag
     - heroku-deploy:
         key: $HEROKU_KEY
         user: $HEROKU_USER
         app-name: $HEROKU_APP_NAME
         install-toolbelt: true
     - script:
-        name: Assets Precompile
-        code: |
-          heroku run rake assets:precompile --app $HEROKU_APP_NAME
-    - script:
         name: DB Migrate
         code: |
-          heroku run rake db:migrate --app $HEROKU_APP_NAME
+          heroku run 'bundle exec rake db:migrate --trace' --app $HEROKU_APP_NAME
   after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: ${SLACK_WEBHOOK_URL}
@@ -187,8 +294,7 @@ deploy-prod-gae:
 ```
 
 ## post-deploy
-post-deployパイプラインは本番環境にデプロイした後の後処理用。参考程度
-に`git tag`をつけてる。
+post-deployパイプラインは本番環境にデプロイした後の後処理用。参考程度に`git tag`をつけてる。
 
 ``` yaml
 post-deploy:
@@ -202,9 +308,12 @@ post-deploy:
     - script:
         name: Add git-tag
         code: |
-          git remote set-url origin git@github.com:nabinno/utagaki.git
-          git tag $(date +%Y-%m-%d-%H-%M-%S) master
-          git push origin --tags
+          _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S)
+          git remote add origin git@github.com:nabinno/utagaki.git
+          git config --global user.email 'wercker@blahfe.com'
+          git config --global user.name 'Wercker Bot'
+          git tag -a $_tag master -m 'wercker deploy'
+          git push origin $_tag
   after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: ${SLACK_WEBHOOK_URL}
