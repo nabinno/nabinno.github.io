@@ -16,6 +16,8 @@ cover-image:
     - なので、APIサーバーはHyper-Vでたてている。
     - また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。
 
+-
+
 # SOLUTION
 というわけで、Hyper-Vでイメージ管理するVisual Studio Emulator for Android（VS Emulator）をつかうことにした。
 
