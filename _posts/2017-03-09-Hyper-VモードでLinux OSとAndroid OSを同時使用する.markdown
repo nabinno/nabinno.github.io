@@ -32,3 +32,6 @@ cover-image:
 4. 無線LAN、有線LAN、双方を接続する。 `Enable-NetAdapter Wi-Fi`
 5. Linux VMを起動する。 `Start-VM CentOS`
 
+-
+
+以上:construction_worker:
