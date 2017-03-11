@@ -28,7 +28,7 @@ google_analytics: UA-314558-24
 # Build settings
 theme: jekyll-theme-dinky
 permalink: pretty
-highlighter: pygments
+highlighter: rouge
 markdown: kramdown
 permalink: date
 use_tex: false
