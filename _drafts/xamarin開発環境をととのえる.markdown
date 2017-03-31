@@ -2,50 +2,49 @@
 layout: post
 title: "Xamarin開発環境をととのえる"
 category: F
-tags:
+tags: xamarin.forms, prism
 cover: false
 cover-image:
 ---
 
 # PROBLEM
 
-- Xamarin周辺の変数のうごきが大きいので開発環境が安定していない
+- Xamarin開発環境がサーバー側のそれとかい離している
   - Visual Studio Community 2015の動作がもっさりしている
   - 適切な開発フローがわからない
   - 適切なアプリケーションフレームワークがわからない
   - 適切なXAMLプレビュワーがわからない
   - 適切なAndroidエミュレーターがわからない
-- 普段の開発環境とかい離している
-  - C#の開発経験なし
-  - ホスト側IDEでの開発経験なし
 
 -
 
 # SOLUTION
 
-というわけで、動作が快適になったVisual Studio 2017がでたのでそちらを中心に開発環境を暫定で整理する。
+というわけで、動作が快適になったといわれるVisual Studio 2017がでたのでそちらを中心に開発環境を暫定で整理する（WIP）。
 
 ## 開発フロー
 まず、想定している開発フローは下記の通り。
 
 - テスト駆動開発
   - デバッグ
-    - XAMLのプレビュー
-    - エミュレーター画面の動作確認
+    - エミュレーター画面の動作確認 - ビルドスピード等考慮してUWPでおこなう
+    - アウトプット - Debug.WriteLineなどの確認
+    - イミディエイト - 変数の追跡
+    - C# REPL - C#やパッケージの動作確認
+    - XAMLのプレビュー - いらない子
   - テスト
     - 単体テスト - NUnit
-      - https://www.slideshare.net/masakit/xamarin-101
-      - https://developer.xamarin.com/guides/ios/deployment,_testing,_and_metrics/touch.unit/
-    - UIテスト
+    - UIテスト - 保留
 - [Github Flow](http://qiita.com/tbpgr/items/4ff76ef35c4ff0ec8314)にそったデプロイ
   - `feature`ブランチをきってプルリクエストをたてる
   - 当該ブランチに対してCIツールでビルド・テスト・配布を自動化 - ビルド・テスト後にレビュアーにメールにて配布しスマホで確認してもらう流れ。
     - CIツール
-      - [Visual Studio Mobile Center](https://mobile.azure.com/apps) - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。
+      - [Visual Studio Mobile Center](https://mobile.azure.com/apps) - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。
       - [Wercker](https://app.wercker.com/) - `master`マージ後にいらなくなった`feature`ブランチを消すなどの後片付け役。
   - Appストアへデプロイ
     - Android
     - iOS
+    - UWP
 
 ちなみにWerckerでの`feature`ブランチなどの後片付けはこんな感じ。`master`マージのタイミングではしらせる。
 
@@ -75,10 +74,10 @@ build:
 ```
 
 ## 開発環境
-その上で開発環境は下記の通りになった。HypervisorがHyper-VからIntel HAXMやVirtualBoxに変更になったことが大きな変化。クラッシュが心配。
+その上で開発環境は下記の通りに。Visual Studio 2017版Xamarinは現時点でHypervisorがHyper-Vを考慮していない、Intel HAXMやVirtualBoxなどのホスト型を前提としている。ただ私見としては、VirtualBoxなどのホスト型はWindowsアップデート時に動作検証対象となっておらずクラッシュが起きやすい、Hyper-Vを開発環境とすることをすすめる。いずれにせよ、デバッグはビルドスピード等がHypervisorに左右されるAndroidではなくUWPでおこなうといい。
 
 - IDE
-  -  Visual Studio Community 2017 - 体感としてVS2015より倍近く早くなった気がする。KeyboardのスキーマにはまだEmacsがない。
+  -  Visual Studio Community 2017
     - Basic extentions
       - Microsoft Visual Studio Community 2017 Version 15.0.26228.9 D15RTWSVC
       - Microsoft .NET Framework Version 4.6.01586
@@ -108,65 +107,80 @@ build:
       - File Nesting   2.6.67
       - GitHub.VisualStudio   2.2.0.8
       - VSColorOutput   2.5
+      - HideMenu   1.0 - MinimaliticViewとの組み合わせでEmacsっぽい画面になる。
+      - MinimaliticView Extension   1.0
     - Debug用エミュレーター
       - XAML Previewer for Xamarin.Forms - Gorilla PlayerはVS2017未対応の上、Data Bindingを参照できないため機能的にXAML Previewer for Xamarin.Formsとほぼかわらない様子。
       - Android Emulator Manager/Android SDK Manager - VS2017ではHyper-VベースのVisual Studio Emulator for Xamarinがなくなり、Intel HAXMベースのAndroid Emulator Manager/Android SDK Manager (Google)のみとなった。
 - DevStack
-  - Prism/Prism template (Profile259)
+  - Prism
+    - Prism template - スキャフォールド、スニペット便利
+    - Profile78 - Profile259になっているがWindows 8必要ないので
     - Newtonsoft.Json
     - FubarCoder.RestSharp.Portable.HttpClient
     - NUnit
     - Moq
 
 ## キーバインド
+おまけのEmacs風キーバインド。Edit.Emacsメソッドは1級市民ではないのでその周辺で代替。Edit.LineCut、Edit.Outline、ReSharpeのいらないキーバインドは削除。
 
-- Navigation
-  - `C-a` - Edit.LineStart
-  - `C-b` - Edit.CharLeft
-  - `C-c,:` - CodeMaid.SwitchFile
-  - `C-e` - Edit.LineEnd
-  - `C-f` - Edit.CharRight
-  - `C-i` - Edit.ToggleOutlingExpansion
-  - `C-l` - Edit.ScrollLineCenter
-  - `C-n` - Edit.LineDown
-  - `C-p` - Edit.LineUp
-  - `C-s` - Edit.IncrementalSearch
-  - `C-u,M-c` - Edit.ToggleAllOutling
-  - `C-v` - Edit.PageDown
-  - `C-x,1` - Window.PreviousTabGroup
-  - `C-x,|` - Window.NewVerticalTabGroup
-  - `M-<` - Edit.DocumentTop
-  - `M->` - Edit.DocumentBottom
-  - `M-b` - Edit.WordPrevious
-  - `M-f` - Edit.WordNext
-  - `M-g` - Edit.GoTo
-  - `M-v` - Edit.PageUp
-  - `M-x,b` - ReSharper.ReSharper_GotoRecentFiles
-  - `M-{` - Edit.PreviousMethod
-  - `M-}` - Edit.NextMethod
-- Edit
-  - `C-,` - Edit.InsertSnippet
-  - `C-SPC` - Edit.SelectCurrentWord
-  - `C-c,;` - ReSharper.ReSharper_GotoRelatedFile
-  - `C-c,j` - CodeMaid.JoinLine
-  - `C-c,p` - ReSharpe._ReSharper_DuplicateText
-  - `C-d` - Edit.Delete
-  - `C-h` - Edit.BackwardDelete
-  - `C-k` - Edit.LineCut
-  - `C-m` - Edit.BreakLine
-  - `C-x,C-S` - File.SaveSelection
-  - `C-x,K` - File.Close
-  - `C-y` - Edit.Paste
-  - `M-/` - Edit.Undo
-  - `M-:` - Edit.UncommentSelection
-  - `M-;` - Edit.CommentSelection
-  - `M-c` - Edit.Capitalize
-  - `M-l` - Edit.MakeLowercase
-  - `M-u` - Edit.MakeUppercase
-- Other
-  - `[N/A]` - Edit.LineCut
-  - `[N/A]` - Resharper*
-
+| category   | command                              | keybind      |
+|------------+--------------------------------------+--------------|
+| Navigation | CodeMaid.SwitchFile                  | `C-c,:`      |
+| Navigation | Edit.CharLeft                        | `C-b`        |
+| Navigation | Edit.CharRight                       | `C-f`        |
+| Navigation | Edit.DocumentBottom                  | `M->`        |
+| Navigation | Edit.DocumentTop                     | `M-<`        |
+| Navigation | Edit.GoTo                            | `M-g`        |
+| Navigation | Edit.IncrementalSearch               | `C-s`        |
+| Navigation | Edit.LineDown                        | `C-n`        |
+| Navigation | Edit.LineEnd                         | `C-e`        |
+| Navigation | Edit.LineStart                       | `C-a`        |
+| Navigation | Edit.LineUp                          | `C-p`        |
+| Navigation | Edit.NextMethod                      | `M-}`        |
+| Navigation | Edit.PageDown                        | `C-v`        |
+| Navigation | Edit.PageUp                          | `M-v`        |
+| Navigation | Edit.PreviousMethod                  | `M-{`        |
+| Navigation | Edit.ScrollLineCenter                | `C-l`        |
+| Navigation | Edit.ToggleAllOutling                | `C-u,M-c`    |
+| Navigation | Edit.ToggleOutlingExpansion          | `C-i`        |
+| Navigation | Edit.WordNext                        | `M-f`        |
+| Navigation | Edit.WordPrevious                    | `M-b`        |
+| Navigation | ReSharper.ReSharper_GotoRecentFiles  | `M-x,b`      |
+| Navigation | Team.TeamExplorerSearch              | `C-x,g`      |
+| Navigation | View.C#Interactive                   | `C-c,i`      |
+| Navigation | Window.NewVerticalTabGroup           | `C-x,&#124;` |
+| Navigation | Window.PreviousTabGroup              | `C-x,1`      |
+| Edit       | Build.BuildSolution                  | `C-c,b`      |
+| Edit       | Build.RebuildSolution                | `C-c,r`      |
+| Edit       | CodeMaid.JoinLine                    | `C-c,j`      |
+| Edit       | CodeMaid.SortLines                   | `M-x,s`      |
+| Edit       | Debug.Start                          | `C-c,d`      |
+| Edit       | Edit.BackwardDelete                  | `C-h`        |
+| Edit       | Edit.BackwardDelete                  | `M-h`        |
+| Edit       | Edit.BreakLine                       | `C-m`        |
+| Edit       | Edit.Capitalize                      | `M-c`        |
+| Edit       | Edit.CommentSelection                | `M-;`        |
+| Edit       | Edit.Delete                          | `C-d`        |
+| Edit       | Edit.InsertSnippet                   | `C-,`        |
+| Edit       | Edit.LineCut                         | `C-k`        |
+| Edit       | Edit.LineDownExtendColumn            | `M-.`        |
+| Edit       | Edit.LineUpExtendColumn              | `M-,`        |
+| Edit       | Edit.MakeLowercase                   | `M-l`        |
+| Edit       | Edit.MakeUppercase                   | `M-u`        |
+| Edit       | Edit.Paste                           | `C-y`        |
+| Edit       | Edit.SelectCurrentWord               | `C-SPC`      |
+| Edit       | Edit.UncommentSelection              | `M-:`        |
+| Edit       | Edit.Undo                            | `M-/`        |
+| Edit       | File.Close                           | `C-x,k`      |
+| Edit       | File.SaveSelection                   | `C-x,C-s`    |
+| Edit       | Project.AddNewItem                   | `C-c,s`      |
+| Edit       | ReSharpe.\_ReSharper\_DuplicateText  | `C-c,p`      |
+| Edit       | ReSharper.ReSharper_GotoRelatedFile  | `C-c,;`      |
+| Edit       | ReSharper.ReSharper_GotoText         | `C-c,g`      |
+| Edit       | Tools.ManageNuGetPackagesforSolution | `C-c,n`      |
+| Edit       | Tools.Options                        | `M-0`        |
+| Edit       | View.PackageManagerConsole           | `C-q,1`      |
 
 -
 
