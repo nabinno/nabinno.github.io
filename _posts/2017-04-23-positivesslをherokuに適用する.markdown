@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "PositiveSSLをHerokuに適用する"
-category: personal
+category: F
 tags:
 cover: false
 cover-image:
