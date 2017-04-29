@@ -1,0 +1,121 @@
+---
+layout: post
+title: "連載 LYSE本を読む 1-3"
+category: F
+tags: erlang,elixir
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
+
+## 1.2 Erlangって何？
+- 関数型言語
+    - 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う
+- アクターモデル
+    - 同時並行性
+    - 高可用性
+    - Ex:
+        - Blue-Green deployment
+        - Log management
+    - Policy:
+        - Let it crash - クラッシュするならさせておけ
+            - [As bad as anything else](http://ferd.ca/the-zen-of-erlang.html)
+            - [let it crashが生んだ誤解](http://qiita.com/soranoba/items/fce095f25c851dd34a6b)
+- 開発環境
+    - クロスプラットフォーム
+        - BEAM
+    - 開発ツール
+        - コンパイラ
+        - デバッガ
+        - プロファイラ
+        - テストフレームワーク
+- ライブラリ
+    - OTPフレームワーク
+    - Webサーバー
+    - パーサジェネレータ
+    - Mnesiaデータベース
+
+## 1.3 Don't drink too much Kool-Aid
+- 軽量プロセスによるスケール
+    - タスクを細かく分けすぎる＝むやみに並行処理させると処理速度に影響がでる
+- CPUコア数によるスケール
+    - すべてを同時に稼働させることができない
+- 技術領域
+    - 適切でない技術領域
+        - 画像処理
+        - 信号処理
+        - OSのデバイスドライバ
+    - 適切な技術領域
+        - 巨大なサーバソフトウェア - QMS, MapReduce
+        - 多言語との接続
+        - 高レベルプロトコルの実装
+        - Ex:
+            - IANOというUNICTチームが作成したロボット
+            - Wings 3D
+
+## 3.2. 変化できない変数
+- パターンマッチング（= 演算子）
+    - 比較の役割も果たしている
+        - 値が違っていたらエラーを出す
+        - 値が同じだったら当該の値を返す
+
+```erlang:
+> 47 = 45 + 2.
+> 47 = 45 + 3.
+** exception error: no match of right hand side value 48
+```
+
+- アンダースコア変数（_）
+    - 使用はできるが値の格納はできない
+
+```erlang:
+> _ = 14+3.
+17
+> _.
+* 1: variable '_' is unbound
+```
+
+## 3.3. アトム
+- アトムと予約語
+    - いくつかのアトムは予約語
+        - `after and andalso band begin bnot bor bsl bsr bxor case catch cond div end fun if let not of or orelse query receive rem try when xor false true`
+
+## 3.4. ブール代数と比較演算子
+- false trueはアトムなので数値の代替にはならない
+- アトムなどのほかの型も比較対象になる
+    - `number < atom < reference < fun < port < pid < tuple < list < bit string`
+
+```erlang:
+> 0 == false.
+false
+> 1 < false.
+true
+```
+
+## 3.8. ビット構文!
+- Erlangはおもいデータを数値処理するにはむいてない
+- 一方、数値処理が必要ないアプリケーションの中では速い
+    - 次のような処理にむいている
+        - イベントに反応する
+            - イベントをミリ秒単位でしょりできリアルタイムアプリケーションに適している
+        - メッセージングパッシング
+            - アトムをつかうと軽く処理できる
+- 軽量なビット文字列
+    - Pros
+        - リストで表現する文字列は1文字につき1ノード
+        - ビット文字列はC言語の配列のようなもの - `<<"this is a bit string!">>`
+    - Cons
+        - パターンマッチなどの捜査の際に単純さが失われる
+
+-
+
+以上 :construction_worker:
