@@ -146,6 +146,7 @@ a
 | Extended API | `get/1`, `peek/1`, `drop/1` | キューの中身の確認         |
 | Okasaki API  | -                           | 関数型データ構造にもとづく |
 
+
 -
 
 以上 :construction_worker:
