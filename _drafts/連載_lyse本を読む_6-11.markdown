@@ -1,0 +1,151 @@
+---
+layout: post
+title: "連載 LYSE本を読む 6-11"
+category: f
+tags: erlang
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
+
+- 今回は標準文法について
+    - Erlangの特徴はざっと次の通り
+        - 型変換の関数が素朴
+            - `erlang:<type>_to_<type>` という形式をとっているため、型が追加されるたびに変換用関数を `BIF (built-in function)` に追加しなければいけない
+        - 再帰、無名関数、エラーは普通、Ruby, JSっぽい
+        - レコードによってインターフェイスを定義できる
+        - データ構造にキーバリューストア、セット、配列、有効グラフ、キューがある
+            - ただ配列は、他の手続き型言語の配列とは逆に、一定時間での挿入や検索ができない
+                - Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため
+
+## 7. 再帰
+- `lists` モジュール
+    - `sort/1`
+    - `join/2`
+    - `last/1`
+    - `flatten/1`
+    - `all/1`
+    - `reverse/1`
+    - `map/2`
+    - `filter/2`
+- `gb_tree` モジュール
+    - `lookup/2`
+    - `map/2`
+
+## 8.2. 無名関数
+```erlang
+> (fun() -> a end)().
+a
+> lists:filter(fun(X) -> X rem 2 == 0 end, lists:seq(1, 10)).
+[2,4,6,8,10]
+```
+
+## 9. エラー
+### コンパイル時エラー
+
+| type     | error                                                                                | description                                                                                                 |
+|----------+--------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------|
+| Module   | Module name 'madule' does not match file name 'module'                               | `-module` 属性内に書いたモジュール名がファイル名と一致していない                                            |
+| Function | Warning: function somefunction/0 is unused                                           | 関数を公開していない、あるいはその関数が使われている場所が間違った関数名やアリティになっている              |
+| Function | function somefunction/1 undefined                                                    | 関数が存在していない: ` -export` 属性内あるいは関数を宣言するときに間違った関数名やアリティを書いてる       |
+| Function | head mismatch                                                                        | 関数定義を他の関数での先頭の節の間に差し込んでいる                                                          |
+| Syntax   | syntax error before: 'SomeCharacterOrWord'                                           | Ex: 括弧の閉じ忘れやタプルやおかしな式接尾辞、予約語・おかしな文字コードにエンコードされたUnicode文字の使用 |
+| Syntax   | syntax error before:                                                                 | 行末がおかしい                                                                                              |
+| Variable | Warning: this expression will fail with a 'badarith' exception                       | Ex: `llama + 5`                                                                                             |
+| Variable | Warning: a term is constructed, but never used                                       | 関数の中に、リス作成、タプル宣言、どんな変数にも束縛されていない無名関数・自身を返す無名関数の宣言がある    |
+| Variable | Warning: variable 'Var' is unused                                                    | 使わない変数を宣言している                                                                                  |
+| Variable | Warning: this clause cannot match because a previous clause at line 4 always matches | モジュール内で定義された関数が `catch-all` 節のあとに特定の節を持っている                                   |
+| Variable | variable 'A' unsafe in 'case'                                                        | `case ... of` の中で宣言されている変数を、その外側で使っている                                              |
+
+### ランタイムエラー (exception error)
+
+| type            | error                                                       | description                                                          |
+|-----------------+-------------------------------------------------------------+----------------------------------------------------------------------|
+| function clause | no function clause matching somefunction                    | 関数内のすべてのガード節で失敗、あるいはすべてのパターンマッチで失敗 |
+| case clause     | no case clause matching 'value'                             | 条件の書き忘れ、誤った種類のデータ送信、 `catch-all` 節が必要な場合  |
+| if clause       | no true branch found when evaluating an if expression       | 条件の書き忘れ、 `catch-all` 節が必要な場合                          |
+| badmatch        | no match of right hand side value                           | 無理なパターンマッチ、変数束縛の繰り返し                             |
+| badarg          | bad argument                                                | 誤った引数の呼び出し                                                 |
+| undef           | undefined function somefunction                             | 未定義関数の呼び出し                                                 |
+| badarith        | bad argument in an arithmetic expression                    | 誤った算術演算                                                       |
+| badfun          | bad function                                                | 変数を関数として呼び出した場合                                       |
+| badarity        | interpreted function with arity 1 called with two arguments | 誤ったアリティ                                                       |
+
+### 例外処理
+```erlang
+1> erlang:error(badarith).
+** exception error: bad argument in an arithmetic expression
+2> erlang:error(custom_error).
+** exception error: custom_error
+```
+
+## 11.2 レコード
+```erlang
+-record(robot, {name, type=industrial, hobbies, details=[]}).
+```
+
+```erlang
+5> Crusher = #robot{name="Crusher", hobbies=["Crushing people","petting cats"]}.
+#robot{name = "Crusher",type = industrial,
+       hobbies = ["Crushing people","petting cats"],
+       details = []}
+6> Crusher#robot.hobbies. %% 参照
+["Crushing people","petting cats"]
+7> NestedBot = #robot{details=#robot{name="erNest"}}.
+#robot{name = undefined,type = industrial,
+       hobbies = undefined,
+       details = #robot{name = "erNest",type = industrial,
+       hobbies = undefined,details = []}}
+8> NestedBot#robot.details#robot.name. %% ネスト参照
+"erNest"
+```
+
+## 11.3. キーバリューストア
+キーバリューストアは4つのモジュールで提供されている。
+
+| module     | methods                                                                            | description                                                                                                                                                  |
+|------------+------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `proplist` | `get_value/2`, `get_all_values/2`, `lookup/2`, `lookup_all/2`                      | 少量データ向け, 緩いデータ構造                                                                                                                               |
+| `orddict`  | `store/3`, `find/2`, `fetch/2`, `erase/2`                                          | 少量データ向け（75要素くらい）                                                                                                                               |
+| `dict`     | `store/3`, `find/2`, `fetch/2`, `erase/2`, `map/2`, `fold/2`                       | 大量データ向け、`ordict` と同じインターフェイス                                                                                                              |
+| `gb_trees` | `enter/2`, `lookup/2`, `delete_any/2`, `insert/3`, `get/2`, `update/3`, `delete/2` | 大量データ向け、データ構造の入出力がわかるスマートモードとわからないネイティブモードがあるため状況に応じて安全性とパフォーマンスのバランスを取ることができる |
+
+## 11.5.セット
+セット（集合）は4つのモジュールで提供されている。
+
+| module    | methods                                                                                | description                                                                                                            |
+|-----------+----------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------|
+| `ordsets` | `new/0`, `is_element/2`, `add_element/2`, `del_element/2`, `union/1`, `intersection/1` | 少量セット向け、遅いが可読性が高い                                                                                     |
+| `sets`    | -                                                                                      | 大量セット向け、`ordsets` と同じインターフェイス                                                                       |
+| `gb_sets` | -                                                                                      | 大量セット向け、スマートモード・ネイティブモードがあるため状況に応じ安全性とパフォーマンスのバランスを取ることができる |
+| `sofs`    | -                                                                                      | 一意な要素の集合だけではなく、数学的な概念として集合が必要な場合                                                       |
+
+## 11.6. 有効グラフ
+有効グラフは2つのモジュールで提供されている。
+
+| module          | description                                  |
+|-----------------+----------------------------------------------|
+| `digraph`       | 生成、変更、エッジ・辺の操作、経路・周の検索 |
+| `digraph_utils` | グラフの誘導、木のテスト、隣接ノードの検索   |
+
+## 11.7. キュー
+`queue` モジュール
+
+| api          | methods                     | description                |
+|--------------+-----------------------------+----------------------------|
+| Original API | `new/0`, `in/2`, `out/1`    | キューの作成・削除         |
+| Extended API | `get/1`, `peek/1`, `drop/1` | キューの中身の確認         |
+| Okasaki API  | -                           | 関数型データ構造にもとづく |
+
+-
+
+以上 :construction_worker:
