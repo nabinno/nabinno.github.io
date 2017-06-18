@@ -1,27 +1,24 @@
-:: Editing blog at:~/nabinno.github.io
-:: Posts
-. : 2017-02-01-hydeをつかってemacsをjekyllクライアントにする.markdown
-. : 2017-02-06-30代からの胸郭変形（漏斗胸）手術.markdown
-. : 2017-02-06-brother_hl-l2365dwを無線lanで設定する.markdown
-. : 2017-02-07-HerokuとGAEのCIをDockerとパイプラインから構成されたWerckerで管理する.markdown
-. : 2017-03-09-Hyper-VモードでLinux OSとAndroid OSを同時使用する.markdown
-. : 2017-03-31-xamarin開発環境をととのえる.markdown
-. : 2017-04-23-positivesslをherokuに適用する.markdown
-. : 2017-04-29-連載 LYSE本を読む.markdown
-. : 2017-05-14-連載_lyse本を読む_4-5.markdown
-C : 2017-06-05-RubyのCSVパースをPyCallで実行する.markdown
-C : 2017-06-11-連載_lyse本を読む_6-11.markdown
+---
+layout: post
+title: "連載 LYSE本を読む 12-13"
+category: F
+tags: erlang
+cover: false
+cover-image:
+---
 
-:: Drafts
-. : .#連載_LYSE本を読む_12-13.markdown
-. : google_cloud_powershellで画像収集を自動化する.markdown
-E : 連載_LYSE本を読む_12-13.markdown
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
 
 
-:: Hyde version 0.3a
-Key:
------
- . Committed and pushed
- C Committed but not yet pushed
- M Local saved changes (uncommitted)
- E Local unsaved changes
+
+-
+
+以上 :construction_worker:
