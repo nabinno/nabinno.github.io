@@ -1,0 +1,89 @@
+---
+layout: post
+title: "連載 LYSE本を読む 14"
+category: F
+tags: erlang
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
+
+- 今回は2つのプロセス間通信のプロセス管理について
+    - 片方のプロセスがエラーになっても、もう片方のプロセスが死なないようにする
+        - プロセスがエラーになったものはクラッシュさせる
+            - クラッシュしたプロセスをリスタートさせる
+        - また、そのクラッシュ情報をもう片方にメッセージとして送る
+
+## 14. エラーとプロセス
+記3つの関数をつかい実装する。
+
+1. `erlang:exit(Pid, Why)` - `Pid` に対して自分が異常終了で死んだとつたえる。自身は死なない。
+2. `erlang:process_flag(trap_exit, Value)` - `Value` が true ならシステムプロセスとなり、 false ならシステムプロセスでなくなる。デフォルトは false。この関数によりクラッシュしたプロセスをリスタートさせる
+3. `erlang:register(Atom, Pid)` と `erlang:make_ref()` - `register/2` で予測不可能な `Pid` を `Atom` として登録し、`make_ref/0` で生成された `Reference` をもとにメッセージ送信をおこなう。なお、ここで生成される `Reference` は同一Erlang VM上、あるいはクラスタリングしたVM上のみでユニークになる。
+
+```erlang
+start_critic2() ->
+    spawn(?MODULE, restarter, []).
+
+restarter() ->
+    process_flag(trap_exit, true),
+    Pid = spawn_link(?MODULE, critic2, []),
+    register(critic2, Pid),
+    receive
+        {'EXIT', Pid, normal} ->   % not a crash
+            ok;
+        {'EXIT', Pid, shutdown} -> % manual termination, not a crash
+            ok;
+        {'EXIT', Pid, _} ->
+            restarter()
+    end.
+
+judge2(Band, Album) ->
+    Ref = make_ref(),
+    critic2 ! {self(), Ref, {Band, Album}},
+    receive
+        {Ref, Criticism} ->
+            Criticism
+    after 2000 ->
+            timeout
+    end.
+
+critic2() ->
+    receive
+        {From, Ref, {"Rage Against the Turing Machine", "Unit Testify"}} ->
+            From ! {Ref, "They are great!"};
+        {From, Ref, {"System of a Downtime", "Memoize"}} ->
+            From ! {Ref, "They're not Johnny Crash but they're good."};
+        {From, Ref, {"Johnny Crash", "The Token Ring of Fire"}} ->
+            From ! {Ref, "Simply incredible."};
+        {From, Ref, {_Band, _Album}} ->
+            From ! {Ref, "They are terrible!"}
+    end,
+    critic2().
+```
+
+```erlang
+27> functions:start_critic2().
+<0.125.0>
+28> functions:judge2("The Doors", "Light my Firewall").
+"They are terrible!"
+29> exit(whereis(critic2), kill).
+true
+30> whereis(critic2).
+<0.129.0>
+31> functions:judge2("The Doors", "Light my Firewall").
+"They are terrible!"
+```
+
+-
+
+以上 :construction_worker:
