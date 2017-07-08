@@ -109,9 +109,9 @@ Eshell V8.1  (abort with ^G)
 <0.59.0>
 2> evserv:subscribe(self()).
 {ok,#Ref<0.0.2.84>}
-3> evserv:add_event("Hey there3", "test", {2017, 7, 9}, {1, 23, 59}}).
+3> evserv:add_event("Hey there3", "test", { {2017, 7, 9}, {1, 23, 59} }).
 * 1: syntax error before: '}'
-3> evserv:add_event("Hey there3", "test", {{2017, 7, 9}, {1, 23, 59}}).
+3> evserv:add_event("Hey there3", "test", { {2017, 7, 9}, {1, 23, 59} }).
 ok
 4> evserv:listen(2000).
 [{done,"Hey there3","test"}]
