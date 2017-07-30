@@ -89,6 +89,8 @@ cover-image:
         - sync_send_event/2-3
 
 ## 18.2. ユーザー同士の取引システム例
+- ![plantuml](/uml/2017-07-30.png)
+- ![plantuml_2](/uml/2017-07-30_2.png)
 
 -
 
