@@ -1,0 +1,86 @@
+---
+layout: post
+title: "連載 LYSE本を読む 19"
+category: F
+tags: erlang, event-driven-programming
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
+
+今回はイベントハンドラ。ビヘイビアは `gen_event` をつかいます。
+
+- 人々（あるいは、あるプロセスやアプリケーション）にイベントが起きたことを知らせる機能の実装方法
+    - 単純出力方式
+        - 結果を出力するのみ
+    - 単純サブスクライバ方式
+        - メッセージ送信前にサブスクライバのPidを取得
+        - Cons
+            - コールバックのために待機プロセスが必要
+    - イベントマネージャ方式
+        - 関数をうけとるプロセスをたて、すべてのイベントに対して当該関数をはしらせる
+        - Pros
+            - サーバのサブスクライバがたくさんあっても稼働し続けられる
+            - すべてのコールバックは同じインスタンスで操作される
+            - 短命なタスクに対して新しいプロセスを生成する必要がない
+        - Cons
+            - 関数が長時間動作する必要があった場合、お互いブロックしあう
+                - イベントマネージャをイベントフォワーダにすれば防ぐことができる
+            - 無限ループする関数はクラッシュするまで新規イベントをブロックする
+
+## 19.2. 汎用イベントハンドラ gen_event
+![](/images/2017-08-07.png)
+
+- gen_event の各関数
+    - init/1
+        - Response
+            - {ok, State}
+    - terminate/2
+    - handle_event/2
+        - 非同期
+            - すべてのイベントマネージャは戻り値を返さないことで呼び出しプロセスをブロックする
+        - Params
+            - Event, State
+        - Response
+            - {ok, NewState}
+                - gen_server:handle_cast/2 と似た動作
+            - {ok, NewState, hibernate}
+            - {remove_handler}
+                - イベントマネージャからハンドラを削除する
+            - {swap_handler, Args1, NewState, NewHandler, Args2}
+                - 今あるイベントハンドラを削除して新しいものに置き換える
+    - notify/2
+        - すべての流入イベントを通知する (非同期)
+    - sync_notify/2
+        - すべての流入イベントを通知する (同期)
+    - cast/2
+        - 非同期
+    - handle_call
+        - gen_server:handle_call コールバックに似ているがレスポンスが異なる
+        - gen_server:call/3-4 が呼び出しに使われている
+        - Response
+            - {ok, Reply, NewState}
+            - {ok, Reply, NewState, hibernate}
+            - {remove_handler, Reply}
+            - {swap_handler, Reply, Args1, NewState, Handle_Call}
+    - handle_info/2
+        - hendle_event と同じレスポンスだが、終了シグナルや ! 演算子でイベントマネージャに贈られたメッセージのみを扱う点で異なる
+    - code_change/3
+        - gen_server:code_change と同じ動作をする
+        - Params
+            - OldVsn バージョン番号, State ハンドラの状態, Extra
+        - Response
+            - {ok, NewState}
+
+-
+
+以上 :construction_worker:
