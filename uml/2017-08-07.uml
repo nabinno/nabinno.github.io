@@ -1,0 +1,13 @@
+@startuml
+skinparam monochrome true
+skinparam backgroundColor #EEEEFF
+
+(*) --> "spawn event manager"
+--> "attach handler"
+--> "init handler"
+--> "loop"
+note right: calls (to handlers)
+--> "exit hadnlers"
+--> (*)
+
+@enduml
