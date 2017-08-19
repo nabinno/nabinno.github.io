@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 16"
+title: "連載 LYSE本を読む 16 OTP"
 category: personal
 tags:
 cover: false
