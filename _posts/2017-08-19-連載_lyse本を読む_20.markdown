@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 20"
+title: "連載 LYSE本を読む 20 supervisor"
 category: personal
 tags:
 cover: false
@@ -17,7 +17,7 @@ cover-image:
 # SOLUTION
 というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
 
-今回のビヘイビアはスーパバイザ。 監視戦略の概要にふれてみる。
+今回のビヘイビアはスーパバイザ `supervisor`。 監視戦略の概要にふれてみる。
 
 - init/1
     - レスポンス
