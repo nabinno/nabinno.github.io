@@ -1,0 +1,66 @@
+---
+layout: post
+title: "連載 LYSE本を読む 20"
+category: personal
+tags:
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+
+-
+
+# SOLUTION
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
+
+今回のビヘイビアはスーパバイザ。 監視戦略の概要にふれてみる。
+
+- init/1
+    - レスポンス
+        - {ok, {{RestartStrategy, MaxRestart, MaxTime}, [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}]}}.
+            - 例
+                - {ok, {{one_for_all, 5, 60}, [{fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic}]}}.
+            - 再起動戦略
+                - one_for_one
+                    - 1つのワーカがクラッシュしたら当該ワーカを再起動する
+                    - 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう
+                - one_for_all
+                    - 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する
+                    - 各々のワーカが互いに強く依存している場合につかう
+                - rest_for_one
+                    - 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する
+                    - 各々のワーカがチェーン状態に依存している場合につかう
+                - simple_one_for_one
+                    - one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している
+            - 再起動制限
+                - MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする
+            - ワーカ (子プロセス)
+                - 構成要素
+                    - ChildId
+                    - StartFunc
+                        - スーパバイザの起動方法をつたえるためのタプル {M, F, A}
+                    - Restart
+                        - 再起動戦略
+                            - permanent
+                                - 常に再起動
+                            - temporary
+                                - 再起動しない
+                            - transient
+                                - 正常終了の場合は再起動しない
+                                - 異常終了の場合は再起動する
+                    - Shutdown
+                        - 終了期限
+                    - Type
+                        - 子プロセスの種類
+                            - ワーカ
+                            - スーパバイザ
+                    - Modules
+                        - コールバックモジュールのリスト
+
+-
+
+以上 :construction_worker:
