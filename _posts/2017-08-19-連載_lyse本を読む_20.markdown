@@ -21,9 +21,22 @@ cover-image:
 
 - init/1
     - レスポンス
-        - `{ok, {{RestartStrategy, MaxRestart, MaxTime}, [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}]}}.`
+        - `{ok,
+             {
+               {RestartStrategy, MaxRestart, MaxTime},
+               [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}]
+             }
+           }.`
             - 例
-                - `{ok, {{one_for_all, 5, 60}, [{fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic}]}}`.
+                - `{ok,
+                     {
+                       {one_for_all, 5, 60},
+                       [
+                         {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]},
+                         {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic}
+                       ]
+                     }
+                   }`.
             - 再起動戦略
                 - `one_for_one`
                     - 1つのワーカがクラッシュしたら当該ワーカを再起動する
