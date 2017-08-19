@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 19"
+title: "連載 LYSE本を読む 19 gen_event"
 category: F
 tags: erlang, event-driven-programming
 cover: false

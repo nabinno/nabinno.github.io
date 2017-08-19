@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 18"
+title: "連載 LYSE本を読む 18 gen_fsm"
 category: F
 tags: erlang,finite-state-machine
 cover: false
