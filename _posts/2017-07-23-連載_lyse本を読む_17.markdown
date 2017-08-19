@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 17"
+title: "連載 LYSE本を読む 17 gen_server"
 category: F
 tags: erlang
 cover: false
