@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 15"
+title: "連載 LYSE本を読む 15 アプリケーションを作成する"
 category: F
 tags:
 cover: false
