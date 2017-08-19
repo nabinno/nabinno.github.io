@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 14"
+title: "連載 LYSE本を読む 14 プロセス間通信"
 category: F
 tags: erlang
 cover: false
