@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 6-11"
+title: "連載 LYSE本を読む 6-11 文法"
 category: f
 tags: erlang
 cover: false
