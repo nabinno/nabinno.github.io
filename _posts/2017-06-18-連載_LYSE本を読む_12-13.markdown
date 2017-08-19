@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 12-13"
+title: "連載 LYSE本を読む 12-13 並列性について"
 category: F
 tags: erlang
 cover: false
