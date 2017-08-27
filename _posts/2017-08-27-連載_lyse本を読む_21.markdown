@@ -64,6 +64,8 @@ cover-image:
     - 保存方法
         - データベースに登録
 
+![](/uml/2017-08-26.png)
+
 -
 
 以上 :construction_worker:
