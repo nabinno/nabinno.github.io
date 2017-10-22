@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "連載 LYSE本を読む 21 プロセスプールをつくる"
+title: "連載 LYSE本を読む 21-24 プロセスプールをつくる"
 category: F
 tags:
 cover: false
