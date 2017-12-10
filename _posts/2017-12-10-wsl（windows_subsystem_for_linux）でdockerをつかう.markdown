@@ -76,7 +76,7 @@ WSLではDockerデーモンがつかえないのでNTFS (WSLからみるとdrvfs
 
 構成は下記のようになります。
 
-![](images/171119_wsl-docker.png)
+![](https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_wsl-docker.png)
 
 DockerクライアントからDockerデーモンにつなぐには、セキュリティリスクはありますが、 `DOCKER_HOST` をつかうのが簡易的です。Docker for WindowsとDockerクライアント、各々設定します。
 1. Docker for WindowsよりDockerデーモンを「Expose daemon on tcp://localhost:2375 without TLS」として設定
