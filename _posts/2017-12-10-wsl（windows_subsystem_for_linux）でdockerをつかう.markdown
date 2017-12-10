@@ -9,6 +9,8 @@ cover-image:
 
 <table><tr><td>当該記事はDocker Advent Calendar 2017用に準備したものです。</td></tr></table>
 
+-
+
 # PROBLEM
 - macOSとWindowsでWebアプリケーション開発をする際に
     - 環境が異なって管理しづらい
@@ -18,7 +20,7 @@ cover-image:
                     - となると、いまWindowsでLinux環境をつかうならWSLか
                         - ただ、実際どこまで開発ができるかわからんしなあ
 
----
+-
 
 # SOLUTION
 というわけで、この記事ではmacOSとWindowsによるWebアプリケーション開発について、どこまで共有できるか書いていきます。
@@ -139,6 +141,6 @@ services:
 
 随時、気になる課題が出てきたら追記します。
 
----
+-
 
 以上 :construction_worker:
