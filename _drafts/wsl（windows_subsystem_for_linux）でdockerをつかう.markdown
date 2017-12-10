@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "WSL（Windows Subsystem for Linux）でDockerをつかう"
+title: "WSL（Windows Subsystem for Linux）でDockerをつかったWebアプリケーション開発をおこなう際の注意点"
 category: F
 tags: wsl, docker, ubuntu
 cover: false
@@ -8,11 +8,6 @@ cover-image:
 ---
 
 <table><tr><td>当該記事はDocker Advent Calendar 2017用に準備したものです。</td></tr></table>
-
-# TLDR
-
-
--
 
 # PROBLEM
 - macOSとWindowsでWebアプリケーション開発をする際に
@@ -23,12 +18,14 @@ cover-image:
                     - となると、いまWindowsでLinux環境をつかうならWSLか
                         - ただ、実際どこまで開発ができるかわからんしなあ
 
--
+---
 
 # SOLUTION
 というわけで、この記事ではmacOSとWindowsによるWebアプリケーション開発について、どこまで共有できるか書いていきます。
 
 前提条件として、当該WebアプリケーションはmacOSというより、Bash/Ubuntu14.04~のLinux環境で動くことを想定しています。macOSはHFS+やAPFSのUnicode正規化以外はおおよそLinux環境に適応できているという判断によります。
+
+要は、WSLでDockerをつかったWebアプリケーション開発ができるかどうかという点に焦点をしぼります。
 
 ## 対象環境
 - Windows 10 Pro 1709 16299.64
@@ -44,21 +41,23 @@ cover-image:
 - [Windows Subsystem for Linuxをインストールしてみよう！](https://qiita.com/Aruneko/items/c79810b0b015bebf30bb)
 
 WSLのパッケージ管理は下記3つを押さえておけば問題ないでしょう。
-- apt
+1. apt
     - WSLではデーモンがつかえないのでDockerクライアントを入れましょう、Dockerデーモンの詳細は後ほど言及します
-- [anyenv](https://github.com/riywo/anyenv)
+2. [anyenv](https://github.com/riywo/anyenv)
     - プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう
-    - exenvがビルドで失敗するためElixirインストールできないほかは、各言語問題なくビルドできました
-- [nix](https://nixos.org/nix/)
+    - exenvがビルドで失敗するためElixirインストールできないほかは、各言語問題なくビルドできます
+3. [nix](https://nixos.org/nix/)
     - ElixirやHaskellのようにanyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
     - また、aptのバージョンが古すぎるパッケージもnixが最適です
 
 ### ConEmuのインストール
 - [ConEmu - Handy Windows Terminal](https://conemu.github.io/)
 
-WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるいのでおすすめしません。
+WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるい[^1]のでおすすめしません。
 
-ConEmuの「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように設定しています。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
+[^1]: https://github.com/cmderdev/cmder/issues/901
+
+ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
 
 ```bash
 # task parameters
@@ -94,31 +93,52 @@ WSLがlxfs、Docker for WindowsがNTFS (drvfs) 上で動いていることから
 
 1. Docker for WindowsはNTFS (WSLからみるとdrvfs `/mnt/`) 上のファイルしかVolumeマウントできません
 2. WSLはLinux形式のパスしか扱えません、`C:\Dev` のようなドライブ名にコロンをつけたURIスキーマは扱えません
-3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません ([URL](https://github.com/docker/compose/issues/4039#issuecomment-269558432))
-4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります
+3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません[^2]
+4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります[^3]
+
+[^2]: https://github.com/docker/compose/issues/4039#issuecomment-269558432
+[^3]: https://github.com/Microsoft/WSL/issues/2448
 
 ひとつずつ解決方法を見ていきましょう。
 
 ### 1. Docker for WindowsはNTFS (WSLからみるとdrvfs `/mnt/`) 上のファイルしかVolumeマウントできません
-開発用のディレクトをNTFS上につくりましょう。
+開発用ディレクトリをNTFS上につくりましょう。普段からWindowsで開発されている方はCドライブ直下につくっているとおもいます。
 
 ### 2. WSLはLinux形式のパスしか扱えません、ドライブ名にコロンをつけたURIスキーマは扱えません
 NTFSからのパス参照とWSLからのパス参照を共通化するために、WSLに各ドライブのシンボリックリンクをはりましょう。
 
 ```bash
-ln -s /mnt/c /C
+$ ln -s /mnt/c /C
+
+# 開発ディレクトリはこんな感じで参照できます
+$ ls -al /C/Dev
+total 0
+drwxrwxrwx 0 root root 512 Oct 27 00:54 .
+drwxrwxrwx 0 root root 512 Dec  8 07:49 ..
+drwxrwxrwx 0 root root 512 Jul 14 03:06 app-test-1
+drwxrwxrwx 0 root root 512 Oct 25 00:38 app-test-2
 ```
 
 ### 3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません
 各OS間での違いを吸収するため、プロジェクトに `PRJ_ROOT` のような環境変数を用意しましょう。
 
+```yaml
+services:
+  app-front:
+    image: 561534604247952616898.dkr.ecr.amazonaws.com/test/app
+    volumes:
+      - ${PRJ_ROOT}/wizpra/survey:/var/www/app
+```
+
 ### 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります
-TODO: 動作検証
+こちらはFall Creators Updateのデグレですが、更新プログラム (KB4051963) でこの問題が修正されました :tada:
 
 
 ## まとめ
+まだ未検証な部分はのこっていますが、ひととおりmacOSとWindowsによるWebアプリケーション開発は共有できるところまできている、と言えそうです。
 
+随時、気になる課題が出てきたら追記します。
 
--
+---
 
 以上 :construction_worker:
