@@ -135,6 +135,13 @@ services:
 ### 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります
 こちらはFall Creators Updateのデグレですが、更新プログラム (KB4051963) でこの問題が修正されました :tada:
 
+もし更新プログラムが適用できない場合は、シンボリックリンクでNTFS上のnode_modulesディレクトリをWSLに移しましょう。
+
+```bash
+$ mkdir /home/foo/tmp/app-test-1/node_modules
+$ ln -s /home/foo/tmp/app-test-1/node_modules /C/Dev/app-test-1/node_modules
+```
+
 
 ## まとめ
 まだ未検証な部分はのこっていますが、ひととおりmacOSとWindowsによるWebアプリケーション開発は共有できるところまできている、と言えそうです。
@@ -144,3 +151,5 @@ services:
 -
 
 以上 :construction_worker:
+
+-
