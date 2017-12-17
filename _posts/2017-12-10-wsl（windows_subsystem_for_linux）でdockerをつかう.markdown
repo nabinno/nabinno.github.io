@@ -150,13 +150,6 @@ $ ln -s /home/foo/tmp/app-test-1/node_modules /C/Dev/app-test-1/node_modules
 
 随時、気になる課題が出てきたら追記します。
 
-そうそう、この記事はもちろんWSLをつかって書いてますよ。
-
-```sh
-$ uname -r
-4.4.0-43-Microsoft
-```
-
 -
 
 以上 :construction_worker: :santa:
