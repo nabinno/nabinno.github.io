@@ -128,9 +128,9 @@ drwxrwxrwx 0 root root 512 Oct 25 00:38 app-test-2
 ```yaml
 services:
   app-front:
-    image: 561534604247952616898.dkr.ecr.amazonaws.com/test/app/front
+    image: 561534604247952616898.dkr.ecr.amazonaws.com/test/front
     volumes:
-      - ${PRJ_ROOT}/front:/var/www/app/front
+      - ${PRJ_ROOT}/front:/var/www/front
 ```
 
 ### 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります
@@ -139,8 +139,8 @@ services:
 もし更新プログラムが適用できない場合は、シンボリックリンクでNTFS上のnode_modulesディレクトリをWSLに移しましょう。
 
 ```bash
-$ mkdir /home/foo/tmp/app-test-1/node_modules
-$ ln -s /home/foo/tmp/app-test-1/node_modules /C/Dev/app-test-1/node_modules
+$ mkdir /home/foo/tmp/app-test-1/front/node_modules
+$ ln -s /home/foo/tmp/app-test-1/front/node_modules /C/Dev/app-test-1/front/node_modules
 ```
 
 -
