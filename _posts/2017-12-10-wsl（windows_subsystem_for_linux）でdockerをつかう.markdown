@@ -8,7 +8,7 @@ cover-image:
 ---
 
 ![](https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_christmas-meiji-ya.jpg)
-当記事は[Docker Advent Calendar 2017](https://qiita.com/advent-calendar/2017/docker)用、前日はinductorさんの「[Docker Meetupの中身まとめ](https://mohikanz.kibe.la/shared/entries/c170117c-b876-49da-931a-9788a473164e)」でした :whale: 写真は[クリスマスを日本にひろめた明治屋](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9#%E6%98%8E%E6%B2%BB%E6%99%82%E4%BB%A3) :christmas_tree:
+当記事は[Docker Advent Calendar 2017](https://qiita.com/advent-calendar/2017/docker)用です。前日はinductorさんの「[Docker Meetupの中身まとめ](https://mohikanz.kibe.la/shared/entries/c170117c-b876-49da-931a-9788a473164e)」でした :whale: （写真は[クリスマスを日本にひろめた明治屋](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9#%E6%98%8E%E6%B2%BB%E6%99%82%E4%BB%A3) :christmas_tree:）
 
 -
 
