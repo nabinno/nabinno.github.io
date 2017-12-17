@@ -3,13 +3,12 @@ layout: post
 title: "WSL（Windows Subsystem for Linux）でDockerをつかったWebアプリケーション開発をおこなう際の注意点"
 category: F
 tags: wsl, docker, ubuntu
-cover: true
-cover-image: https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_christmas-meiji-ya.jpg
+cover: false
+cover-image:
 ---
 
-当記事は[Docker Advent Calendar 2017](https://qiita.com/advent-calendar/2017/docker)用、前日は inductorさんの「Docker Meetupの中身まとめ」でした :whale:
-
-写真は[クリスマスを日本にひろめた明治屋](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9#%E6%98%8E%E6%B2%BB%E6%99%82%E4%BB%A3)です :christmas_tree:
+![](https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_christmas-meiji-ya.jpg)
+当記事は[Docker Advent Calendar 2017](https://qiita.com/advent-calendar/2017/docker)用、前日はinductorさんの「[Docker Meetupの中身まとめ](https://mohikanz.kibe.la/shared/entries/c170117c-b876-49da-931a-9788a473164e)」でした :whale: 写真は[クリスマスを日本にひろめた明治屋](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9#%E6%98%8E%E6%B2%BB%E6%99%82%E4%BB%A3) :christmas_tree:
 
 -
 
@@ -59,7 +58,7 @@ WSLのパッケージ管理は下記3つを押さえておけば問題ないで�
 
 WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるい[^1]のでおすすめしません。
 
-[^1]: https://github.com/cmderdev/cmder/issues/901
+[^1]: [https://github.com/cmderdev/cmder/issues/901](https://github.com/cmderdev/cmder/issues/901)
 
 ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
 
@@ -100,8 +99,8 @@ WSLがlxfs、Docker for WindowsがNTFS (drvfs) 上で動いていることから
 3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません[^2]
 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります[^3]
 
-[^2]: https://github.com/docker/compose/issues/4039#issuecomment-269558432
-[^3]: https://github.com/Microsoft/WSL/issues/2448
+[^2]: [https://github.com/docker/compose/issues/4039#issuecomment-269558432](https://github.com/docker/compose/issues/4039#issuecomment-269558432)
+[^3]: [https://github.com/Microsoft/WSL/issues/2448](https://github.com/Microsoft/WSL/issues/2448)
 
 ひとつずつ解決方法を見ていきましょう。
 
