@@ -3,11 +3,13 @@ layout: post
 title: "WSL（Windows Subsystem for Linux）でDockerをつかったWebアプリケーション開発をおこなう際の注意点"
 category: F
 tags: wsl, docker, ubuntu
-cover: false
-cover-image:
+cover: true
+cover-image: https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_christmas-meiji-ya.jpg
 ---
 
-<table><tr><td>当該記事はDocker Advent Calendar 2017用に準備したものです。</td></tr></table>
+当記事は[Docker Advent Calendar 2017](https://qiita.com/advent-calendar/2017/docker)用、前日は inductorさんの「Docker Meetupの中身まとめ」でした :whale:
+
+写真は[クリスマスを日本にひろめた明治屋](https://ja.wikipedia.org/wiki/%E3%82%AF%E3%83%AA%E3%82%B9%E3%83%9E%E3%82%B9#%E6%98%8E%E6%B2%BB%E6%99%82%E4%BB%A3)です :christmas_tree:
 
 -
 
@@ -142,14 +144,15 @@ $ mkdir /home/foo/tmp/app-test-1/node_modules
 $ ln -s /home/foo/tmp/app-test-1/node_modules /C/Dev/app-test-1/node_modules
 ```
 
+-
 
-## まとめ
+# WRAPUP
 まだ未検証な部分はのこっていますが、ひととおりmacOSとWindowsによるWebアプリケーション開発は共有できるところまできている、と言えそうです。
 
 随時、気になる課題が出てきたら追記します。
 
 -
 
-以上 :construction_worker:
+以上 :construction_worker: :santa:
 
 -
