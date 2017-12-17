@@ -128,9 +128,9 @@ drwxrwxrwx 0 root root 512 Oct 25 00:38 app-test-2
 ```yaml
 services:
   app-front:
-    image: 561534604247952616898.dkr.ecr.amazonaws.com/test/app
+    image: 561534604247952616898.dkr.ecr.amazonaws.com/test/app/front
     volumes:
-      - ${PRJ_ROOT}/wizpra/survey:/var/www/app
+      - ${PRJ_ROOT}/front:/var/www/app/front
 ```
 
 ### 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります
