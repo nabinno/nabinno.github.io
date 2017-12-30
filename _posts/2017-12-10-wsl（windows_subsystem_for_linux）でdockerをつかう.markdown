@@ -53,14 +53,41 @@ WSLのパッケージ管理は下記3つを押さえておけば問題ないで�
     - ElixirやHaskellのようにanyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
     - また、aptのバージョンが古すぎるパッケージもnixが最適です
 
-### ConEmuのインストール
+### ターミナルのインストール
+WSLttyかConEmuをおすすめします。各々の特徴は下記のとおりですが、通常のWebアプリケーション開発の場合はWSLTTYがいいでしょう。
+
+- WSLtty
+    - Pros
+        - ConEmuとくらべてファイルの読込速度が速い (VMよりは遅い)
+        - EmacsでCtrl-SPC `set-mark` が機能する
+        - 画面サイズの変更が柔軟
+    - Cons
+        - PowerShellなどほかのコンソールの呼び出しが面倒
+- ConEmu
+    - Pros
+        - PowerShellなどほかのコンソールの呼び出しが楽
+    - Cons
+        - ファイルの読込速度がおそい
+        - EmacsでCtrl-SPC `set-mark` が機能しない
+        - 画面サイズの変更に制限がある
+
+### WSLtty
+- [mintty/wsltty](https://github.com/mintty/wsltty)
+
+WSL用ターミナルとしてのMinttyです。操作はMinttyとかわらず、元Cygwinづかいにはうれしい操作感です。というわけで、いつものごとく起動用ショートカットのターゲットを準備します。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
+
+```bat
+%LOCALAPPDATA%\wsltty\bin\mintty.exe --wsl -o Locale=C -o Charset=UTF-8 /bin/wslbridge -t /bin/bash -c 'sudo mkdir /run/screen && sudo chmod 775 $_ && sudo chown root:utmp $_ && SHELL=/usr/bin/zsh screen'
+```
+
+#### ConEmu
 - [ConEmu - Handy Windows Terminal](https://conemu.github.io/)
 
 WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるい[^1]のでおすすめしません。
 
 [^1]: [https://github.com/cmderdev/cmder/issues/901](https://github.com/cmderdev/cmder/issues/901)
 
-ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
+ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。
 
 ```bash
 # task parameters
