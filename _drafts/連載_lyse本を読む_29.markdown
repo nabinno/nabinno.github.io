@@ -152,17 +152,57 @@ cover-image:
         - 1台のコンピューター上でErlangノードを設定する際は通常短い名前をつかう
         - 長い名前と短い名前、双方でのやり取りはできない
 - 関数
-    - `net\_kernel:connect_node/1` - ノード接続
-    - `node/0` - ノード名参照
-    - `nodes/0` - 接続ノード参照
-    - `process_flag/2`
-    - `erlang:monitor/2`
+    - `net_kernel:connect_node/1` - ノード接続
+    - ノード名参照
+        - `node/0` - 現在のノード名を参照
+        - `nodes/0` - 接続ノード参照
+    - リンクとモニタ
+        - `link` - ノードをまたいだリンク
+        - `erlang:monitor/2` - ノードをまたいだモニタ（ネットワーク分断時に一斉に活性化し負荷が増加する可能性あり）
+        - `erlang:monitor_node/2` - ノードを指定したモニタ
     - 遠隔操作
         - `spawn/2`
         - `spawn/4`
         - `spawn_link/2`
         - `spawn_link/4`
-
+- クラスタのUIDトークンとしてのCookie
+    - 関数
+        - `erl -sname ShortName -setcookie CookieName`
+        - `erlang:get_cookei/0`
+        - `erlang:set_cookei/2`
+- 隠しノード
+    - クラスタを介してノード接続すると、クラスタ間で予期しないメッセージ通信がおこなわれる可能性があるため、それを防止する策としてクラスタを介さず接続可能な隠しノード機能がある
+    - 関数
+        - `erlang:send(Dest, Message, [noconnect])` - クラスタを介さずにノードに接続
+        - `erl -sname ShortName -hidden` - クラスタを介さずに隠しノードに接続
+        - `nodes(hidden)` - 隠しノードを参照
+- ポート範囲指定
+    - EPMDのポート番号は `4369`
+    - 設定方法
+        - `erl -name LongName -kernel inet_dist_listen_min 9100 -kernel inet_dist_listen_max 9115`
+        - `erl -name LongName -config ports`
+            - ports.config: `[{kernel, [{inet_dist_listen_min, 9100}, {inet_dist_listen_max, 9115}]}].`
+- 分散用モジュール
+    - `net_kernel`
+        - `start([Name, Type, HeartbeatInMilliseconds])` - インスタンスを一時的にノード化
+        - `set_net_ticktime(Milliseconds)` - Ticktime（ハートビートを4倍した時間、ノードの死亡判定時間）を設定変更
+    - `global` - プロセスレジストリの代替
+        - `register_name(Name, Pid)` - gloabl登録し名前変更
+        - `unregister_name(Name, Pid)` - globalから名前解除
+        - `re_register_name(Name, Pid)` - 参照先の喪失を防ぎながらglobal登録し名前変更
+        - `whereis_name(Name)` - PID探索
+        - `send(Name, Message)` - メッセージ送信
+        - `random_exit_name/3` - ランダムにプロセスをkillする
+        - `random_notify_name/3` - 2つのプロセスのうちいかすプロセスをランダムに1つ選び、globalから解除されるプロセスに `{global_name_conflict, Name}` というメッセージを送信
+        - `notify_all_name/3` - 指定したPIDプロセスをglobalから解除し、 `{global_name_conflict, Name, OtherPid}` というメッセージを送信、コンフリクト解消を促す
+    - `rpc`
+        - `call(Node, Module, Function, Args[, Timout])`
+        - `async_call(Node, Mod, Fun, Args[, Timout])`
+        - `yield(AsyncPid)`
+        - `nb_yield(AsyncPid[, Timeout])` - ポーリング、ロングポーリング
+        - `cast(Node, Mod, Fun, Args)` - 返値なしのコール
+        - `multicall(Nodes, Mod, Fun, Args)` - 複数ノードへのコール
+        - `eval_everywhere(Nodes, Mod, Fun, Args)` - 複数ノードへの命令（コールとほぼ同じ）
 
 -
 
