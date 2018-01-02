@@ -17,7 +17,7 @@ cover-image:
 # SOLUTION
 というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を選定している。
 
-- 今回はシステムテストCommon Testについてかんがえる。システムテストとは結合テスト、Webテストのことを指す。Common Testではリモートノードを対象にした分散テスト、EUnitを取り込んだテスト、各プロトコル（SSH `ct_ssh`、Telnet `ct_telnet`、SNMP `ct_telnet`、FTP `ct_ftp`）を対象としたテストも可能です。
+- 今回はシステムテストCommon Testについてかんがえる。システムテストとは結合テスト、Webテストのことを指す。Common Testではリモートノードを対象にした分散テスト、EUnitを取り込んだテスト、各プロトコル（SSH `ct_ssh`、Telnet `ct_telnet`、SNMP `ct_telnet`、FTP `ct_ftp`）を対象としたテストも可能。
 
 ## Common Testの特徴
 **構成**
