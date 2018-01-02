@@ -114,6 +114,7 @@ cover-image:
                     - SPOFがある場合
                     - ネットワーク分断時データ変更不可でも問題ない場合
                 - 採用ケース
+                    - Mnesia
                     - Apache HBase
 
 **Erlangが提供する道具**
