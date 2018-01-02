@@ -85,4 +85,4 @@ cover-image:
 
 -
 
-以上 :construction_worker: :droplet:
+以上 :construction_worker::droplet:
