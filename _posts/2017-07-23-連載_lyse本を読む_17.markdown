@@ -10,7 +10,7 @@ cover-image:
 # PROBLEM
 - Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
 - Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
-- 巷でいわれているSLA 99.999999% などの実際がどうなのか腹落ちしてない
+- 巷でいわれているSLA 99.9999999% などの実際がどうなのか腹落ちしてない
 
 -
 
@@ -82,4 +82,4 @@ cover-image:
 
 -
 
-以上 :construction_worker:
+以上 :construction_worker::droplet:
