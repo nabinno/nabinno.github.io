@@ -104,8 +104,8 @@ main() ->
 
 %% 注釈をつけないとdialyzerは下記のように判定する
 % -spec convert(list() | tuple()) -> list() | tuple().
-- spec convert(tuple()) -> list();
-              (list()) -> tuple().
+-spec convert(tuple()) -> list();
+             (list()) -> tuple().
 main() ->
     [_, _] = convert({a, b}),
     {_, _} = convert([a, b]),
