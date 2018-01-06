@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Rails2Phoenix UmbrellaプロジェクトでHerokuにデプロイする"
+title: "連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする"
 category: F
 tags: phoenix-framework, elixir
 cover: false
