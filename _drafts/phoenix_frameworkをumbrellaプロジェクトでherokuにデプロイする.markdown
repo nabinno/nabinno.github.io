@@ -15,15 +15,18 @@ cover-image:
 -
 
 # SOLUTION
-というわけで、LYSE本の連載がおわったので本腰をいれてPhoenix実装にとりかかる。いきなりKubernetesにとりかかろうとおもったが、Kubernetesをつかったローカル開発は技術スタックにばらつきがあるチーム開発以外メリットをかんじない上、まだPaaS/IaaS利用が過渡期なため、見送ることにした。Herokuでできるところまでやって問題があれば次のフェーズとして考えたい。
+というわけで、LYSE本の連載がおわったのでRailsからPhoenixに移行する連載「Rails2Phoenix」をはじめる。
 
-- 方針
+- 下記方針
     - `phoenix/base` ブランチをベースに
     - 気軽に参照できるようにRails関連ファイルは可能な限り残しておく
     - Phoenixへの移行が終わるまではPhoenixではDBマイグレーションをしない
+    - Kubernetesについては、まだPaaS環境が過渡期なため見送ることに
 
-## ながれ
-Railsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロイする流れは基本的に[ドキュメント](https://hexdocs.pm/phoenix/heroku.html)通り。
+今回はRailsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロイする流れをとりあげる。
+
+## Herokuへのデプロイのながれ
+基本的に[ドキュメント](https://hexdocs.pm/phoenix/heroku.html)通り。
 
 ### Phoenixアプリケーションを作成
 まず、こんな感じでPhoenixの骨組みをつくる。Phoenix関連のファイル `apps/`, `deps/`, `config/config.exs`, `mix.exs`, `mix.lock` が追加される。
@@ -32,20 +35,28 @@ Railsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロ�
 > mix new . --umbrella
 > cd ./apps
 > mix phx.new phoenix_app
-> cd -
+> cd ./phoenix_app
 ```
 
 つぎに、既存のRailsでつくられたスキーマをPhoenixに移植。[Ripperをつかうとはかどる](http://developersnote.jp/elixir/share-db-between-rails-and-phoenix.html)。手動でスキーマをつくりたい場合は、CLI `mix phx.gen.schema --no-migration Blog.Post blog_posts title:string` で作成する。
 ```sh
-> bin/rails convert_rails_schema_for_phoenix
+> rails db:schema:convert_to_phoenix
 ```
 
 試しに既存DBへこんな感じで接続してみる。
 ```config
 # rails_project/apps/phoenix_app/config/dev.exs
-...
+config :phoenix_app, PhoenixApp.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("POSTGRES_USERNAME"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  database: System.get_env("POSTGRES_DATABASE"),
+  hostname: System.get_env("POSTGRES_HOSTNAME"),
+  pool_size: 10,
+  ssl: true
 ```
 ```sh
+> (cd ./assets && npm install)
 > mix deps.get
 > mix phx.server
 ```
