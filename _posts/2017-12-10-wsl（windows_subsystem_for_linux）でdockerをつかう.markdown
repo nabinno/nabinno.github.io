@@ -179,6 +179,6 @@ $ ln -s /home/foo/tmp/app-test-1/front/node_modules /C/Dev/app-test-1/front/node
 
 -
 
-以上 :construction_worker::santa:
+以上 :santa:
 
 -
