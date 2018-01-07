@@ -38,4 +38,4 @@ cover-image:
 
 -
 
-以上 :construction_worker:
+以上
