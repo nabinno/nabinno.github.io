@@ -218,4 +218,4 @@ BashOnWindowsで無茶をやる。少し落ち着く。
 
 -
 
-以上:construction_worker:
+以上
