@@ -2,16 +2,15 @@
 layout: post
 title: "連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする"
 category: F
-tags: phoenix-framework, elixir
+tags: phoenix-framework, elixir, ruby-on-rails, ruby, wercker, heroku
 cover: false
 cover-image:
 ---
 
 # PROBLEM
 - サービスについて
-    - 拡張にともない
-        - 技術スタックがふえるのを抑えたい
-        - スケーラビリティのためのコストを抑えたい
+    - 拡張にともない技術スタックがふえるのを抑えたい
+    - スケーラビリティのためのコストを抑えたい
     - パフォーマンスをあげたい
 
 -
@@ -20,12 +19,14 @@ cover-image:
 というわけで、現在つかっているRailsをPhoenixに変更することにした。
 
 - 方針
-    - PaaSはいままでとおなじHeroku
-    - 既存Railsから徐々にPhoenixに移行できるようにおなじレポジトリ・DBをつかう
-        - ブランチ戦略は `phoenix/base` をベースに
-        - 気軽に参照できるようにRails関連ファイルは可能な限り残しておく
-        - RailsからPhoenixへの移行が完了するまではPhoenixではDBマイグレーションをしない
-    - Phoenixは今後の拡張性を考えてUmbrellaプロジェクトで
+    - Railsから徐々にPhoenixに移行できるように
+      - いままでとおなじPaaS（Heroku）
+      - いままでとおなじレポジトリ
+          - ブランチ戦略は `phoenix/base` をベースに
+          - 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく
+      - いままでとおなじDB
+          - 移行完了までDBマイグレーションをしない
+    - Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで
 
 今回はRailsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロイする流れをとりあげる。
 
@@ -208,74 +209,32 @@ config :phoenix_app, PhoenixApp.Repo,
 ```
 
 ## デプロイのパイプラインを追加
-さて、既存のCI（Wercker）も更新。今回はPhoenix関連ブランチが更新された場合にのみ、関連パイプラインを走らせるように下記のように変更した。特定ブランチをHerokuにデプロイするためのコマンド `git push -f "git@heroku.com:${HEROKU_PHOENIX_APP_NAME}.git"  ${BRANCH_NAME}:master` がポイント。
+さて、既存のCI（Wercker）も更新。今回はPhoenix関連ブランチが更新された場合にのみ、関連パイプラインを走らせるように下記のように変更した。
 
 **BEFORE**
 - build (all branch)
     - deploy.prod (master branch)
 
 **AFTER**
-- build (branches excluding phoenix/* branch)
-    - deploy.prod (master)
+- build (all branch)
+    - deploy.prod (master branch)
     - deploy.phoenix.prod (phoenix/base branch)
 
 ```yaml
 # wercker.yml
 deploy-phoenix-prod-heroku:
   steps:
-    - script:
-        name: Init netrc
-        code: |
-          {
-            echo "machine api.heroku.com"
-            echo "  login ${HEROKU_KEY}"
-            echo "  password ${HEROKU_USER}"
-          } >> "$HOME/.netrc"
-          chmod 0600 "$netrc";
     - add-ssh-key:
         host: github.com
         keyname: GITHUB
     - add-to-known_hosts:
         hostname: github.com
         fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
-    - script:
-        name: Init git
-        code: |
-          git config --global user.name "${HEROKU_USER}"
-          git config --global user.email "${HEROKU_USER}"
-          git checkout phoenix/base
-    - script:
-        name: Init gitssh
-        code: |
-          gitssh_path="$(mktemp)";
-          ssh_key_path="$(mktemp -d)/id_rsa";
-          echo "ssh -e none -i \"$ssh_key_path\" \$"" > "$gitssh_path";
-          chmod 0700 "$gitssh_path";
-          export GIT_SSH="$gitssh_path";"
-    - script:
-        name: Remove unrequired files
-        code: |
-          rm -fr \
-            Gemfile \
-            Gemfile.lock
-            Guardfile \
-            Rakefile \
-            app \
-            config.ru \
-            db \
-            lib \
-            log \
-            package.json \
-            public \
-            spec \
-            tmp \
-            vendor \
-    - script:
-        name: Deploy phoenix/base to heroku
-        code: |
-          git add .
-          git commit -m 'Deploy phoenix/base to heroku.'
-          git push -f "git@heroku.com:${HEROKU_APP_NAME}.git" phoenix/base:master
+    - heroku-deploy:
+        key: $HEROKU_KEY
+        user: $HEROKU_USER
+        app-name: $HEROKU_APP_NAME
+        install-toolbelt: true
   after-steps:
     - wantedly/pretty-slack-notify:
         webhook_url: ${SLACK_WEBHOOK_URL}
@@ -327,15 +286,14 @@ heroku config:set DATABASE_URL=foo
 heroku config:set DATABASE_POOL_SIZE=bar
 ```
 
-シークレットキー。
+クレデンシャル関連。
 ```sh
-> heroku config:set SECRET_KEY_BASE=$(mix phoenix.gen.secret)
+> heroku config:set HEROKU_API_KEY=$(heroku auth:token)
+> heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)
 ```
 
--
-
 # WRAPUP
-
+びっくりするほど簡単。
 
 -
 
