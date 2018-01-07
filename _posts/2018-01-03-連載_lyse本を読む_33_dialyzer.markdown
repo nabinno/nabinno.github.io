@@ -119,7 +119,6 @@ convert(L=[_|_]) ->
     list_to_tuple(L).
 ```
 
-
 -
 
-以上 :construction_worker::droplet:
+以上 :droplet:
