@@ -295,9 +295,4 @@ heroku config:set DATABASE_POOL_SIZE=bar
 
 -
 
-# WRAPUP
-びっくりするほど簡単。
-
--
-
 以上 :droplet:
