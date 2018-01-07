@@ -110,4 +110,4 @@ Jekyllのルートにおく`.hyde.el`の中身はこんな感じ。JekyllはWebr
 
 -
 
-以上:construction_worker:
+以上
