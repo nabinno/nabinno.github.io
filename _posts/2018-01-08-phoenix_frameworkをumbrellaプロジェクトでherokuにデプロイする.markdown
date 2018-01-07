@@ -298,4 +298,4 @@ heroku config:set DATABASE_POOL_SIZE=bar
 
 -
 
-以上
+以上 :droplet:
