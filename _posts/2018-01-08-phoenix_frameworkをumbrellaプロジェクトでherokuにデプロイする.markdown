@@ -272,6 +272,7 @@ web: MIX_ENV=prod mix phx.server
 ```
 
 **3. 環境変数を適用**
+
 データベース関連。
 ```config
 # rails_project/apps/phoenix_app/config/prod.exs
@@ -297,4 +298,4 @@ heroku config:set DATABASE_POOL_SIZE=bar
 
 -
 
-以上 :construction_worker::droplet:
+以上
