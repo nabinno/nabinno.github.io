@@ -91,4 +91,4 @@ run_eunit(_Config) ->
 
 -
 
-以上 :construction_worker: :droplet:
+以上 :droplet:
