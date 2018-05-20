@@ -47,12 +47,14 @@ cover-image:
 
 コントローラ
 - MyAppWeb.RegistrationController
-- MyAppWeb.AuthController
+- MyAppWeb.SessionController
 
 ### シリアライザとエラーハンドラの設定
 Guardian1.0から直接ではなくモジュールを介して参照するようになった。下記のように各モジュールを用意してコンフィグに割り当てる。
 
-```ex:apps/my_app/lib/my_app/auth/guardian.ex
+```elixir
+# apps/my_app/lib/my_app/auth/guardian.ex
+
 defmodule MyApp.Auth.Guardian do
   use Guardian, otp_app: :my_app
   alias MyApp.Account
@@ -65,7 +67,9 @@ defmodule MyApp.Auth.Guardian do
 end
 ```
 
-```ex:apps/my_app/lib/my_app/auth/error_handler.ex
+```elixir
+# apps/my_app/lib/my_app/auth/error_handler.ex
+
 defmodule MyApp.Auth.ErrorHandler do
   import Plug.Conn
 
@@ -76,7 +80,9 @@ defmodule MyApp.Auth.ErrorHandler do
 end
 ```
 
-```ex:apps/my_app/config/config.exs
+```elixir
+# apps/my_app/config/config.exs
+
 config :my_app, MyApp.Auth.Guardian,
   issuer: "MyApp",
   ttl: {30, :days},
@@ -95,7 +101,9 @@ config :my_app, MyApp.Auth.Guardian,
 
 ルータースコープ内のパイプラインくみあわせについて、ここでは未ログインスコープには認証前・認証中パイプライン、ログイン済スコープには認証前・認証中・認証後パイプラインを適用している。こうすることでどのスコープにも認証リソースをロードすることができ、かつ、認証も担保することができるようになる。具体的にいうと、ルート `/` などの同一URLで未ログインスコープとログイン済スコープの切り替えができるようになる。
 
-```ex:apps/my_app/lib/my_app/auth/pipeline.ex
+```elixir
+# apps/my_app/lib/my_app/auth/pipeline.ex
+
 defmodule MyApp.Auth.Pipeline do
   use Guardian.Plug.Pipeline, otp_app: :my_app
 
@@ -105,7 +113,9 @@ defmodule MyApp.Auth.Pipeline do
 end
 ```
 
-```ex:apps/my_app/lib/my_app/auth/after_pipeline.ex
+```elixir
+# apps/my_app/lib/my_app/auth/after_pipeline.ex
+
 defmodule MyApp.Auth.AfterPipeline do
   use Guardian.Plug.Pipeline, otp_app: :my_app
 
@@ -113,7 +123,9 @@ defmodule MyApp.Auth.AfterPipeline do
 end
 ```
 
-```ex:apps/my_app/lib/my_app_web/router.ex
+```elixir
+# apps/my_app/lib/my_app_web/router.ex
+
 defmodule MyAppWeb.Router do
   use MyAppWeb, :router
 
@@ -151,7 +163,9 @@ defmodule MyAppWeb.Router do
 end
 ```
 
-```ex:apps/my_app/config/config.exs
+```elixir
+# apps/my_app/config/config.exs
+
 config :MyApp, MyApp.Auth.Pipeline,
   module: MyApp.Auth.Guardian,
   error_handler: MyApp.Auth.ErrorHandler
@@ -166,7 +180,9 @@ config :MyApp, MyApp.Auth.AferPipeline,
 
 このあたりはDevise/Railsとあまり変わらない。ほかのアクション「新規パスワード発行」「メールアドレス確認」なども同様の構成をとろうと思っている。
 
-```ex:apps/my_app/lib/my_app_web/controller/registration_controller.ex
+```elixir
+# apps/my_app/lib/my_app_web/controller/registration_controller.ex
+
 def create(conn, user_params) do
   changeset = User.registration_changeset(%User{}, user_params)
 
@@ -185,7 +201,9 @@ def create(conn, user_params) do
 end
 ```
 
-```ex:apps/my_app/lib/my_app/auth/auth.ex
+```elixir
+# apps/my_app/lib/my_app/auth/auth.ex
+
 def login(conn, %User{} = user) do
   conn
   |> Guardian.Plug.sign_in(user)
@@ -193,7 +211,9 @@ def login(conn, %User{} = user) do
 end
 ```
 
-```ex:apps/my_app/lib/my_app/account/registration.ex
+```elixir
+# apps/my_app/lib/my_app/account/registration.ex
+
 def create(changeset, repo) do
   changeset
   |> repo.insert()
@@ -203,7 +223,9 @@ end
 ### ログイン・ログアウト
 ログイン・ログアウトはセッション用のサービスとコントローラで実装する。
 
-```ex:apps/my_app/lib/my_app_web/controller/session_controller.ex
+```elixir
+# apps/my_app/lib/my_app_web/controller/session_controller.ex
+
 @doc "Logged in [POST /login]"
 def create(conn, %{"email" => email, "password" => password}) do
   case Session.authenticate_user(email, password) do
@@ -229,7 +251,9 @@ def delete(conn, _params) do
 end
 ```
 
-```ex:apps/my_app/lib/my_app/auth/session.ex
+```elixir
+# apps/my_app/lib/my_app/auth/session.ex
+
 defmodule MyApp.Auth.Session do
   import Ecto.Query
   import Plug.Conn
@@ -270,7 +294,9 @@ end
 
 Devise/Railsのビューヘルパーはビューマクロで適用する。
 
-```ex:apps/my_app/lib/my_app_web.ex
+```elixir
+# apps/my_app/lib/my_app_web.ex
+
 def view do
   quote do
     # ..
@@ -283,16 +309,27 @@ end
 ## その他
 RailsのビューをPhoenixのテンプレートに移植するには下記の変換を地道におこなっていく。
 
-| rails                                                                                      | phoenix                                                             |
-|--------------------------------------------------------------------------------------------+---------------------------------------------------------------------|
-| `ActionView::Helpers::FormHelper#form_for(record, options={}, &block)`                     | `Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun)` |
-| `ActionView::Helpers::FormHelper#text_field(object_name, method, options={})`              | `Phoenix.HTML.Form.text_input(form, field, opts \\ [])`             |
-| `ActionView::Helpers::FormHelper#file_field(object_name, method, options={})`              | `Phoenix.HTML.Form.file_input(form, field, opts \\ [])`             |
-| `ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={})`            | `Phoenix.HTML.Form.hidden_input(form, field, opts \\ [])`           |
-| `ActionView::Helpers::FormHelper#password_field(object_name, method, options={})`          | `Phoenix.HTML.Form.password_input(form, field, opts \\ [])`         |
-| `ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={})` | `Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])`    |
-| `ActionView::Helpers::FormBuilder#submit(value=nil, options={})`                           | `Phoenix.HTML.Form.submit(opts, opts \\ [])`                        |
-| `ActionView::Helpers::TranslationHelper#t`                                                 | `Gettext.dgettext(backend, domain, msgid, bindings \\ %{})`         |
+| rails                                                                                      |
+|--------------------------------------------------------------------------------------------|
+| `ActionView::Helpers::FormHelper#form_for(record, options={}, &block)`                     |
+| `ActionView::Helpers::FormHelper#text_field(object_name, method, options={})`              |
+| `ActionView::Helpers::FormHelper#file_field(object_name, method, options={})`              |
+| `ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={})`            |
+| `ActionView::Helpers::FormHelper#password_field(object_name, method, options={})`          |
+| `ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={})` |
+| `ActionView::Helpers::FormBuilder#submit(value=nil, options={})`                           |
+| `ActionView::Helpers::TranslationHelper#t`                                                 |
+
+| phoenix                                                             |
+|---------------------------------------------------------------------|
+| `Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun)` |
+| `Phoenix.HTML.Form.text_input(form, field, opts \\ [])`             |
+| `Phoenix.HTML.Form.file_input(form, field, opts \\ [])`             |
+| `Phoenix.HTML.Form.hidden_input(form, field, opts \\ [])`           |
+| `Phoenix.HTML.Form.password_input(form, field, opts \\ [])`         |
+| `Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])`    |
+| `Phoenix.HTML.Form.submit(opts, opts \\ [])`                        |
+| `Gettext.dgettext(backend, domain, msgid, bindings \\ %{})`         |
 
 -
 
