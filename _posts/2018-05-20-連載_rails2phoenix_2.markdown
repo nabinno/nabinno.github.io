@@ -157,8 +157,10 @@ defmodule MyAppWeb.Router do
   scope "/", MyAppWeb do
     pipe_through([:browser, :browser_auth, :browser_auth_after])
 
+    get("/edit", RegistrationController, :edit)
+    put("/edit", RegistrationController, :update)
     get("/users", UserController, :index)
-    resources "/", UserController, only: [:show, :edit, :update, :delete], param: "username"
+    resources "/", UserController, only: [:show, :delete], param: "username"
   end
 end
 ```
@@ -186,7 +188,7 @@ config :MyApp, MyApp.Auth.AferPipeline,
 def create(conn, user_params) do
   changeset = User.registration_changeset(%User{}, user_params)
 
-  case MyApp.Auth.Registration.create(changeset, Repo) do
+  case Registration.create(changeset, Repo) do
     {:ok, user} ->
       conn
       |> MyApp.Auth.login(user)
