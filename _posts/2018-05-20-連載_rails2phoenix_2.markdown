@@ -303,35 +303,84 @@ def view do
   quote do
     # ..
     import Okuribi.Auth.Session, only: [current_user: 1, logged_in?: 1]
-    # ..
   end
 end
+```
+
+あるいは、`put_assigns`関数をはやしてコントローラマクロに適用する。
+
+```elixir
+# apps/my_app/lib/my_app/auth/session.ex
+
+def put_assigns(%{private: %{phoenix_action: action}} = conn, settings) do
+  current_resource = Guardian.Plug.current_resource(conn)
+
+  settings =
+    if current_resource,
+      do: settings[:sign_in][action] || [],
+      else: settings[:sign_out][action] || []
+
+  conn
+  |> assign(:current_user, current_resource)
+  |> assign(:page_title, settings[:page_title])
+  |> assign(:page_description, settings[:page_description])
+end
+```
+
+```elixir
+# apps/my_app/lib/my_app_web.ex
+
+def controller do
+  quote do
+    # ..
+    import Okuribi.Auth, only: [put_assigns: 2]
+  end
+end
+```
+
+`assigns`ひとつでアクセスできるので、下記のようにコントローラでまとめて指定することでRailsの`ActionView::Helpers::CaptureHelper#provide`の代わりに使える。
+
+```elixir
+# apps/my_app/lib/my_app_web/controller/*_controller.ex
+
+@page %{
+  sign_in: %{
+    new: %{
+      page_title: dgettext("views", "pages.home.signed_in.page_title"),
+      page_description: ""
+    }
+  },
+  sign_out: %{
+    new: %{
+      page_title: dgettext("views", "pages.home.signed_out.page_title"),
+      page_description: ""
+    }
+  }
+}
+plug(:put_assigns, @page when action in [:home])
 ```
 
 ## その他
 RailsのビューをPhoenixのテンプレートに移植するには下記の変換を地道におこなっていく。
 
-| rails                                                                                      |
-|--------------------------------------------------------------------------------------------|
-| `ActionView::Helpers::FormHelper#form_for(record, options={}, &block)`                     |
-| `ActionView::Helpers::FormHelper#text_field(object_name, method, options={})`              |
-| `ActionView::Helpers::FormHelper#file_field(object_name, method, options={})`              |
-| `ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={})`            |
-| `ActionView::Helpers::FormHelper#password_field(object_name, method, options={})`          |
-| `ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={})` |
-| `ActionView::Helpers::FormBuilder#submit(value=nil, options={})`                           |
-| `ActionView::Helpers::TranslationHelper#t`                                                 |
-
-| phoenix                                                             |
-|---------------------------------------------------------------------|
-| `Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun)` |
-| `Phoenix.HTML.Form.text_input(form, field, opts \\ [])`             |
-| `Phoenix.HTML.Form.file_input(form, field, opts \\ [])`             |
-| `Phoenix.HTML.Form.hidden_input(form, field, opts \\ [])`           |
-| `Phoenix.HTML.Form.password_input(form, field, opts \\ [])`         |
-| `Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])`    |
-| `Phoenix.HTML.Form.submit(opts, opts \\ [])`                        |
-| `Gettext.dgettext(backend, domain, msgid, bindings \\ %{})`         |
+- Rails
+    - `ActionView::Helpers::FormHelper#form_for(record, options={}, &block)`
+    - `ActionView::Helpers::FormHelper#text_field(object_name, method, options={})`
+    - `ActionView::Helpers::FormHelper#file_field(object_name, method, options={})`
+    - `ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={})`
+    - `ActionView::Helpers::FormHelper#password_field(object_name, method, options={})`
+    - `ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={})`
+    - `ActionView::Helpers::FormBuilder#submit(value=nil, options={})`
+    - `ActionView::Helpers::TranslationHelper#t`
+- Phoenix
+    - `Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun)`
+    - `Phoenix.HTML.Form.text_input(form, field, opts \\ [])`
+    - `Phoenix.HTML.Form.file_input(form, field, opts \\ [])`
+    - `Phoenix.HTML.Form.hidden_input(form, field, opts \\ [])`
+    - `Phoenix.HTML.Form.password_input(form, field, opts \\ [])`
+    - `Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])`
+    - `Phoenix.HTML.Form.submit(opts, opts \\ [])`
+    - `Gettext.dgettext(backend, domain, msgid, bindings \\ %{})`
 
 -
 
