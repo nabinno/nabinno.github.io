@@ -17,18 +17,20 @@ cover-image:
 というわけで、DM106AのセンサーデータをRaspberry Piで定期取得することにした。設置方法の詳細は[GitHubレポジトリ](https://github.com/nabinno/air_elixir)を参照。下記は実装概要。
 
 ## 電子部品の構成
-| item              | description               |
-|-------------------+---------------------------|
-| Raspberry Pi 3 B+ |                           |
-| Aosong DHT011     | 気温・湿度センサー、GPIO  |
-| Nova SDS021       | PM2.5・PM10センサー、UART |
-| ams CCS811        | TVOC・CO2eセンサー、I2C   |
+
+| item                    | description               |
+|-------------------------|---------------------------|
+| Raspberry Pi 3 Model B+ |                           |
+| Aosong DHT011           | 気温・湿度センサー、GPIO  |
+| Nova SDS021             | PM2.5・PM10センサー、UART |
+| ams CCS811              | TVOC・CO2eセンサー、I2C   |
 
 電子工作は素人ゆえどのセンサーを買えばいいかわからなかったのでDM106Aを分解して各センサーの型番をしらべた。DHT011、SDS021はDM106Aとおなじセンサー、HCHOセンサーは信頼性があり手ごろなのがうまく見つけられなかった。TVOCセンサーはAdafruitが推しているCCS811を採用した。
 
 ## コードの構成
+
 | item                         | description              |
-|------------------------------+--------------------------|
+|------------------------------|--------------------------|
 | AirElixir.Application        | アプリケーション管理     |
 | AirElixir.GoogleSpreadsheets | センサーデータ記録       |
 | AirElixirSensor.Publisher    | センサーデータ発行・送信 |
@@ -51,16 +53,18 @@ cover-image:
 - TVOCのスパイクを抑えたい
     - **TODO:** [ファイトレメディエーション](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%88%E3%83%AC%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A8%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3)による効果を見ていきたいところ
 
+-
+
 # WRAPUP
-Elixirは健康管理に向いている
+Elixirは健康管理に向いている。
 
 ```txt
 「なんか体調がすぐれないなあ...」
 「Elixirちょうだい!」
 ```
 
+という感じ。
+
 -
 
 以上 :mask:
-
--
