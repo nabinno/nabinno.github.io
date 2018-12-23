@@ -21,7 +21,7 @@ cover-image:
 | item                    | description               |
 |-------------------------|---------------------------|
 | Raspberry Pi 3 Model B+ |                           |
-| Aosong DHT011           | 気温・湿度センサー、GPIO  |
+| Aosong DHT11            | 気温・湿度センサー、GPIO  |
 | Nova SDS021             | PM2.5・PM10センサー、UART |
 | ams CCS811              | TVOC・CO2eセンサー、I2C   |
 
