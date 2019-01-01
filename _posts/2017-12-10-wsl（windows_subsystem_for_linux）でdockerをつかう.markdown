@@ -4,7 +4,7 @@ title: "WSL（Windows Subsystem for Linux）でDockerをつかったWebアプリ
 category: F
 tags: wsl, docker, ubuntu
 cover: false
-cover-image:
+cover-image: /images/171119_christmas-meiji-ya.jpg
 ---
 
 ![](https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_christmas-meiji-ya.jpg)

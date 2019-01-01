@@ -4,7 +4,7 @@ title: "Elixirではてなブックマーク"
 category: B
 tags: elixir,hatena-bookmark
 cover: false
-cover-image:
+cover-image: /images/190101_diagram.png
 ---
 
 ![diagram](https://raw.githubusercontent.com/nabinno/keshikimi2/master/priv/img/diagram.png)

@@ -4,7 +4,7 @@ title: "ElixirとRaspberry PiでPM2.5などの環境データを定点観察し�
 category: H
 tags: elixir,raspberry-pi,particulates,physiology
 cover: false
-cover-image:
+cover-image: /images/181222_air.png
 ---
 
 # PROBLEM
