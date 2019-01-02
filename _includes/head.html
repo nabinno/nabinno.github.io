@@ -10,8 +10,10 @@
   <meta name="twitter:site" content="@{{ site.twitter_username }}">
   <meta name="twitter:creator" content="@{{ site.twitter_username }}">
   <meta name="twitter:title" content="{{ page.title }}">
-  {% if page.title %}
-  <meta name="twitter:description" content="{{ page.title }}">
+  {% if page.tags %}
+  <meta name="twitter:description" content="{{ page.tags }}">
+  {% elsif page.description %}
+  <meta name="twitter:description" content="{{ page.description }}">
   {% else %}
   <meta name="twitter:description" content="{{ site.description }}">
   {% endif %}

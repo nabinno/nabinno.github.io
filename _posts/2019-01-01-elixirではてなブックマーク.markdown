@@ -2,7 +2,7 @@
 layout: post
 title: "Elixirではてなブックマーク"
 category: B
-tags: elixir,hatena-bookmark
+tags: elixir, hatena-bookmark
 cover: false
 cover-image: /images/190101_diagram.png
 ---
