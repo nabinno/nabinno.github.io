@@ -17,7 +17,7 @@ cover-image: https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.pn
 # SOLUTION
 というわけで、年明け見つけたRedがシンプルだったのでつかってみた。題材は以前つくったEmacsライブラリ「[esa.el](https://github.com/nabinno/esa.el)」の移植だ。
 
-https://github.com/nabinno/esa.red
+[https://github.com/nabinno/esa.red](https://github.com/nabinno/esa.red)
 
 ## やったこと
 ### エディター
