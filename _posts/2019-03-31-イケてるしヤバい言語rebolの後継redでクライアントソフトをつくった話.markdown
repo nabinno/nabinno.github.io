@@ -56,8 +56,7 @@ data .[Series/map 'd [rejoin [d "  "]] |> rejoin]
 ```
 
 ### タスクランナーの用意
-今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリをつかっている。
-ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意した（[nabinno/hot](https://github.com/nabinno/hot)、[nabinno/mods](https://github.com/nabinno/mods)）。
+今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリをつかっている。ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意した（[nabinno/hot](https://github.com/nabinno/hot)、[nabinno/mods](https://github.com/nabinno/mods)）。
 
 RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了する。
 
