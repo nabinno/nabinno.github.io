@@ -7,7 +7,7 @@ cover: false
 cover-image: https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.png
 ---
 
-![](https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.png | width=400)
+![](https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.png)
 
 -
 
