@@ -24,8 +24,7 @@ cover-image: https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.pn
 構文がすなおなので特にエディタは関係なさそうだったけど、慣れ親しんでるEmacsに「[Skrylar/red.el](https://github.com/Skrylar/red.el)」を適用した。その際、 `red-font-lock-keywords` と `red-indent-line` に足りない箇所があったので[オーバーライドした](https://github.com/nabinno/dotfiles/blob/master/.emacs.d/lisp/init-red.el)。
 
 ### 糖衣構文の適用
-RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認した。
-その中でどうしても慣れない表現が2つあったので糖衣構文を実装（[nabinno/red-elixir](https://github.com/nabinno/red-elixir)）。
+RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認した。その中でどうしても慣れない表現が2つあったので糖衣構文を実装（[nabinno/red-elixir](https://github.com/nabinno/red-elixir)）。
 
 **1. compose**
 
@@ -41,18 +40,27 @@ compose [foo (bar)]
 
 **2. 関数の入れ子**
 
-素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよくつかう。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入した。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはあまりなかった。あってもこのくらい。
+素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよくつかう。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入した。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼなかった。あってもこのくらい。
 
 ```red
 ;-- before
-rejoin collect [foreach d data [keep rejoin [d "  "]]]
+rejoin collect [
+    foreach d data [
+        keep rejoin [d "  "]
+    ]
+]
 
 ;-- after
-data .[Series/map 'd [rejoin [d "  "]] |> rejoin]
+data .[
+    |> Series/map 'd [rejoin [d "  "]]
+    |> rejoin
+]
 ```
 
 ### タスクランナーの用意
 今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリをつかっている。ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意した（[nabinno/hot](https://github.com/nabinno/hot)、[nabinno/mods](https://github.com/nabinno/mods)）。
+
+**タスクランナーインストール後、パッケージのインストールから呼び出しまでの流れ**
 
 RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了する。
 
@@ -94,7 +102,7 @@ hots: context [
 -
 
 # WRAPUP
-Redは既存のフレームワークと比べるとまだまだライブラリ不足感がぬぐえないが、それを補えるだけの表現力をもっていた。
+Redは既存のフレームワークと比べるとまだまだ機能不足感がぬぐえないが、それを補えるだけの表現力をもっていた。
 
 -
 
