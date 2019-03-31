@@ -7,10 +7,6 @@ cover: false
 cover-image: https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.png
 ---
 
-![](https://raw.githubusercontent.com/nabinno/esa.red/master/esa.red.png)
-
--
-
 # PROBLEM
 - クロスプラットフォーム用のクライアントソフトをつくるにあたり
     - 重たいフレームワークが多い
