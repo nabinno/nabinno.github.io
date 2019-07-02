@@ -37,57 +37,16 @@ cover-image:
 ### WSLのインストール
 - [WSL2を使ってみる (InsiderPreview)](https://qiita.com/namoshika/items/53a9ac2df7eace656870)
 
-WSLのパッケージ管理は下記3つを押さえておけば問題ないでしょう。
-1. [anyenv](https://github.com/riywo/anyenv), [asdf](https://github.com/asdf-vm/asdf)
+WSLのパッケージ管理は下記2つを押さえておけば問題ないでしょう。
+1. [asdf](https://github.com/asdf-vm/asdf)/[anyenv](https://github.com/riywo/anyenv)
     - プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう
-    - exenvがビルドで失敗するためElixirインストールできないほかは、各言語問題なくビルドできます
+    - 関数言語界隈ではasdfが主流になってきてるようです。
 2. [nix](https://nixos.org/nix/)
-    - ElixirやHaskellのようにanyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
+    - Haskellのようにasdf/anyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
     - また、aptのバージョンが古すぎるパッケージもnixが最適です
 
 ### ターミナルのインストール
-WSLttyかConEmuをおすすめします。各々の特徴は下記のとおりですが、通常のWebアプリケーション開発であればWSLttyがいいでしょう。
-
-- WSLtty
-    - Pros
-        - ConEmuとくらべてファイルの読込速度が速い (VMよりは遅い)
-        - EmacsでCtrl-SPC `set-mark` が機能する
-        - 画面サイズの変更が柔軟
-    - Cons
-        - PowerShellなどほかのコンソールの呼び出しが面倒
-- ConEmu
-    - Pros
-        - PowerShellなどほかのコンソールの呼び出しが楽
-    - Cons
-        - ファイルの読込速度がおそい
-        - EmacsでCtrl-SPC `set-mark` が機能しない
-        - 画面サイズの変更に制限がある
-
-### WSLtty
-- [mintty/wsltty](https://github.com/mintty/wsltty)
-
-WSL用ターミナルとしてのMinttyです。操作はMinttyとかわらず、元Cygwinづかいにはうれしい操作感です。というわけで、いつものごとく起動用ショートカットのターゲットを準備します。WSLは `chsh` がつかえないのでログイン時につかいたいシェルを指定します。もし、 `screen` をつかいたい場合は `/run/screen` ディレクトリを作成してからコマンド指定します。
-
-```bat
-%LOCALAPPDATA%\wsltty\bin\mintty.exe --wsl -o Locale=C -o Charset=UTF-8 /bin/wslbridge -t /bin/bash -c 'sudo mkdir /run/screen && sudo chmod 775 $_ && sudo chown root:utmp $_ && SHELL=/usr/bin/zsh screen'
-```
-
-#### ConEmu
-- [ConEmu - Handy Windows Terminal](https://conemu.github.io/)
-
-WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるい[^1]のでおすすめしません。
-
-[^1]: [https://github.com/cmderdev/cmder/issues/901](https://github.com/cmderdev/cmder/issues/901)
-
-ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。
-
-```bash
-# task parameters
-/icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1604.2017.922.0_x64__79rhkp1fndgsc\images\icon.ico"
-
-# task command
-bash -c 'sudo mkdir /run/screen && sudo chmod 775 $_ && sudo chown root:utmp $_ && SHELL=/usr/bin/zsh screen' -new_console:d:%USERPROFILE%
-```
+ConEmuやWSLttyがWSL2に対応してないため、デフォルトのターミナルか、Windows Terminal一択です。
 
 ### Docker for Windowsのインストール
 - [Docker For Windows](https://www.docker.com/docker-windows)
