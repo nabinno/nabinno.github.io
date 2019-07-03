@@ -8,8 +8,8 @@ cover-image:
 ---
 
 # PROBLEM
-- あたらしくでたWSL2によって[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
-    - 変わったこと
+- あたらしくでたWSL2が[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
+    - 主な変更点
 	    - WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった
             - WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss)
             - WSL2 軽量Hyper-V上のLinux (Linux Kernel)
@@ -46,30 +46,28 @@ WSLのパッケージ管理は下記2つを押さえておけば問題ないで�
     - また、aptのバージョンが古すぎるパッケージもnixが最適です
 
 ### ターミナルのインストール
-ConEmuやWSLttyがWSL2に対応してないため、デフォルトのターミナルか、Windows Terminal一択です。
+WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため、デフォルトのターミナルか、[Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701?WT.mc_id=-blog-scottha&wa=wsignin1.0&activetab=pivot:overviewtab)が選択肢となります。
 
-### Docker for Windowsのインストール
-- [Docker For Windows](https://www.docker.com/docker-windows)
+**Windows TerminalとConEmuとの比較**
 
-WSLではDockerデーモンがつかえないのでNTFS (WSLからみるとdrvfs) 側で用意します。インストールはDockerのダウンロードページから手順通りおこないます。
+| -                | Windows Terminal    | ConEmu         |
+| ---              | ---                 | ---            |
+| 透過対象         | backgroundImage     | ConEmu自体     |
+| キーバインド制約 | Alt+Shiftが効かない | 特になし       |
+| WSL2の描画       | 特になし            | くずれる       |
+| 管理者権限で実行 | 初回のみ            | タスク実行ごと |
 
-構成は下記のようになります。
 
-![](https://github.com/nabinno/nabinno.github.io/raw/master/_posts/images/171119_wsl-docker.png)
+### Dockerのインストール
+WSL1ではDockerデーモンがつかえないのでWSL2でつかうようにしましょう。
 
-DockerクライアントからDockerデーモンにつなぐには、セキュリティリスクはありますが、 `DOCKER_HOST` をつかうのが簡易的です。Docker for WindowsとDockerクライアント、各々設定します。
-1. Docker for WindowsよりDockerデーモンを「Expose daemon on tcp://localhost:2375 without TLS」として設定
-2. WSL上のDockerクライアントに `DOCKER_HOST=tcp://0.0.0.0:2375` を設定
+// TODO
 
-WSLには下記のようなaliasを用意しておくといいでしょう。
+どうしてもWSL1でということであれば、Win32 (WSL1からみるとdrvfs) 側で[Docker For Windows](https://www.docker.com/docker-windows)を用意します。インストールはDockerのダウンロードページから手順通りおこないます。
+構成等は[前回の記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html#docker-for-windowsのインストール)を参照ください。
 
-```bash
-export DOCKER_HOST=tcp://0.0.0.0:2375
-alias docker="DOCKER_HOST=${DOCKER_HOST} docker"
-alias docker-compose="docker-compose -H ${DOCKER_HOST}"
-```
+## さて、WSL2からDockerはどの程度つかえるのか
 
-## さて、WSLからDocker for Windowsはどの程度つかえるのか
 
     - 抱えている課題
         - パフォーマンス
@@ -81,19 +79,23 @@ alias docker-compose="docker-compose -H ${DOCKER_HOST}"
         - 
         - 
 
+WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。
 
+ただし、WSL1と違いlocalhostにIPアドレスがバインドされていません // TODO: 書き直す
 
-WSLがlxfs、Docker for WindowsがNTFS (drvfs) 上で動いていることからわかるように、ファイルシステム上の制約があります。具体的には下記4点です。
+また、WSL1同様にWin32<->WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。
 
-1. Docker for WindowsはNTFS (WSLからみるとdrvfs `/mnt/`) 上のファイルしかVolumeマウントできません
-2. WSLはLinux形式のパスしか扱えません、`C:\Dev` のようなドライブ名にコロンをつけたURIスキーマは扱えません
-3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません[^2]
-4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります[^3]
-
-[^2]: [https://github.com/docker/compose/issues/4039#issuecomment-269558432](https://github.com/docker/compose/issues/4039#issuecomment-269558432)
-[^3]: [https://github.com/Microsoft/WSL/issues/2448](https://github.com/Microsoft/WSL/issues/2448)
 
 ひとつずつ解決方法を見ていきましょう。
+
+
+### 1. WSL1と違いlocalhostにIPアドレスがバインドされていません // TODO: 書き直す
+
+### 2. WSL1同様にWin32<->WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています
+
+
+// 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります => 解決
+
 
 ### 1. Docker for WindowsはNTFS (WSLからみるとdrvfs `/mnt/`) 上のファイルしかVolumeマウントできません
 開発用ディレクトリをNTFS上につくりましょう。普段からWindowsで開発されている方はCドライブ直下につくっているとおもいます。
