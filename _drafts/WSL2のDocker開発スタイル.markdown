@@ -46,7 +46,7 @@ WSLのパッケージ管理は下記2つを押さえておけば問題ないで�
     - また、aptのバージョンが古すぎるパッケージもnixが最適です
 
 ### ターミナルのインストール
-WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため、デフォルトのターミナルか、[Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701?WT.mc_id=-blog-scottha&wa=wsignin1.0&activetab=pivot:overviewtab)が選択肢となります。
+WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため、デフォルトのターミナルか[Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701?WT.mc_id=-blog-scottha&wa=wsignin1.0&activetab=pivot:overviewtab)が選択肢となります。
 
 **Windows TerminalとConEmuとの比較**
 
@@ -60,14 +60,29 @@ WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため�
 
 ### Dockerのインストール
 WSL1ではDockerデーモンがつかえないのでWSL2でつかうようにしましょう。
-
-// TODO
+[Docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/)をインストールします。
 
 どうしてもWSL1でということであれば、Win32 (WSL1からみるとdrvfs) 側で[Docker For Windows](https://www.docker.com/docker-windows)を用意します。インストールはDockerのダウンロードページから手順通りおこないます。
 構成等は[前回の記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html#docker-for-windowsのインストール)を参照ください。
 
 ## さて、WSL2からDockerはどの程度つかえるのか
+WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。
 
+ただし、WSL1と違いlocalhostにWSL2がバインドできません。
+また、WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。
+
+ひとつずつ解決方法を見ていきましょう。
+
+### 1. WSL1と違いlocalhostにWSL2がバインドできません
+WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。[現在対応中のようです](https://docs.microsoft.com/en-us/windows/wsl/wsl2-faq#will-wsl-2-be-able-to-use-networking-applications)。
+
+対応は2つあります。
+
+1. WSL1をつかいます。これが一番楽ですが、WSL1は次項であげるパフォーマンス上の欠点があるので、Webフロントエンド開発におけるライブリローディング機能をつかうケースに限定するといいでしょう。
+2. proxyサーバーとhostsファイルをつかいます。 // TODO
+
+
+### 2. WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています
 
     - 抱えている課題
         - パフォーマンス
@@ -76,25 +91,9 @@ WSL1ではDockerデーモンがつかえないのでWSL2でつかうようにし
             - Win32
             - Win32 -> WSL
         - デバイスへのアクセス
-        - 
-        - 
-
-WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。
-
-ただし、WSL1と違いlocalhostにIPアドレスがバインドされていません // TODO: 書き直す
-
-また、WSL1同様にWin32<->WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。
 
 
-ひとつずつ解決方法を見ていきましょう。
-
-
-### 1. WSL1と違いlocalhostにIPアドレスがバインドされていません // TODO: 書き直す
-
-### 2. WSL1同様にWin32<->WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています
-
-
-// 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります => 解決
+// TODO: WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります => 解決
 
 
 ### 1. Docker for WindowsはNTFS (WSLからみるとdrvfs `/mnt/`) 上のファイルしかVolumeマウントできません
