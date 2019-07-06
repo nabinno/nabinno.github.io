@@ -1,0 +1,180 @@
+---
+layout: post
+title: "WSL2時代のDocker開発スタイル"
+category: F
+tags: wsl, ubuntu
+cover: false
+cover-image:
+---
+
+# PROBLEM
+- あたらしくでたWSL2が[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
+    - 主な変更点
+	    - WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった
+            - WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss)
+            - WSL2 軽量Hyper-V上のLinux (Linux Kernel)
+        - /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された
+            - Win32側の9Pクライアント `9prdr.sys`
+    	    - WSL側の9Pクライアント `/init`
+
+-
+
+# SOLUTION
+というわけで、前記事で掲げていた目標「WSLでDockerをつかったWebアプリケーション開発ができるかどうか」について再確認します。
+
+## 対象環境
+- Windows 10 Pro Version 1903 OS Build 18922.1000
+    - Windows Terminal (Preview) Version 0.2.1715.0
+    - WSL2
+	    - Ubuntu Version 1804.2019.5210 (Linux 4.19.43-microsoft-standard)
+        - Docker version 19.03.0-rc3, build 27fcb77
+    - WSL1
+	    - Ubuntu 18.04 LTS Version 1804.2019.522.0 (Linux 4.4.0-18922-Microsoft)
+
+## Windowsの開発環境を構築する
+まず、Windowsの開発環境の構築ですが、既知の情報をふまえつつTIPSを順次紹介します。
+
+### WSLのインストール
+- [WSL2を使ってみる (InsiderPreview)](https://qiita.com/namoshika/items/53a9ac2df7eace656870)
+
+WSLのパッケージ管理は下記2つを押さえておけば問題ないでしょう。
+1. [asdf](https://github.com/asdf-vm/asdf)/[anyenv](https://github.com/riywo/anyenv)
+    - プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう
+    - 関数言語界隈ではasdfが主流になってきてるようです。
+2. [nix](https://nixos.org/nix/)
+    - Haskellのようにasdf/anyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
+    - また、aptのバージョンが古すぎるパッケージもnixが最適です
+
+### ターミナルのインストール
+WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため、デフォルトのターミナルか[Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701?WT.mc_id=-blog-scottha&wa=wsignin1.0&activetab=pivot:overviewtab)が選択肢となります。
+
+**Windows TerminalとConEmuとの比較**
+
+| -                | Windows Terminal    | ConEmu         |
+| ---              | ---                 | ---            |
+| 透過対象         | backgroundImage     | ConEmu自体     |
+| キーバインド制約 | Alt+Shiftが効かない | 特になし       |
+| WSL2の描画       | 特になし            | くずれる       |
+| 管理者権限で実行 | 初回のみ            | タスク実行ごと |
+
+### Dockerのインストール
+WSL1ではDockerデーモンがつかえないのでWSL2でつかうようにしましょう。[Docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/)をインストールします。
+
+どうしてもWSL1でということであれば、Win32 (WSL1からみるとdrvfs) 側で[Docker For Windows](https://www.docker.com/docker-windows)を用意します。インストールはDockerのダウンロードページから手順通りおこないます。
+構成等は[前回の記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html#docker-for-windowsのインストール)を参照ください。
+
+## さて、WSL2からDockerはどの程度つかえるのか
+WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。
+
+ただし、WSL1と違いlocalhostにWSL2がバインドできません。
+また、WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。
+
+ひとつずつ解決方法を見ていきましょう。
+
+### 1. WSL1と違いlocalhostにWSL2がバインドできません
+WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。[現在対応中のようです](https://docs.microsoft.com/en-us/windows/wsl/wsl2-faq#will-wsl-2-be-able-to-use-networking-applications)。
+
+対応方法は2つあります。
+
+**1. WSL1をつかう**
+これが一番楽ですが、WSL1は次項であげるパフォーマンス上の欠点があるので、Web系フロントエンド開発におけるライブリローディング機能をつかうケースに限定するといいでしょう。
+
+**2. Hostsファイルをつかう**
+Win32のHostsファイルでWSL2のeth0インターフェイスのIPアドレスに適当なホスト名を割り当てます（ポートごとにホストを振り分けたい場合はWSL2側にProxyを用意するといいでしょう）。
+
+```
+# C:\Windows\System32\drivers\etc\hosts
+
+172.17.72.217 dashboard.local.me
+```
+
+WSL2のIPアドレスはコンテナを立ち上げるごとに変わるので、下記のようなコマンドレットをWin32側のPowerShell $PROFILEに用意しておくといいでしょう。WSL2だけで完結したい方はシェル上から `powershell.exe -Command 'Sync-HostsToWslIp'` と打つだけです。
+
+```powershell
+# $PROFILE
+
+function Sync-HostsToWslIp {
+  $hosts = "C:\Windows\System32\drivers\etc\hosts";
+  $pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}";
+  $wslip = bash.exe -c "ifconfig eth0 | grep 'inet '";
+  if ($wslip -match $pattern) {
+    $wslip = $matches[0];
+  } else {
+    echo "The Script Exited, the ip address of WSL 2 cannot be found";
+    exit;
+  }
+  cat $hosts | %{ $_ -match $pattern }
+  $rc = cat $hosts | %{ $_ -replace $matches[0], $wslip }
+  $rc | Out-File $hosts;
+}
+```
+
+### 2. WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています
+いろんな方がベンチマーク公開してるのでそれを参考にするといいでしょう。
+
+**Cf.**
+
+- [Pythonでファイル操作](https://twitter.com/ZahmbieND/status/1139921840351170560?s=20)
+- [dd、git clone](https://qiita.com/kunit/items/051196022763e64e91f6)
+
+わたしは `git status -sb` をよくつかうので、そのコマンドで簡単なベンチマークとりました。
+
+```shell
+# WSLx
+$ cd ~/nabinno.github.io
+$ \time -f %e git status -sb 
+
+# Win32/WSLx
+$ cd ~/nabinno.github.io
+$ \time -f %e powershell.exe -Command 'git status -sb'
+
+# Win32
+PS> cd ~/nabinno.github.io
+PS> [math]::Round(Measure-Command { git status -sb }).TotalMilliseconds / 1000, 2)
+```
+
+| Subject    | WSL  | Win32 |
+| ---        | ---  | ---   |
+| WSL1       | 0.47 | 0.09  |
+| WSL2       | 0.00 | 0.61  |
+| Win32/WSL1 | 2.66 | 1.91  |
+| Win32/WSL2 | 2.81 | 1.79  |
+| Win32      | 0.51 | 0.12  |
+
+## Docker以外でWSLの課題はないのか
+### デバイスへのアクセス
+以前から要望があったものだとデバイス操作があります。
+
+9P導入前だとこれはElixirのIoTフレームワークNervesのように、[WSL Utilities](https://github.com/wslutilities/wslu)をつかうのが簡単な解決策でした。
+
+```sh
+$ fwup.exe -a -i $(wslpath -w -a _build/rpi0_dev/nerves/images/hello_nerves.fw) -t complete -d $(fwup.exe -D | sed 's/,.*//')
+```
+
+ただ、9P導入したWindows 10 Version 1903以降の場合はWSL1もWSL2もともにこれで事足ります。
+
+```sh
+$ fwup.exe -a -i _build/rpi0_dev/nerves/images/hello_nerves.fw -t complete -d $(fwup.exe -D | sed 's/,.*//')
+```
+
+-
+
+# WRAPUP
+課題はわたしの観測範囲ではほぼ問題ない状態まで来ていました。
+
+**おすすめ開発環境は下記のとおり**
+
+| item                  | content               |
+| ---                   | ---                   |
+| IDE                   | WSLx上のエディタ      |
+| Webフロントエンド開発 | WSL1                  |
+| Docker関連開発        | WSL2                  |
+| dotfiles              | WSLx、Win32を共有管理 |
+
+Win32側のIDEをつかっているユーザーはパフォーマンス上の不満がまだあるかもしれませんが、WSLでDockerをつかったWebアプリケーション開発は十分できる、と言えそうです。つまり、Linux・macOS・WindowsによるWebアプリケーション開発は十分共有できる、と。
+
+いい時代になりました。
+
+-
+
+以上 :penguin:
