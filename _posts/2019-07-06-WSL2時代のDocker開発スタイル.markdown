@@ -8,14 +8,14 @@ cover-image:
 ---
 
 # PROBLEM
-- あたらしくでたWSL2が[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
+- あたらしくでたWSL2によって[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
     - 主な変更点
 	    - WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった
             - WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss)
             - WSL2 軽量Hyper-V上のLinux (Linux Kernel)
         - /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された
             - Win32側の9Pクライアント `9prdr.sys`
-    	    - WSL側の9Pクライアント `/init`
+            - WSL側の9Pクライアント `/init`
 
 -
 
@@ -58,7 +58,7 @@ WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため�
 | 管理者権限で実行 | 初回のみ            | タスク実行ごと |
 
 ### Dockerのインストール
-WSL1ではDockerデーモンがつかえないのでWSL2でつかうようにしましょう。[Docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/)をインストールします。
+WSL1ではDockerデーモンがつかえないのでWSL2でDockerをつかうようにしましょう。[Docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/)をインストールします。
 
 どうしてもWSL1でということであれば、Win32 (WSL1からみるとdrvfs) 側で[Docker For Windows](https://www.docker.com/docker-windows)を用意します。インストールはDockerのダウンロードページから手順通りおこないます。
 構成等は[前回の記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html#docker-for-windowsのインストール)を参照ください。
@@ -74,15 +74,17 @@ WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本H
 ### 1. WSL1と違いlocalhostにWSL2がバインドできません
 WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。[現在対応中のようです](https://docs.microsoft.com/en-us/windows/wsl/wsl2-faq#will-wsl-2-be-able-to-use-networking-applications)。
 
-対応方法は2つあります。
+対処方法は2つあります。
 
-**1. WSL1をつかう**
+**a. WSL1をつかう**
+
 これが一番楽ですが、WSL1は次項であげるパフォーマンス上の欠点があるので、Web系フロントエンド開発におけるライブリローディング機能をつかうケースに限定するといいでしょう。
 
-**2. Hostsファイルをつかう**
+**b. Hostsファイルをつかう**
+
 Win32のHostsファイルでWSL2のeth0インターフェイスのIPアドレスに適当なホスト名を割り当てます（ポートごとにホストを振り分けたい場合はWSL2側にProxyを用意するといいでしょう）。
 
-```
+```shell
 # C:\Windows\System32\drivers\etc\hosts
 
 172.17.72.217 dashboard.local.me
@@ -94,7 +96,7 @@ WSL2のIPアドレスはコンテナを立ち上げるごとに変わるので�
 # $PROFILE
 
 function Sync-HostsToWslIp {
-  $hosts = "C:\Windows\System32\drivers\etc\hosts";
+  $hosts = "$env:SystemRoot\System32\drivers\etc\hosts";
   $pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}";
   $wslip = bash.exe -c "ifconfig eth0 | grep 'inet '";
   if ($wslip -match $pattern) {
@@ -110,12 +112,12 @@ function Sync-HostsToWslIp {
 ```
 
 ### 2. WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています
-いろんな方がベンチマーク公開してるのでそれを参考にするといいでしょう。
+いろんな方がベンチマークを公開してるのでそれを参考にするといいでしょう。
 
 **Cf.**
 
-- [Pythonでファイル操作](https://twitter.com/ZahmbieND/status/1139921840351170560?s=20)
-- [dd、git clone](https://qiita.com/kunit/items/051196022763e64e91f6)
+- [Pythonでファイル操作のベンチマーク](https://twitter.com/ZahmbieND/status/1139921840351170560?s=20)
+- [dd、git cloneのベンチマーク](https://qiita.com/kunit/items/051196022763e64e91f6)
 
 わたしは `git status -sb` をよくつかうので、そのコマンドで簡単なベンチマークとりました。
 
@@ -130,7 +132,7 @@ $ \time -f %e powershell.exe -Command 'git status -sb'
 
 # Win32
 PS> cd ~/nabinno.github.io
-PS> [math]::Round(Measure-Command { git status -sb }).TotalMilliseconds / 1000, 2)
+PS> (Measure-Command { git status -sb }).TotalMilliseconds / 1000 | %{ [math]::Round($_, 2) }
 ```
 
 | Subject    | WSL  | Win32 |
@@ -143,15 +145,15 @@ PS> [math]::Round(Measure-Command { git status -sb }).TotalMilliseconds / 1000, 
 
 ## Docker以外でWSLの課題はないのか
 ### デバイスへのアクセス
-以前から要望があったものだとデバイス操作があります。
+以前から要望があったものだと「デバイスアクセスができない」件があります。
 
-9P導入前だとこれはElixirのIoTフレームワークNervesのように、[WSL Utilities](https://github.com/wslutilities/wslu)をつかうのが簡単な解決策でした。
+9P導入前だとこれはElixirのIoTフレームワークNervesのように、[WSL Utilities](https://github.com/wslutilities/wslu)でWSLパスをWin32パスに変換してからWin32にあるデバイス関連ツールをつかうのが簡単な解決策でした。
 
 ```sh
 $ fwup.exe -a -i $(wslpath -w -a _build/rpi0_dev/nerves/images/hello_nerves.fw) -t complete -d $(fwup.exe -D | sed 's/,.*//')
 ```
 
-ただ、9P導入したWindows 10 Version 1903以降の場合はWSL1もWSL2もともにこれで事足ります。
+ただし9Pを導入したWindows 10 Version 1903以降は、WSL1もWSL2もともにWSLパスを変換せずにWin32にあるデバイス関連ツールをつかうことができます。
 
 ```sh
 $ fwup.exe -a -i _build/rpi0_dev/nerves/images/hello_nerves.fw -t complete -d $(fwup.exe -D | sed 's/,.*//')
@@ -160,7 +162,7 @@ $ fwup.exe -a -i _build/rpi0_dev/nerves/images/hello_nerves.fw -t complete -d $(
 -
 
 # WRAPUP
-課題はわたしの観測範囲ではほぼ問題ない状態まで来ていました。
+わたしの観測範囲では課題はほぼ問題ない状態になっていました。
 
 **おすすめ開発環境は下記のとおり**
 
