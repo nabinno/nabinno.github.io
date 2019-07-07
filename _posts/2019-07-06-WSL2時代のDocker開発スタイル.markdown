@@ -4,8 +4,12 @@ title: "WSL2時代のDocker開発スタイル"
 category: F
 tags: wsl, ubuntu
 cover: false
-cover-image:
+cover-image: /images/190706_wsl.jpg
 ---
+
+![](https://nabinno.github.io/images/190706_wsl.jpg)
+
+-
 
 # PROBLEM
 - あたらしくでたWSL2によって[以前書いた記事](https://nabinno.github.io/f/2017/12/10/wsl-windows_subsystem_for_linux-でdockerをつかう.html)からだいぶ状況が変わった
