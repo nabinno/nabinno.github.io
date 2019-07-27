@@ -70,13 +70,13 @@ WSL1ではDockerデーモンがつかえないのでWSL2でDockerをつかうよ
 ## さて、WSL2からDockerはどの程度つかえるのか
 WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。
 
-ただし、WSL1と違いlocalhostにWSL2がバインドできません。
+ただし、~~WSL1と違いlocalhostにWSL2がバインドできません~~ (2019-07-27追記: [Build Version 18945で解決しました](https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-insiders-preview-build-18945/) :tada:)。
 また、WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。
 
 ひとつずつ解決方法を見ていきましょう。
 
 ### 1. WSL1と違いlocalhostにWSL2がバインドできません
-WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。[現在対応中のようです](https://docs.microsoft.com/en-us/windows/wsl/wsl2-faq#will-wsl-2-be-able-to-use-networking-applications)。
+WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。[現在対応中のようです](https://docs.microsoft.com/en-us/windows/wsl/wsl2-faq#will-wsl-2-be-able-to-use-networking-applications) (2019-07-27追記: [Build Version 18945で解決しました](https://devblogs.microsoft.com/commandline/whats-new-for-wsl-in-insiders-preview-build-18945/) :tada:)。
 
 対処方法は2つあります。
 
