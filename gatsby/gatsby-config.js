@@ -1,17 +1,30 @@
+// const dayjs = require("dayjs")
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `On Blahfe`,
     author: {
-      name: `Kyle Mathews`,
+      name: `Nab Inno`,
       summary: `who lives and works in San Francisco building useful things.`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.app/`,
+    siteUrl: `https://nabinno.github.io/`,
     social: {
-      twitter: `kylemathews`,
+      twitter: `nabinno`,
+      github: `nabinno`,
     },
   },
   plugins: [
+    {
+      resolve: `gatsby-source-esa`,
+      options: {
+        accessToken: process.env.ESA_TOKEN,
+        teamName: process.env.TEAM_NAME,
+        q: `in:blog wip:false`,
+        baseCategory: "blog",
+      },
+    },
+
     {
       resolve: `gatsby-source-filesystem`,
       options: {
@@ -48,6 +61,7 @@ module.exports = {
         ],
       },
     },
+    `gatsby-transformer-yaml`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
@@ -56,12 +70,11 @@ module.exports = {
         //trackingId: `ADD YOUR TRACKING ID HERE`,
       },
     },
-    `gatsby-plugin-feed`,
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `On Blahfe`,
+        short_name: `On Blahfe`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
@@ -70,6 +83,120 @@ module.exports = {
       },
     },
     `gatsby-plugin-react-helmet`,
+
+    // {
+    //   resolve: `gatsby-plugin-feed`,
+    //   options: {
+    //     query: `
+    //       {
+    //         site {
+    //           siteMetadata {
+    //             title
+    //             description
+    //             siteUrl
+    //             site_url: siteUrl
+    //           }
+    //         }
+    //       }
+    //     `,
+    //     feeds: [
+    //       {
+    //         serialize: ({
+    //           query: { site, allEsaPost, allExternalPostsYaml },
+    //         }) => {
+    //           return [...allEsaPost.edges, ...allExternalPostsYaml.edges]
+    //             .sort((a, b) => {
+    //               const bDate = b.node.pubDate
+    //                 ? new Date(b.node.pubDate)
+    //                 : new Date(b.node.childPublishedDate.published_on)
+    //               const aDate = a.node.pubDate
+    //                 ? new Date(a.node.pubDate)
+    //                 : new Date(a.node.childPublishedDate.published_on)
+    //               return bDate - aDate
+    //             })
+    //             .map(edge => {
+    //               const node = edge.node
+
+    //               switch (node.internal.type) {
+    //                 case "EsaPost":
+    //                   const day = dayjs(node.childPublishedDate.published_on)
+    //                   return {
+    //                     date: day.toISOString(),
+    //                     pubDate: day.toISOString(),
+    //                     url:
+    //                       site.siteMetadata.siteUrl + `/posts/${node.number}`,
+    //                     guid: node.number,
+    //                     title: node.fields.title,
+    //                     description: node.fields.excerpt,
+    //                   }
+    //                   break
+
+    //                 case "ExternalPostsYaml":
+    //                   return {
+    //                     date: dayjs(
+    //                       node.childPublishedDate.published_on
+    //                     ).toISOString(),
+    //                     pubDate: dayjs(
+    //                       node.childPublishedDate.published_on
+    //                     ).toISOString(),
+    //                     url: node.link,
+    //                     guid: node.link,
+    //                     title: node.fields.title,
+    //                     description: node.fields.excerpt.substring(0, 512),
+    //                   }
+
+    //                 default:
+    //                   throw `${node.internal.type} is unknown type`
+    //               }
+    //             })
+    //         },
+    //         query: `
+    //           {
+    //             allEsaPost {
+    //               edges {
+    //                 node {
+    //                   number
+    //                   fields {
+    //                     title
+    //                     excerpt
+    //                   }
+    //                   childPublishedDate {
+    //                     published_on
+    //                     published_on_unix
+    //                   }
+    //                   internal {
+    //                     type
+    //                   }
+    //                 }
+    //               }
+    //             }
+    //             allExternalPostsYaml {
+    //               edges {
+    //                 node {
+    //                   link
+    //                   fields {
+    //                     title
+    //                     excerpt
+    //                     category
+    //                   }
+    //                   childPublishedDate {
+    //                     published_on
+    //                     published_on_unix
+    //                   }
+    //                   internal {
+    //                     type
+    //                   }
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         `,
+    //         output: "/rss.xml",
+    //       },
+    //     ],
+    //   },
+    // },
+
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
