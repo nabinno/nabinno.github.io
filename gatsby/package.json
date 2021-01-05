@@ -1,21 +1,24 @@
 {
-  "name": "gatsby-starter-blog",
-  "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "name": "@nabinno/nabinno.github.io",
+  "description": "@nabinno Site",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "nabinno <nab@blahfe.com>",
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/nabinno/nabinno.github.io/issues"
   },
   "dependencies": {
     "gatsby": "^2.29.3",
     "gatsby-image": "^2.8.0",
+    "gatsby-paginate": "^1.1.1",
+    "gatsby-plugin-emotion": "^4.3.4",
     "gatsby-plugin-feed": "^2.10.0",
     "gatsby-plugin-google-analytics": "^2.8.0",
     "gatsby-plugin-manifest": "^2.9.1",
     "gatsby-plugin-offline": "^3.7.1",
     "gatsby-plugin-react-helmet": "^3.7.0",
+    "gatsby-plugin-remove-serviceworker": "^1.0.0",
     "gatsby-plugin-sharp": "^2.11.2",
+    "gatsby-plugin-twitter": "^2.3.4",
     "gatsby-remark-copy-linked-files": "^2.7.0",
     "gatsby-remark-images": "^3.8.1",
     "gatsby-remark-prismjs": "^3.10.0",
@@ -30,6 +33,8 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-helmet": "^5.2.1",
+    "react-share": "^2.4.0",
+    "ress": "^2.0.4",
     "typeface-merriweather": "0.0.72",
     "typeface-montserrat": "0.0.75"
   },
@@ -42,7 +47,7 @@
     "@typescript-eslint/parser": "^3.9.0",
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.20.6",
     "prettier": "2.2.1",
     "ts-node": "^8.10.2",
@@ -66,5 +71,11 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
+  },
+  "prettier": {
+    "jsxBracketSameLine": true,
+    "trailingComma": "all",
+    "semi": false,
+    "singleQuote": true
   }
 }
