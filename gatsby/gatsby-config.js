@@ -1,3 +1,4 @@
+/* eslint-env node */
 const dayjs = require('dayjs')
 
 module.exports = {
@@ -28,7 +29,6 @@ module.exports = {
     `gatsby-transformer-yaml`,
     `gatsby-plugin-emotion`,
     `gatsby-plugin-react-helmet`,
-    `gatsby-plugin-twitter`,
     'gatsby-plugin-remove-serviceworker',
     {
       resolve: `gatsby-plugin-manifest`,
@@ -76,7 +76,7 @@ module.exports = {
                   const node = edge.node
 
                   switch (node.internal.type) {
-                    case 'EsaPost':
+                    case 'EsaPost': {
                       const day = dayjs(node.childPublishedDate.published_on)
                       return {
                         date: day.toISOString(),
@@ -87,9 +87,8 @@ module.exports = {
                         title: node.fields.title,
                         description: node.fields.excerpt,
                       }
-                      break
-
-                    case 'ExternalPostsYaml':
+                    }
+                    case 'ExternalPostsYaml': {
                       return {
                         date: dayjs(
                           node.childPublishedDate.published_on,
@@ -102,9 +101,10 @@ module.exports = {
                         title: node.fields.title,
                         description: node.fields.excerpt.substring(0, 512),
                       }
-
-                    default:
+                    }
+                    default: {
                       throw `${node.internal.type} is unknown type`
+                    }
                   }
                 })
             },

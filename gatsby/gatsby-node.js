@@ -1,3 +1,4 @@
+/* eslint-env node */
 require('ts-node').register()
 
 exports.onCreateNode = require('./gatsby-node/onCreateNode').onCreateNode
