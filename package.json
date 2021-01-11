@@ -1,0 +1,73 @@
+{
+  "name": "",
+  "description": "On Blahfe",
+  "version": "1.0.0",
+  "dependencies": {
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.2",
+    "dayjs": "^1.7.7",
+    "framer-motion": "^2.4.2",
+    "gatsby": "^2.23.3",
+    "gatsby-paginate": "^1.1.1",
+    "gatsby-plugin-emotion": "^4.3.4",
+    "gatsby-plugin-feed": "^2.5.5",
+    "gatsby-plugin-google-analytics": "^2.3.4",
+    "gatsby-plugin-manifest": "^2.4.11",
+    "gatsby-plugin-offline": "^3.2.9",
+    "gatsby-plugin-react-helmet": "^3.3.4",
+    "gatsby-plugin-remove-serviceworker": "^1.0.0",
+    "gatsby-plugin-twitter": "^2.3.4",
+    "gatsby-source-esa": "^1.1.3",
+    "gatsby-source-filesystem": "^2.3.11",
+    "gatsby-source-rss-feed": "^1.2.2",
+    "gatsby-transformer-remark": "^2.8.15",
+    "gatsby-transformer-yaml": "^2.4.4",
+    "html2plaintext": "^2.1.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-helmet": "^6.1.0",
+    "react-share": "^4.3.1",
+    "ress": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/react": "16.9.23",
+    "@types/react-dom": "16.9.5",
+    "@types/react-helmet": "6.0.0",
+    "@types/react-share": "2.1.1",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.6",
+    "prettier": "2.0.5",
+    "ts-node": "^8.10.2",
+    "typescript": "3.9.7"
+  },
+  "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "main": "n/a",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
+  },
+  "scripts": {
+    "lint": "eslint --ext .ts,.tsx --ignore-pattern public .",
+    "format": "prettier '**/*.{ts,tsx}' --write",
+    "develop": "gatsby develop",
+    "build": "GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES=true gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
+  },
+  "prettier": {
+    "jsxBracketSameLine": true,
+    "trailingComma": "all",
+    "semi": false,
+    "singleQuote": true
+  }
+}
