@@ -17,7 +17,7 @@ jobs:
           name: Deploy
           command: |
             git add .
-            git commit -m -v 'Run `npm run clean && npm run build`.'
+            git commit -m "Run npm run clean && npm run build."
             git push origin master
 
 workflows:
