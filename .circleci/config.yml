@@ -1,0 +1,26 @@
+version: 2.1
+
+jobs:
+  build_deploy:
+    docker:
+      - image: circleci/node:12.4
+    steps:
+      - checkout
+      - run:
+          name: Install NPM
+          command: npm install
+      - setup_remote_docker
+      - run:
+          name: Build
+          command: npm run clean && npm run build
+      - deploy:
+          name: Deploy
+          command: |
+            git add .
+            git commit -a 'Run `npm run clean && npm run build`.'
+            git push origin master
+
+workflows:
+  build_deploy:
+    jobs:
+      - build_deploy
