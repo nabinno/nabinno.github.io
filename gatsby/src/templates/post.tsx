@@ -66,7 +66,7 @@ const PostTemplate = (props: any) => {
   const description = post.fields.excerpt.slice(0, 120)
   const category = post.relative_category || 'blog'
   const image =
-    post.fields?.thumbnail ||
+    post.fields.thumbnail ||
     'https://img.esa.io/uploads/production/attachments/6967/2018/05/19/4651/139850ac-6690-4bee-bdf3-6f9faf6ac10b.png'
   const card = post.fields?.thumbnail ? 'summary_large_image' : 'summary'
   const url = `https://nabinno.github.io/posts/${post.number}`

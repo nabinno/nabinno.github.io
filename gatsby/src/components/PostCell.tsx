@@ -18,7 +18,7 @@ const cell = css`
     padding-right: 0;
   }
   &:hover .title {
-    color: #4d9abf;
+    color: #80695F;
   }
 `
 

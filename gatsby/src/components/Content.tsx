@@ -69,7 +69,7 @@ export default styled.div`
       width: 100px;
       bottom: -3px;
       height: 3px;
-      background-color: #4d9abf;
+      background-color: #80695F;
     }
   }
 
@@ -565,4 +565,11 @@ export default styled.div`
   h6 {
     font-weight: 700;
   }
+
+  .footnotes {
+    margin-top: 4.375rem;
+    padding: 20px 0;
+    background-color: #efefef;
+  }
+}
 `

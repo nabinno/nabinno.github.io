@@ -32,9 +32,6 @@ const title = css`
 `
 
 const IndexPage = ({ pageContext, location }: any) => {
-  console.log('------------------------------')
-  console.log(pageContext)
-
   const { group, index, first, last, additionalContext } = pageContext
   const previousUrl = index - 1 === 1 ? '/' : `/page/${index - 1}`
   const nextUrl = `/page/${index + 1}`
