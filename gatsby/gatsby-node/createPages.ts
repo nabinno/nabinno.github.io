@@ -1,58 +1,171 @@
-import path from "path"
+import path from 'path'
+import { CreatePagesArgs } from 'gatsby'
 
-export const createPages = async ({ graphql, actions, reporter }) => {
+/* eslint-disable @typescript-eslint/no-var-requires */
+const createPaginatedPages = require('gatsby-paginate')
+
+const perPage = 12
+
+interface NodeEdge<T> {
+  edges: {
+    node: T
+  }[]
+}
+
+type EsaPostNode = {
+  number: number
+  relative_category: string
+  fields: {
+    title: string
+    excerpt: string
+  }
+  name: string
+  tags: string[]
+  childPublishedDate: {
+    published_on: string
+    published_on_unix: string
+  }
+}
+
+type GraphQLResult = {
+  allEsaPost: NodeEdge<EsaPostNode>
+  allExternalPostsYaml: NodeEdge<any>
+}
+
+export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
   const { createPage } = actions
 
-  // Define a template for blog post
-  const blogPost = path.resolve(`./src/templates/blog-post.js`)
-
-  // Get all markdown blog posts sorted by date
-  const result = await graphql(
-    `
-      {
-        allMarkdownRemark(
-          sort: { fields: [frontmatter___date], order: ASC }
-          limit: 1000
-        ) {
-          nodes {
-            id
+  const blogList = path.resolve('./src/templates/posts.tsx')
+  const blogPost = path.resolve('./src/templates/post.tsx')
+  return graphql<GraphQLResult>(`
+    {
+      allEsaPost {
+        edges {
+          node {
+            number
+            relative_category
             fields {
-              slug
+              title
+              excerpt
+            }
+            name
+            tags
+            childPublishedDate {
+              published_on
+              published_on_unix
             }
           }
         }
       }
-    `
-  )
 
-  if (result.errors) {
-    reporter.panicOnBuild(
-      `There was an error loading your blog posts`,
-      result.errors
-    )
-    return
-  }
+      allExternalPostsYaml {
+        edges {
+          node {
+            fields {
+              title
+              excerpt
+              category
+            }
+            childPublishedDate {
+              published_on
+              published_on_unix
+            }
+            link
+          }
+        }
+      }
+    }
+  `).then((result) => {
+    if (result.errors) {
+      console.error(result.errors)
+    }
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    const { allEsaPost, allExternalPostsYaml } = result.data!
 
-  const posts = result.data.allMarkdownRemark.nodes
-
-  // Create blog posts pages
-  // But only if there's at least one markdown file found at "content/blog" (defined in gatsby-config.js)
-  // `context` is available in the template as a prop and as a variable in GraphQL
-
-  if (posts.length > 0) {
-    posts.forEach((post, index) => {
-      const previousPostId = index === 0 ? null : posts[index - 1].id
-      const nextPostId = index === posts.length - 1 ? null : posts[index + 1].id
-
+    allEsaPost.edges.forEach((postEdge: { node: EsaPostNode }) => {
+      const post = postEdge.node
       createPage({
-        path: post.fields.slug,
+        path: `posts/${post.number}`,
         component: blogPost,
         context: {
-          id: post.id,
-          previousPostId,
-          nextPostId,
+          number: post.number,
         },
       })
     })
-  }
+
+    const categoryMap = new Map()
+    const tagMap = new Map()
+    const postEntities: Record<
+      number,
+      {
+        node: EsaPostNode
+      }
+    > = {}
+
+    allEsaPost.edges.forEach((postEdge: { node: EsaPostNode }) => {
+      const post = postEdge.node
+      const number = post.number
+
+      post.tags.forEach((tag: string) => {
+        tagMap.set(
+          tag,
+          tagMap.get(tag) ? tagMap.get(tag).concat(number) : [number],
+        )
+      })
+
+      const category = post.relative_category || 'blog'
+      const numbersByCategory = categoryMap.get(category)
+      categoryMap.set(
+        category,
+        numbersByCategory ? numbersByCategory.concat(number) : [number],
+      )
+
+      postEntities[post.number] = postEdge
+    })
+
+    createPaginatedPages({
+      edges: [...allEsaPost.edges, ...allExternalPostsYaml.edges].sort(
+        (a, b) => {
+          return (
+            b.node.childPublishedDate.published_on_unix -
+            a.node.childPublishedDate.published_on_unix
+          )
+        },
+      ),
+      createPage,
+      pageTemplate: blogList,
+      pageLength: perPage,
+      pathPrefix: '',
+      buildPath: (index: number, pathPrefix: string) =>
+        index > 1 ? `${pathPrefix}/page/${index}` : `/${pathPrefix}`,
+    })
+
+    Array.from(categoryMap.keys()).map((category: string) => {
+      const postNumbers = categoryMap.get(category)
+      createPaginatedPages({
+        edges: postNumbers.map((number: number) => postEntities[number]),
+        createPage,
+        pageTemplate: blogList,
+        pageLength: perPage,
+        pathPrefix: `categories/${category}`,
+        buildPath: (index: number, pathPrefix: string) =>
+          index > 1 ? `${pathPrefix}/page/${index}` : `/${pathPrefix}`,
+        context: { category },
+      })
+    })
+
+    Array.from(tagMap.keys()).map((tag: string) => {
+      const postNumbers = tagMap.get(tag)
+      createPaginatedPages({
+        edges: postNumbers.map((number: number) => postEntities[number]),
+        createPage,
+        pageTemplate: blogList,
+        pageLength: perPage,
+        pathPrefix: `tags/${tag}`,
+        buildPath: (index: number, pathPrefix: string) =>
+          index > 1 ? `${pathPrefix}/page/${index}` : `/${pathPrefix}`,
+        context: { tag },
+      })
+    })
+  })
 }
