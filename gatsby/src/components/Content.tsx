@@ -166,6 +166,14 @@ export default styled.div`
     background: #f6f6f6;
   }
 
+  a {
+    color: #58463C;
+
+    &:hover {
+      color: #80695F;
+    }
+  }
+
   .code-block .highlight {
     border-radius: 4px;
   }

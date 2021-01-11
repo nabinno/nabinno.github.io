@@ -14,8 +14,11 @@ const Profile = () => {
         />
         <div className="description">
           Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br />
-          <Link to='https://twitter.com/nabinno'>Twitter</Link>&nbsp;/&nbsp;
-          <Link to='https://utagaki.com/nabinno'>Utagaki</Link>
+          <a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a>&nbsp;/&nbsp;
+          <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;/&nbsp;
+          <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a>&nbsp;/&nbsp;
+          <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a>&nbsp;/&nbsp;
+          <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a>
         </div>
       </div>
     </Base>
@@ -35,11 +38,12 @@ const Base = styled.div`
     }
 
     > .description {
-      > .name {
-        font-size: 16px;
-        color: #30627a;
-        letter-spacing: 0.5px;
-        line-height: 1.7;
+      > a {
+        color: #58463C;
+
+        &:hover {
+          color: #80695F;
+        }
       }
     }
   }
