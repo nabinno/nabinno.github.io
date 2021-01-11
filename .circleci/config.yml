@@ -16,8 +16,10 @@ jobs:
       - deploy:
           name: Deploy
           command: |
+            git config --global user.email "nab+circleci@blahfe.com"
+            git config --global user.name "nabinno+circleci"
             git add .
-            git commit -m "Run npm run clean && npm run build."
+            git commit -m "Run npm `run clean && npm run build`."
             git push origin master
 
 workflows:
