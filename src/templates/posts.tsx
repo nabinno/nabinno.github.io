@@ -99,6 +99,14 @@ const Pagination = styled.div`
   width: 100%;
   margin: 24px 0;
   padding: 0 12px;
+
+  a {
+    color: #58463C;
+
+    &:hover {
+      color: #80695F;
+    }
+  }
 `
 
 const Title = styled.h1`

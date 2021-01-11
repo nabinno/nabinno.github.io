@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 11 Jan 2021 14:15:55 GMT</lastBuildDate><item><title><![CDATA[ネクイノ開発者ブログ：整理したい私はITILをかぶる、PlantUMLへの愛]]></title><description><![CDATA[入社後8ヶ月、年の瀬ということで振り返り記事を書くことにしました。テーマはPlantUMLです。]]></description><link>https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</link><guid isPermaLink="false">https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</guid><pubDate>Wed, 30 Dec 2020 02:30:00 GMT</pubDate></item><item><title><![CDATA[WSL2時代のDocker開発スタイル]]></title><description><![CDATA[> PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 11 Jan 2021 15:10:51 GMT</lastBuildDate><item><title><![CDATA[ネクイノ開発者ブログ：整理したい私はITILをかぶる、PlantUMLへの愛]]></title><description><![CDATA[入社後8ヶ月、年の瀬ということで振り返り記事を書くことにしました。テーマはPlantUMLです。]]></description><link>https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</link><guid isPermaLink="false">https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</guid><pubDate>Wed, 30 Dec 2020 02:30:00 GMT</pubDate></item><item><title><![CDATA[WSL2時代のDocker開発スタイル]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - あたらしくでたWSL2によって以前書いた記事からだいぶ状況が変わった 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
 - 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
@@ -550,7 +550,7 @@ $ PYTHON=/usr/bin/python3.4 ruby parse_6_pycall.rb Sum: 499999500000 Time: 1.49 
 - Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
 - 巷でいわれているSLA 99.9999999% などの実際がどうなのか腹落ちしてない   > TLDRTLDR 
 
-- 下記Erlang機能を中心に高いSLAを提供する素地になっている 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 ライフサイクル、再起動戦略を備えたライブラリ（分散OTP） CPシステムでNoSQLデータベース「Mnesia」 
+- 下記Erlang機能を中心に高いSLAを提供する素地をなしている 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 ライフサイクル、再起動戦略を備えたライブラリ（分散OTP） CPシステムでNoSQLデータベース「Mnesia」 
 - 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 
 - 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。
 - EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 
@@ -560,7 +560,7 @@ $ PYTHON=/usr/bin/python3.4 ruby parse_6_pycall.rb Sum: 499999500000 Time: 1.49 
 - ライフサイクル、再起動戦略を備えたライブラリ（分散OTP）
 - CPシステムでNoSQLデータベース「Mnesia」   > SOLUTIONSOLUTION 
 
-というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を抜粋している。   > 1-3 Erlang概要1-3 Erlang概要   > 1.2 Erlangって何？1.2 Erlangって何？ 
+というわけで、『Learn You Some Erlang for Great Good!（通称LYSE本）』を読むことにした。Elixirに関係ありそうな箇所を抜粋している。   > 1-3 Erlang概要1-3 Erlang概要   > 1.2 Erlangって何？1.2 Erlangって何？ 
 
 - 関数型言語 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う 
 - 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う
