@@ -1,8 +1,8 @@
-import path from 'path'
 import { CreatePagesArgs } from 'gatsby'
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const createPaginatedPages = require('gatsby-paginate')
+const path = require('path')
 
 const perPage = 12
 
@@ -82,15 +82,21 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     const { allEsaPost, allExternalPostsYaml } = result.data!
 
-    allEsaPost.edges.forEach((postEdge: { node: EsaPostNode }) => {
-      const post = postEdge.node
-      createPage({
-        path: `posts/${post.number}`,
-        component: blogPost,
-        context: {
-          number: post.number,
+    createPaginatedPages({
+      edges: [...allEsaPost.edges, ...allExternalPostsYaml.edges].sort(
+        (a, b) => {
+          return (
+            b.node.childPublishedDate.published_on_unix -
+            a.node.childPublishedDate.published_on_unix
+          )
         },
-      })
+      ),
+      createPage,
+      pageTemplate: blogList,
+      pageLength: perPage,
+      pathPrefix: '',
+      buildPath: (index: number, pathPrefix: string) =>
+        index > 1 ? `${pathPrefix}/page/${index}` : `/${pathPrefix}`,
     })
 
     const categoryMap = new Map()
@@ -123,21 +129,16 @@ export const createPages = async ({ graphql, actions }: CreatePagesArgs) => {
       postEntities[post.number] = postEdge
     })
 
-    createPaginatedPages({
-      edges: [...allEsaPost.edges, ...allExternalPostsYaml.edges].sort(
-        (a, b) => {
-          return (
-            b.node.childPublishedDate.published_on_unix -
-            a.node.childPublishedDate.published_on_unix
-          )
+    allEsaPost.edges.forEach((postEdge: { node: EsaPostNode }) => {
+      const post = postEdge.node
+
+      createPage({
+        path: `posts/${post.number}`,
+        component: blogPost,
+        context: {
+          number: post.number,
         },
-      ),
-      createPage,
-      pageTemplate: blogList,
-      pageLength: perPage,
-      pathPrefix: '',
-      buildPath: (index: number, pathPrefix: string) =>
-        index > 1 ? `${pathPrefix}/page/${index}` : `/${pathPrefix}`,
+      })
     })
 
     Array.from(categoryMap.keys()).map((category: string) => {

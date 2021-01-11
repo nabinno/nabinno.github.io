@@ -1,5 +1,5 @@
 import { CreateNodeArgs } from 'gatsby'
-import dayjs from 'dayjs'
+import dayjs = require('dayjs')
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const h2p = require('html2plaintext')
@@ -42,7 +42,7 @@ export const onCreateNode = ({
 }>) => {
   const { createNode, createParentChildLink, createNodeField } = actions
 
-  let day, dateNode
+  let day: any, dateNode: any
   switch (node.internal.type) {
     case 'EsaPost': {
       createNodeField({
