@@ -1,0 +1,1988 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 11 Jan 2021 14:15:55 GMT</lastBuildDate><item><title><![CDATA[ネクイノ開発者ブログ：整理したい私はITILをかぶる、PlantUMLへの愛]]></title><description><![CDATA[入社後8ヶ月、年の瀬ということで振り返り記事を書くことにしました。テーマはPlantUMLです。]]></description><link>https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</link><guid isPermaLink="false">https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</guid><pubDate>Wed, 30 Dec 2020 02:30:00 GMT</pubDate></item><item><title><![CDATA[WSL2時代のDocker開発スタイル]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- あたらしくでたWSL2によって以前書いた記事からだいぶ状況が変わった 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
+- 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
+- WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) 
+- WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss)
+- WSL2 軽量Hyper-V上のLinux (Linux Kernel)
+- /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
+- Win32側の9Pクライアント 9prdr.sys 
+- WSL側の9Pクライアント /init    > SOLUTIONSOLUTION 
+
+というわけで、前記事で掲げていた目標「WSLでDockerをつかったWebアプリケーション開発ができるかどうか」について再確認します。   > 対象環境対象環境 
+
+- Windows 10 Pro Version 1903 OS Build 18922.1000 Windows Terminal (Preview) Version 0.2.1715.0 WSL2 Ubuntu Version 1804.2019.5210 (Linux 4.19.43-microsoft-standard) Docker version 19.03.0-rc3, build 27fcb77 WSL1 Ubuntu 18.04 LTS Version 1804.2019.522.0 (Linux 4.4.0-18922-Microsoft) 
+- Windows Terminal (Preview) Version 0.2.1715.0
+- WSL2 Ubuntu Version 1804.2019.5210 (Linux 4.19.43-microsoft-standard) Docker version 19.03.0-rc3, build 27fcb77 
+- Ubuntu Version 1804.2019.5210 (Linux 4.19.43-microsoft-standard)
+- Docker version 19.03.0-rc3, build 27fcb77
+- WSL1 Ubuntu 18.04 LTS Version 1804.2019.522.0 (Linux 4.4.0-18922-Microsoft) 
+- Ubuntu 18.04 LTS Version 1804.2019.522.0 (Linux 4.4.0-18922-Microsoft)   > Windowsの開発環境を構築するWindowsの開発環境を構築する 
+
+まず、Windowsの開発環境の構築ですが、既知の情報をふまえつつTIPSを順次紹介します。   > WSLのインストールWSLのインストール 
+
+- WSL2を使ってみる (InsiderPreview) 
+
+WSLのパッケージ管理は下記2つを押さえておけば問題ないでしょう。 
+
+1. asdf/anyenv プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう 関数言語界隈ではasdfが主流になってきてるようです。 
+2. プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう
+3. 関数言語界隈ではasdfが主流になってきてるようです。
+4. nix Haskellのようにasdf/anyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう また、aptのバージョンが古すぎるパッケージもnixが最適です 
+5. Haskellのようにasdf/anyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
+6. また、aptのバージョンが古すぎるパッケージもnixが最適です   > ターミナルのインストールターミナルのインストール 
+
+WSLttyはWSL2に対応しておらずConEmuは描画がくずれやすいため、デフォルトのターミナルかWindows Terminalが選択肢となります。 
+
+Windows TerminalとConEmuとの比較    - Windows Terminal ConEmu     透過対象 backgroundImage ConEmu自体   キーバインド制約 Alt+Shiftが効かない 特になし   WSL2の描画 特になし くずれる   管理者権限で実行 初回のみ タスク実行ごと      > DockerのインストールDockerのインストール 
+
+WSL1ではDockerデーモンがつかえないのでWSL2でDockerをつかうようにしましょう。Docker CEをインストールします。 
+
+どうしてもWSL1でということであれば、Win32 (WSL1からみるとdrvfs) 側でDocker For Windowsを用意します。インストールはDockerのダウンロードページから手順通りおこないます。
+ 構成等は前回の記事を参照ください。   > さて、WSL2からDockerはどの程度つかえるのかさて、WSL2からDockerはどの程度つかえるのか 
+
+WSL2は軽量Hyper-V上にLinuxコンテナを動かしているので、基本Hyper-Vと同様にDockerをつかうことができます。 
+
+ただし、WSL1と違いlocalhostにWSL2がバインドできません (2019-07-27追記: Build Version 18945で解決しました )。
+ また、WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています。 
+
+ひとつずつ解決方法を見ていきましょう。   > 1. WSL1と違いlocalhostにWSL2がバインドできません1. WSL1と違いlocalhostにWSL2がバインドできません 
+
+WSL2がつかっているVirtual Switchはinternal onlyのため、Win32側からlocalhostをつかってWSL2にアクセスすることができません。現在対応中のようです (2019-07-27追記: Build Version 18945で解決しました )。 
+
+対処方法は2つあります。 
+
+a. WSL1をつかう 
+
+これが一番楽ですが、WSL1は次項であげるパフォーマンス上の欠点があるので、Web系フロントエンド開発におけるライブリローディング機能をつかうケースに限定するといいでしょう。 
+
+b. Hostsファイルをつかう 
+
+Win32のHostsファイルでWSL2のeth0インターフェイスのIPアドレスに適当なホスト名を割り当てます（ポートごとにホストを振り分けたい場合はWSL2側にProxyを用意するといいでしょう）。   shell 
+
+# C:\Windows\System32\drivers\etc\hosts 172.17.72.217 dashboard.local.me   
+
+WSL2のIPアドレスはコンテナを立ち上げるごとに変わるので、下記のようなコマンドレットをWin32側のPowerShell $PROFILEに用意しておくといいでしょう。WSL2だけで完結したい方はシェル上から powershell.exe -Command 'Sync-HostsToWslIp' と打つだけです。   powershell 
+
+# $PROFILE function Sync-HostsToWslIp { $hosts = "$env:SystemRoot\System32\drivers\etc\hosts"; $pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"; $wslip = bash.exe -c "ifconfig eth0 | grep 'inet '"; if ($wslip -match $pattern) { $wslip = $matches[0]; } else { echo "The Script Exited, the ip address of WSL 2 cannot be found"; exit; } cat $hosts | %{ $_ -match $pattern } $rc = cat $hosts | %{ $_ -replace $matches[0], $wslip } $rc | Out-File $hosts; }     > 2. WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています2. WSL1と同様にWin32・WSL間でのファイルの読み書きにパフォーマンスの差が大きく出ています 
+
+いろんな方がベンチマークを公開してるのでそれを参考にするといいでしょう。 
+
+Cf. 
+
+- Pythonでファイル操作のベンチマーク
+- dd、git cloneのベンチマーク 
+
+わたしは git status -sb をよくつかうので、そのコマンドで簡単なベンチマークとりました。   shell 
+
+# WSLx $ cd ~/nabinno.github.io $ \time -f %e git status -sb # Win32/WSLx $ cd ~/nabinno.github.io $ \time -f %e powershell.exe -Command 'git status -sb' # Win32 PS> cd ~/nabinno.github.io PS> (Measure-Command { git status -sb }).TotalMilliseconds / 1000 | %{ [math]::Round($_, 2) }      Subject WSL Win32     WSL1 0.47 0.09   WSL2 0.00 0.61   Win32/WSL1 2.66 1.91   Win32/WSL2 2.81 1.79   Win32 0.51 0.12      > Docker以外でWSLの課題はないのかDocker以外でWSLの課題はないのか   > デバイスへのアクセスデバイスへのアクセス 
+
+以前から要望があったものだと「デバイスアクセスができない」件があります。 
+
+9P導入前だとこれはElixirのIoTフレームワークNervesのように、WSL UtilitiesでWSLパスをWin32パスに変換してからWin32にあるデバイス関連ツールをつかうのが簡単な解決策でした。   sh 
+
+$ fwup.exe -a -i $(wslpath -w -a _build/rpi0_dev/nerves/images/hello_nerves.fw) -t complete -d $(fwup.exe -D | sed 's/,.*//')   
+
+ただし9Pを導入したWindows 10 Version 1903以降は、WSL1もWSL2もともにWSLパスを変換せずにWin32にあるデバイス関連ツールをつかうことができます。   sh 
+
+$ fwup.exe -a -i _build/rpi0_dev/nerves/images/hello_nerves.fw -t complete -d $(fwup.exe -D | sed 's/,.*//')     > WRAPUPWRAPUP 
+
+わたしの観測範囲では課題はほぼ問題ない状態になっていました。 
+
+おすすめ開発環境は下記のとおり    item content     IDE WSLx上のエディタ   Webフロントエンド開発 WSL1   Docker関連開発 WSL2   dotfiles WSLx、Win32を共有管理    
+
+Win32側のIDEをつかっているユーザーはパフォーマンス上の不満がまだあるかもしれませんが、WSLでDockerをつかったWebアプリケーション開発は十分できる、と言えそうです。つまり、Linux・macOS・WindowsによるWebアプリケーション開発は十分共有できる、と。 
+
+いい時代になりました。]]></description><link>https://nabinno.github.io/posts/64</link><guid isPermaLink="false">64</guid><pubDate>Fri, 05 Jul 2019 15:00:00 GMT</pubDate></item><item><title><![CDATA[イケてるしヤバい言語REBOLの後継Redでクライアントソフトをつくった話]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- クロスプラットフォーム用のクライアントソフトをつくるにあたり 重たいフレームワークが多い 汎用的な言語をつかってるものが多く、そのためライブラリー等の依存関係が多くなりやすい 
+- 重たいフレームワークが多い
+- 汎用的な言語をつかってるものが多く、そのためライブラリー等の依存関係が多くなりやすい   > SOLUTIONSOLUTION 
+
+というわけで、年明け見つけたRedがシンプルだったのでつかってみた。題材は以前つくったEmacsライブラリ「esa.el」の移植だ。 
+
+https://github.com/nabinno/esa.red   > やったことやったこと   > エディターエディター 
+
+構文がすなおなので特にエディタは関係なさそうだったけど、慣れ親しんでるEmacsに「Skrylar/red.el」を適用した。その際、 red-font-lock-keywords と red-indent-line に足りない箇所があったのでオーバーライドした。   > 糖衣構文の適用糖衣構文の適用 
+
+RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認した。その中でどうしても慣れない表現が2つあったので糖衣構文を実装（nabinno/red-elixir）。 
+
+1. compose 
+
+ブロック内の変数を評価しブロックとして返す関数 compose は、VIDのフェイス更新によくつかわれる。HTML/JavaScripでいうところDOM更新にあたるものといえばわかるだろう。頻繁に「 compose [foo (bar)] 」のような表現がつづくとほかの変数や関数とまざり可読性がおちるので、Elixirのシジルを参考に compose 関数を省略した。こんな感じ。 
+
+;-- before compose [foo (bar)] ;-- after ~c[foo (bar)]  
+
+2. 関数の入れ子 
+
+素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよくつかう。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入した。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼなかった。あってもこのくらい。   red 
+
+;-- before rejoin collect [ foreach d data [ keep rejoin [d " "] ] ] ;-- after data .[ |> Series/map 'd [rejoin [d " "]] |> rejoin ]     > タスクランナーの用意タスクランナーの用意 
+
+今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリをつかっている。ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意した（nabinno/hot、nabinno/mods）。 
+
+タスクランナーインストール後、パッケージのインストールから呼び出しまでの流れ 
+
+RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了する。   sh 
+
+> mkdir -p ~/.local/bin > wget https://github.com/nabinno/hot/releases/download/0.0.3/hot-linux -O ~/.local/bin/hot > chmod 744 ~/.local/bin/hot   
+
+パッケージ管理はElixirのmixを参考にタスクランナー管理ファイル内に定義する。   sh 
+
+> hot cmd/install https://raw.githubusercontent.com/nabinno/mods/master/mods.red > cat hots.red Red [] hots: context [ mods: [ red-elixir #(init: %init.red git: https://github.com/nabinno/red-elixir) json #(init: %json.red git: https://github.com/rebolek/red-tools) http-tools #(init: %http-tools.red git: https://github.com/rebolek/red-tools) ] ] > hot mods/get   
+
+ビルド時は #include をつかうのでパッケージ呼び出し機能はつかえないが、コマンドラインREPLで挙動確認している際は do/args %require をつかう。   sh 
+
+> red >> do/args %require [red-elixir] >> 1 .. 10 .[ |> Series/map 'i [i * 2] |> Series/map 'i [i + 1] ] == [3 5 7 9 11 13 15 17 19 21]     > WRAPUPWRAPUP 
+
+Redは既存のフレームワークと比べるとまだまだ機能不足感がぬぐえないが、それを補えるだけの表現力をもっていた。]]></description><link>https://nabinno.github.io/posts/63</link><guid isPermaLink="false">63</guid><pubDate>Sat, 30 Mar 2019 15:00:00 GMT</pubDate></item><item><title><![CDATA[Elixirではてなブックマーク]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- フィードリーダーで記事を読んだ後にはてなブックマーク（ブクマ）するとフィード消化するのに時間がかかる フィードをそのままブクマしていると下記の問題がでてくる あとで確認することができない 読みたくない記事をブクマしてしまう 適切でないURLでブクマしてしまう 
+- フィードをそのままブクマしていると下記の問題がでてくる あとで確認することができない 読みたくない記事をブクマしてしまう 適切でないURLでブクマしてしまう 
+- あとで確認することができない
+- 読みたくない記事をブクマしてしまう
+- 適切でないURLでブクマしてしまう   > SOLUTIONSOLUTION 
+
+というわけで、下記の方針でブクマすることにした。設置方法の詳細はGitHubレポジトリを参照。 
+
+方針 
+
+- フィードごとにタグづけする
+- ブクマ対象になる記事をリンクとタイトルで除外判定する
+- ブクマ対象になる記事をリンクから校正すべきものかリダイレクトすべきものか判定する
+- 上記設定はYAMLファイルで簡単に管理できるようにする
+- フィード読込とブクマを非同期処理できるようElixirで実装する   > ブクマの管理方法ブクマの管理方法 
+
+下記5つのYAMLファイルで管理している、構造はマップとリストのみ。記事を読みすすめる中で気になるキーワードが出てきたら都度 feed.yaml を更新する。また、記事にノイズが多いようだったら傾向を分析して除外ファイル feed_excluded_link.yaml feed_excluded_title.yaml を更新してる。    item description     feed.yaml フィードグループ名に対するリンク、タグのマップ   feed_excluded_link.yaml 除外すべきフィードリンクのリスト   feed_excluded_title.yaml 除外すべきフィードタイトルのリスト   feed_corrected_link.yaml フィードリンクに対するトリミングすべきパラメータのマップ   feed_redirected_link.yaml フィードリンクに対するリダイレクト先リンクのマップ      yaml 
+
+# feed.yaml nabinno/sports/feed_group_name: tags: - ski links: - http://rss.example.com/ski_feed.rss - http://rss.example.com/snowboard_feed.rss - http://ski-status.example.com/rss # feed_excluded_link.yaml - anti-ski.example.com - awesome-snowboard.example.com # feed_excluded_title.yaml - queer - two-planker - beaver-tail # feed_corrected_link.yaml amazon.com: - ref - ie # feed_redirected_link.yaml ski-status.example.com: - Floki.find(fst, ".post__body a")     > Elixirによる非同期処理Elixirによる非同期処理   > 監視機構 Supervisor監視機構 Supervisor 
+
+Elixirには監視機構があり、それが各ワーカーを子プロセスとして管理している。ここではフィード読込とブクマは別々のワーカーで処理しているが、キャッシュが暖気処理を別ワーカーで行っているため再起動戦略は「失敗したイベントの中にあるすべての子プロセスを再起動」（ one_for_all ）にしてある。 
+
+下記のように Supervisor.start_link を Keshikimi2.Application.start に適用すると、アプリケーション開始（ mix run ）した時点で監視機構が起動される。   ex 
+
+Supervisor.start_link( [ :hackney_pool.child_spec(:hatena_bookmark_pool, timeout: 15_000, max_connections: 100), # @todo 当該ワーカーで暖気処理を行っていないので `one_for_one` にした場合、再起動時にほかに影響する supervisor(Cachex, [:feed, []]), supervisor(Keshikimi2Feed.Registry, [prefix]), # フィード読込処理 (PubSub) supervisor(Keshikimi2Feed.Subscriber, [prefix]), worker(Keshikimi2Feed.Worker, [prefix]), worker(Keshikimi2Feed.Publisher, [[prefix: prefix, poll_interval: 3_000]]), # ブクマ処理 worker(Keshikimi2.HatenaBookmark.AddEntry, [ [prefix: prefix, poll_interval: 3_000] ]) ], strategy: :one_for_all, name: name(prefix) )     > 非同期処理 Task.async_stream非同期処理 Task.async_stream 
+
+配列を引き回すリクエスト処理は Task.async_stream がうってつけである。下記ではキャッシュからブクマ対象になるフィードリンクを取り出し、除外処理、校正処理を加えて、ブクマのリクエストを出すという流れを組んでいる。Elixirでは、流れをひとまとめにして視覚的にわかりやすく非同期処理してくことができる。   ex 
+
+Cachex.keys!(:feed) |> Enum.reject(fn key -> key in [ "excluded_links", "excluded_titles", "corrected_links", "redirected_links", "feed_group", "archived_links" ] end) |> Task.async_stream( fn item_link -> with {:ok, [item_title, feed_tags]} <- Cachex.get(:feed, item_link), :ok <- validate_all(item_link, item_title), corrected_link <- correct_all(item_link), {:ok, payload} <- FormData.create( %{ url: corrected_link, comment: feed_tags |> Enum.map_join(fn tag -> "[#{tag}]" end), rks: System.get_env("HATENA_BOOKMARK_RKS"), private: 0, keep_original_url: 1, with_status_op: 1, from: "inplace", post_twitter: 0, post_evernote: 0 }, :url_encoded, get: false ) do do_add_entries_to_hb(payload) Logger.info("add entry: #{item_link}") end archive_link(item_link) end, timeout: 15_000 ) |> Stream.run()     > WRAPUPWRAPUP   > これからのはてなブックマークの使い方これからのはてなブックマークの使い方 
+
+- 手動でブクマ: 気になった記事があるごとに
+- ブクマの確認: 気になるタグごとにまとめて確認 たとえば、CIでデプロイしている間に最近のGitHubの動向を確認したい場合は「nabinno/github」をみる、という感じ。 
+- たとえば、CIでデプロイしている間に最近のGitHubの動向を確認したい場合は「nabinno/github」をみる、という感じ。]]></description><link>https://nabinno.github.io/posts/62</link><guid isPermaLink="false">62</guid><pubDate>Mon, 31 Dec 2018 15:00:00 GMT</pubDate></item><item><title><![CDATA[ElixirとRaspberry PiでPM2.5などの環境データを定点観察し、目・喉の痛みに備える]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- 以前からオフィスに行くと目や喉が痛くなることがあったので、自分の体調なのか環境なのか原因を切り分けるために汚染計測器「Dienmern DM106A」を購入 ただ、DM106Aの計測はその時その時のスナップショットなので傾向を読み解きづらい、また、都度実施する手間がかかる 
+- ただ、DM106Aの計測はその時その時のスナップショットなので傾向を読み解きづらい、また、都度実施する手間がかかる   > SOLUTIONSOLUTION 
+
+というわけで、DM106AのセンサーデータをRaspberry Piで定期取得することにした。設置方法の詳細はGitHubレポジトリを参照。下記は実装概要。   > 電子部品の構成電子部品の構成    item description     Raspberry Pi 3 Model B+    Aosong DHT11 気温・湿度センサー、GPIO   Nova SDS021 PM2.5・PM10センサー、UART   ams CCS811 TVOC・CO2eセンサー、I2C    
+
+電子工作は素人ゆえどのセンサーを買えばいいかわからなかったのでDM106Aを分解して各センサーの型番をしらべた。DHT011、SDS021はDM106Aとおなじセンサー、HCHOセンサーは信頼性があり手ごろなのがうまく見つけられなかった。TVOCセンサーはAdafruitが推しているCCS811を採用した。   > コードの構成コードの構成    item description     AirElixir.Application アプリケーション管理   AirElixir.GoogleSpreadsheets センサーデータ記録   AirElixirSensor.Publisher センサーデータ発行・送信   AirElixirSensor.Subscriber センサーデータ購読・受信    
+
+基本構成はGrovePiを参考にした。発行処理はElixirでうまくいかないケースがあったのでまずはPython/ErlPortでおこなった。後々Elixirに移行できるようにマクロにしてある。   > 5日ほど稼働してわかったこと・見立て、今後の課題5日ほど稼働してわかったこと・見立て、今後の課題 
+
+- 
+- オフィスの空気清浄機「Hitachi EP-LVG110」はPMをきちんとフィルターしていた ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている 
+- ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている
+- 人の入りが多い時間帯に空気（TVOCやCO2e）がよごれる 人が「出る」ときよりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察 
+- 人が「出る」ときよりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察
+- TVOCやCO2eはPMのうごきに連動している（かも） チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
+- チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
+- TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ
+- TVOCの変動が大きすぎる ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均 
+- ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均
+- TVOCのスパイクを抑えたい TODO: ファイトレメディエーションによる効果を見ていきたいところ 
+- TODO: ファイトレメディエーションによる効果を見ていきたいところ   > WRAPUPWRAPUP 
+
+Elixirは健康管理に向いている。   txt 
+
+「なんか体調がすぐれないなあ...」 「Elixirちょうだい!」   
+
+という感じ。]]></description><link>https://nabinno.github.io/posts/61</link><guid isPermaLink="false">61</guid><pubDate>Fri, 21 Dec 2018 15:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 2 認証機能を実装する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
+- 拡張にともない技術スタックがふえるのを抑えたい
+- スケーラビリティのためのコストを抑えたい
+- パフォーマンスをあげたい   > SOLUTIONSOLUTION 
+
+というわけで、現在つかっているRailsをPhoenixに変更することにした。 
+
+- 方針 Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+- Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない 
+- いままでとおなじPaaS（Heroku）
+- いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく 
+- ブランチ戦略は phoenix/base をベースに
+- 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく
+- いままでとおなじDB 移行完了までDBマイグレーションをしない 
+- 移行完了までDBマイグレーションをしない
+- Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+
+今回はRails/Deviseの認証機能をPhoenixで実装するながれをとりあげる。   > Guardianを実装するGuardianを実装する 
+
+参考にしたのはBlackodeのguardian_auth  ただ、Guardianのバージョンがふるいので1.0へのマイグレーション記事をもとにアレンジしてある。 
+
+認証に関係しそうな構成は下記のとおり。 
+
+ロジック 
+
+- MyApp.Account
+- MyApp.Account.Registration
+- MyApp.Account.User
+- MyApp.Auth.Guardian
+- MyApp.Auth.ErrorHandler
+- MyApp.Auth.Pipeline
+- MyApp.Auth.AfterPipeline
+- MyApp.Auth.Session 
+
+コントローラ 
+
+- MyAppWeb.RegistrationController
+- MyAppWeb.SessionController   > シリアライザとエラーハンドラの設定シリアライザとエラーハンドラの設定 
+
+Guardian1.0から直接ではなくモジュールを介して参照するようになった。下記のように各モジュールを用意してコンフィグに割り当てる。   elixir 
+
+# apps/my_app/lib/my_app/auth/guardian.ex defmodule MyApp.Auth.Guardian do use Guardian, otp_app: :my_app alias MyApp.Account def subject_for_token(resource, _claims), do: {:ok, to_string(resource.id)} def subject_for_token(_, _), do: {:error, :reason_for_error} def resource_from_claims(claims), do: {:ok, Account.get_user!(claims["sub"])} def resource_from_claims(_claims), do: {:error, :reason_for_error} end     elixir 
+
+# apps/my_app/lib/my_app/auth/error_handler.ex defmodule MyApp.Auth.ErrorHandler do import Plug.Conn def auth_error(conn, {type, _reason}, _opts) do body = Poison.encode!(%{message: to_string(type)}) send_resp(conn, 401, body) end end     elixir 
+
+# apps/my_app/config/config.exs config :my_app, MyApp.Auth.Guardian, issuer: "MyApp", ttl: {30, :days}, allowed_drift: 2000, # optionals allowed_algos: ["HS512"], verify_module: MyApp.Auth.Guardian.JWT, verify_issuer: true, secret_key: System.get_env("GUARDIAN_SECRET") || "secret_key"     > ルーターの設定ルーターの設定 
+
+認証のパイプラインは、認証中と認証後のものを用意しコンフィグとルーターに割り当てる。 
+
+ルータースコープ内のパイプラインくみあわせについて、ここでは未ログインスコープには認証前・認証中パイプライン、ログイン済スコープには認証前・認証中・認証後パイプラインを適用している。こうすることでどのスコープにも認証リソースをロードすることができ、かつ、認証も担保することができるようになる。具体的にいうと、ルート / などの同一URLで未ログインスコープとログイン済スコープの切り替えができるようになる。   elixir 
+
+# apps/my_app/lib/my_app/auth/pipeline.ex defmodule MyApp.Auth.Pipeline do use Guardian.Plug.Pipeline, otp_app: :my_app plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"}) plug(Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"}) plug(Guardian.Plug.LoadResource, allow_blank: true) end     elixir 
+
+# apps/my_app/lib/my_app/auth/after_pipeline.ex defmodule MyApp.Auth.AfterPipeline do use Guardian.Plug.Pipeline, otp_app: :my_app plug(Guardian.Plug.EnsureAuthenticated) end     elixir 
+
+# apps/my_app/lib/my_app_web/router.ex defmodule MyAppWeb.Router do use MyAppWeb, :router pipeline :browser do plug(:accepts, ["html"]) plug(:fetch_session) plug(:fetch_flash) plug(:protect_from_forgery) plug(:put_secure_browser_headers) end pipeline :browser_auth do plug(MyApp.Auth.Pipeline) end pipeline :browser_auth_after do plug(MyApp.Auth.AfterPipeline) end scope "/", MyAppWeb do pipe_through([:browser, :browser_auth]) post("/registration", RegistrationController, :create) get("/login", SessionController, :new) post("/login", SessionController, :create) get("/logout", SessionController, :delete) end scope "/", MyAppWeb do pipe_through([:browser, :browser_auth, :browser_auth_after]) get("/edit", RegistrationController, :edit) put("/edit", RegistrationController, :update) get("/users", UserController, :index) resources "/", UserController, only: [:show, :delete], param: "username" end end     elixir 
+
+# apps/my_app/config/config.exs config :MyApp, MyApp.Auth.Pipeline, module: MyApp.Auth.Guardian, error_handler: MyApp.Auth.ErrorHandler config :MyApp, MyApp.Auth.AferPipeline, module: MyApp.Auth.Guardian, error_handler: MyApp.Auth.ErrorHandler     > 登録登録 
+
+登録は登録用のロジック（ユーザーモデルと登録サービス）とコントローラを用意する。 
+
+このあたりはDevise/Railsとあまり変わらない。ほかのアクション「新規パスワード発行」「メールアドレス確認」なども同様の構成をとろうと思っている。   elixir 
+
+# apps/my_app/lib/my_app_web/controller/registration_controller.ex def create(conn, user_params) do changeset = User.registration_changeset(%User{}, user_params) case Registration.create(changeset, Repo) do {:ok, user} -> conn |> MyApp.Auth.login(user) |> put_flash(:info, "Your account was created successfully") |> redirect(to: page_path(conn, :home)) {:error, changeset} -> conn |> put_flash(:error, "Unable to create account: Try again") |> render(MyAppWeb.PageView, "home.html", changeset: changeset) end end     elixir 
+
+# apps/my_app/lib/my_app/auth/auth.ex def login(conn, %User{} = user) do conn |> Guardian.Plug.sign_in(user) |> assign(:current_user, user) end     elixir 
+
+# apps/my_app/lib/my_app/account/registration.ex def create(changeset, repo) do changeset |> repo.insert() end     > ログイン・ログアウトログイン・ログアウト 
+
+ログイン・ログアウトはセッション用のサービスとコントローラで実装する。   elixir 
+
+# apps/my_app/lib/my_app_web/controller/session_controller.ex @doc "Logged in [POST /login]" def create(conn, %{"email" => email, "password" => password}) do case Session.authenticate_user(email, password) do {:ok, user} -> conn |> Session.login(user) |> put_flash(:info, "Logged in successfully") |> redirect(to: page_path(conn, :home)) {:error, _reason} -> conn |> put_flash(:error, "Wrong username/password") |> render("new.html") end end @doc "Logged out [DELETE /logout]" def delete(conn, _params) do conn |> Session.logout() |> put_flash(:info, "Logged out successfully.") |> redirect(to: "/") end     elixir 
+
+# apps/my_app/lib/my_app/auth/session.ex defmodule MyApp.Auth.Session do import Ecto.Query import Plug.Conn import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0] alias MyApp.Repo alias MyApp.Auth.Guardian alias MyApp.Account.User def login(conn, %User{} = user) do conn |> Guardian.Plug.sign_in(user) |> assign(:current_user, user) end def logout(conn), do: Guardian.Plug.sign_out(conn) def authenticate_user(email, given_password) do query = Ecto.Query.from(u in User, where: u.email == ^email) Repo.one(query) |> check_password(given_password) end def current_user(conn), do: Guardian.Plug.current_resource(conn, []) def logged_in?(conn), do: Guardian.Plug.authenticated?(conn, []) defp check_password(nil, _), do: {:error, "Incorrect username or password"} defp check_password(user, given_password) do case Comeonin.Bcrypt.checkpw(given_password, user.encrypted_password) do true -> {:ok, user} false -> {:error, "Incorrect email or password"} end end end   
+
+Devise/Railsのビューヘルパーはビューマクロで適用する。   elixir 
+
+# apps/my_app/lib/my_app_web.ex def view do quote do # .. import Okuribi.Auth.Session, only: [current_user: 1, logged_in?: 1] end end   
+
+あるいは、put_assigns関数をはやしてコントローラマクロに適用する。   elixir 
+
+# apps/my_app/lib/my_app/auth/session.ex def put_assigns(%{private: %{phoenix_action: action}} = conn, settings) do current_resource = Guardian.Plug.current_resource(conn) settings = if current_resource, do: settings[:sign_in][action] || [], else: settings[:sign_out][action] || [] conn |> assign(:current_user, current_resource) |> assign(:page_title, settings[:page_title]) |> assign(:page_description, settings[:page_description]) end     elixir 
+
+# apps/my_app/lib/my_app_web.ex def controller do quote do # .. import Okuribi.Auth, only: [put_assigns: 2] end end   
+
+assignsひとつでアクセスできるので、下記のようにコントローラでまとめて指定することでRailsのActionView::Helpers::CaptureHelper#provideの代わりに使える。   elixir 
+
+# apps/my_app/lib/my_app_web/controller/*_controller.ex @page %{ sign_in: %{ new: %{ page_title: dgettext("views", "pages.home.signed_in.page_title"), page_description: "" } }, sign_out: %{ new: %{ page_title: dgettext("views", "pages.home.signed_out.page_title"), page_description: "" } } } plug(:put_assigns, @page when action in [:home])     > その他その他 
+
+RailsのビューをPhoenixのテンプレートに移植するには下記の変換を地道におこなっていく。 
+
+- Rails ActionView::Helpers::FormHelper#form_for(record, options={}, &block) ActionView::Helpers::FormHelper#text_field(object_name, method, options={}) ActionView::Helpers::FormHelper#file_field(object_name, method, options={}) ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={}) ActionView::Helpers::FormHelper#password_field(object_name, method, options={}) ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={}) ActionView::Helpers::FormBuilder#submit(value=nil, options={}) ActionView::Helpers::TranslationHelper#t 
+- ActionView::Helpers::FormHelper#form_for(record, options={}, &block)
+- ActionView::Helpers::FormHelper#text_field(object_name, method, options={})
+- ActionView::Helpers::FormHelper#file_field(object_name, method, options={})
+- ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={})
+- ActionView::Helpers::FormHelper#password_field(object_name, method, options={})
+- ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={})
+- ActionView::Helpers::FormBuilder#submit(value=nil, options={})
+- ActionView::Helpers::TranslationHelper#t
+- Phoenix Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun) Phoenix.HTML.Form.text_input(form, field, opts \\ []) Phoenix.HTML.Form.file_input(form, field, opts \\ []) Phoenix.HTML.Form.hidden_input(form, field, opts \\ []) Phoenix.HTML.Form.password_input(form, field, opts \\ []) Phoenix.HTML.Form.radio_button(form, field, value, opts \\ []) Phoenix.HTML.Form.submit(opts, opts \\ []) Gettext.dgettext(backend, domain, msgid, bindings \\ %{}) 
+- Phoenix.HTML.Form.form_for(form_data, action, options \\ [], fun)
+- Phoenix.HTML.Form.text_input(form, field, opts \\ [])
+- Phoenix.HTML.Form.file_input(form, field, opts \\ [])
+- Phoenix.HTML.Form.hidden_input(form, field, opts \\ [])
+- Phoenix.HTML.Form.password_input(form, field, opts \\ [])
+- Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])
+- Phoenix.HTML.Form.submit(opts, opts \\ [])
+- Gettext.dgettext(backend, domain, msgid, bindings \\ %{})]]></description><link>https://nabinno.github.io/posts/60</link><guid isPermaLink="false">60</guid><pubDate>Sat, 19 May 2018 15:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
+- 拡張にともない技術スタックがふえるのを抑えたい
+- スケーラビリティのためのコストを抑えたい
+- パフォーマンスをあげたい   > SOLUTIONSOLUTION 
+
+というわけで、現在つかっているRailsをPhoenixに変更することにした。 
+
+- 方針 Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+- Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない 
+- いままでとおなじPaaS（Heroku）
+- いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく 
+- ブランチ戦略は phoenix/base をベースに
+- 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく
+- いままでとおなじDB 移行完了までDBマイグレーションをしない 
+- 移行完了までDBマイグレーションをしない
+- Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+
+今回はRailsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロイする流れをとりあげる。   > HerokuへのデプロイのながれHerokuへのデプロイのながれ 
+
+基本的にドキュメント通り。   > Phoenixアプリケーションを作成Phoenixアプリケーションを作成 
+
+まず、こんな感じでPhoenixの骨組みをつくる。Phoenix関連のファイル apps/, deps/, config/config.exs, mix.exs, mix.lock が追加される。   sh 
+
+> cd rails_project > mix new . --umbrella > (cd ./apps && mix phx.new phoenix_app)   
+
+つぎに、既存のRailsでつくられたスキーマをPhoenixに移植。Ripperをつかうとはかどる。ちなみに手動でスキーマをつくりたい場合は、CLI mix phx.gen.schema --no-migration Blog.Post blog_posts title:string で作成する。   rb 
+
+# lib/tasks/convert_to_phoenix.rake # こちらはスキーマ移植タスクをPhoenix1.3用に改めたもの require 'ripper' require 'erb' require 'fileutils' namespace :db do namespace :schema do desc 'Convert schema from Rails to Phoenix' task convert_to_phoenix: :environment do ConvertSchemaForPhoenixService.call end end end class ConvertSchemaForPhoenixService class << self def call FileUtils.mkdir_p(File.join('tmp', 'models')) extract_activerecord_define_block( Ripper.sexp( Rails.root .join('db', 'schema.rb') .read ) ).select(&method(:create_table_block?)) .map(&method(:configuration)) .each do |conf| project_name = 'PhoenixApp' table_name = conf[:table_name] table_columns = conf[:table_columns].reject(&method(:reject_condition)) .map do |c| case c[:column_type] when 'text' then c[:column_type] = ':string' when 'datetime' then c[:column_type] = ':naive_datetime' when 'inet' then c[:column_type] = 'EctoNetwork.INET' else c[:column_type] = ":#{c[:column_type]}" end c end File.write( File.join('tmp', 'models', "#{conf[:table_name].singularize}.ex"), template.result(binding) ) end end private def extract_activerecord_define_block(sexp) sexp.dig(1, 0, 2, 2) end def create_table_block?(activerecord_define_block_element_sexp) activerecord_define_block_element_sexp.dig(1, 1, 1) == 'create_table' rescue false end def extract_table_name(create_table_block_sexp) create_table_block_sexp.dig(1, 2, 1, 0, 1, 1, 1) end def extract_table_columns(create_table_block_sexp) create_table_block_sexp.dig(2, 2) end def extract_column_type(table_column_sexp) table_column_sexp.dig(3, 1) end def extract_column_name(table_column_sexp) # Return value of `t.index` is array like ['user_id']. if table_column_sexp.dig(4, 1, 0, 0) == :array return table_column_sexp.dig(4, 1, 0, 1).map { |e| e.dig(1, 1, 1) } end table_column_sexp.dig(4, 1, 0, 1, 1, 1) end def extract_column_option(table_column_sexp) # If is not `column_option`, then `table_column_sexp.dig(4, 1, 1, # 1)` method return nil. Set blank array ([]) for avoiding nil. table_column_sexp.dig(4, 1, 1, 1) || [] end def extract_option_key(column_option_sexp) # Remove colon for avoiding `null:`. column_option_sexp.dig(1, 1).gsub(/:\z/, '') end def extract_option_value(column_option_sexp) if column_option_sexp.dig(2, 0) == :array return Array(column_option_sexp.dig(2, 1)).map { |e| e.dig(1, 1, 1) } end element = column_option_sexp.dig(2, 1) if element.class != Array return element end case element.dig(0) when :kw then element.dig(1) when :string_content then element.dig(1, 1) || '' end end def template ERB.new(<<'__EOD__', nil, '-') defmodule <%= project_name %>.<%= table_name.classify %> do use Ecto.Schema import Ecto.Changeset alias <%= project_name %>.<%= table_name.classify %> schema "<%= table_name %>" do<% table_columns.each do |c| %> field :<%= c[:column_name] -%>, <%= c[:column_type] -%> <% end %> timestamps inserted_at: :created_at end @doc false def changeset(%<%= table_name.classify %>{} = <%= table_name.singularize %>, attrs) do <%= table_name.singularize %> |> cast(attrs, [<%= table_columns.map { |c| ":" << c[:column_name] }.join(", ") -%>]) # |> validate_required([<%= table_columns.map { |c| ":" << c[:column_name] }.join(", ") -%>]) end end __EOD__ end def configuration(table) { table_name: extract_table_name(table), table_columns: extract_table_columns(table).map do |c| { column_name: extract_column_name(c), column_type: extract_column_type(c), column_option: Hash[extract_column_option(c).map { |o| [extract_option_key(o), extract_option_value(o)] }] } end } end def reject_condition(column) column[:column_name] =~ /\A(created|updated)_at\z/ || column[:column_type] == 'index' end end end     sh 
+
+> rails db:schema:convert_to_phoenix   
+
+最後に、既存DBへはこんな感じで接続する。   config 
+
+# rails_project/apps/phoenix_app/config/dev.exs config :phoenix_app, PhoenixApp.Repo, adapter: Ecto.Adapters.Postgres, url: System.get_env("DATABASE_URL"), pool_size: 10, ssl: true     sh 
+
+> (cd ./apps/phoenix_app/assets && npm install) > mix deps.get > mix phx.server     > デプロイのパイプラインを追加デプロイのパイプラインを追加 
+
+さて、既存のCI（Wercker）も更新。今回はPhoenix関連ブランチが更新された場合にのみ、関連パイプラインを走らせるように下記のように変更した。 
+
+BEFORE 
+
+- build (all branch) deploy.prod (master branch) 
+- deploy.prod (master branch) 
+
+AFTER 
+
+- build (all branch) deploy.prod (master branch) deploy.phoenix.prod (phoenix/base branch) 
+- deploy.prod (master branch)
+- deploy.phoenix.prod (phoenix/base branch)   yaml 
+
+# wercker.yml deploy-phoenix-prod-heroku: steps: - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - heroku-deploy: key: $HEROKU_KEY user: $HEROKU_USER app-name: $HEROKU_APP_NAME install-toolbelt: true after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > Herokuアプリケーションを作成Herokuアプリケーションを作成 
+
+基本ドキュメントの説明通り。Phoenix Umbrellaプロジェクトの注意点としては、ディレクトリの差異くらいでそれ以外はおなじ。つまり、これ rails_project/config/prod.exs をこう rails_project/apps/phoenix_app/config/prod.exs する。 
+
+1. Herokuアプリにビルドパックを適用   sh 
+
+> heroku create --buildpack https://github.com/HashNuke/heroku-buildpack-elixir.git > heroku buildpacks:add https://github.com/gjaldon/heroku-buildpack-phoenix-static.git   
+
+2. 起動設定を準備   config 
+
+# rails_project/elixir_buildpack.config erlang_version=19.1 elixir_version=1.4.2 always_rebuild=false pre_compile="pwd" post_compile="pwd" runtime_path=/app config_vars_to_export=(DATABASE_URL) config_vars_to_export=(DATABASE_POOL_SIZE)     config 
+
+# rails_project/phoenix_static_buildpack.config phoenix_relative_path=apps/phoenix_app     config 
+
+# rails_project/Procfile web: MIX_ENV=prod mix phx.server   
+
+3. 環境変数を適用 
+
+データベース関連。   config 
+
+# rails_project/apps/phoenix_app/config/prod.exs config :phoenix_app, PhoenixApp.Repo, adapter: Ecto.Adapters.Postgres, url: System.get_env("DATABASE_URL"), pool_size: String.to_integer(System.get_env("DATABASE_POOL_SIZE") || 10), ssl: true     sh 
+
+heroku config:set DATABASE_URL=foo heroku config:set DATABASE_POOL_SIZE=bar   
+
+クレデンシャル関連。   sh 
+
+> heroku config:set HEROKU_API_KEY=$(heroku auth:token) > heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)]]></description><link>https://nabinno.github.io/posts/59</link><guid isPermaLink="false">59</guid><pubDate>Sun, 07 Jan 2018 15:00:00 GMT</pubDate></item><item><title><![CDATA[WSL（Windows Subsystem for Linux）でDockerをつかったWebアプリケーション開発をおこなう際の注意点]]></title><description><![CDATA[これは無宗教ななびの  が書くDocker Advent Calendar 2017用記事です。前日はinductorさんの「Docker Meetupの中身まとめ」でした  （写真はクリスマスを日本にひろめた明治屋 ）   > PROBLEMPROBLEM 
+
+- macOSとWindowsでWebアプリケーション開発をする際に 環境が異なって管理しづらい それならDockerで と思ったが、macOSはBashでWindowsはPowerShellなのか せめてPowerShellではなくBash... となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- 環境が異なって管理しづらい それならDockerで と思ったが、macOSはBashでWindowsはPowerShellなのか せめてPowerShellではなくBash... となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- それならDockerで と思ったが、macOSはBashでWindowsはPowerShellなのか せめてPowerShellではなくBash... となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- と思ったが、macOSはBashでWindowsはPowerShellなのか せめてPowerShellではなくBash... となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- せめてPowerShellではなくBash... となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- となると、いまWindowsでLinux環境をつかうならWSLか ただ、実際どこまで開発ができるかわからんしなあ 
+- ただ、実際どこまで開発ができるかわからんしなあ   > SOLUTIONSOLUTION 
+
+というわけで、この記事ではmacOSとWindowsによるWebアプリケーション開発について、どこまで共有できるか書いていきます。 
+
+前提条件として、当該WebアプリケーションはmacOSというより、Bash/Ubuntu14.04~のLinux環境で動くことを想定しています。macOSはHFS+やAPFSのUnicode正規化以外はおおよそLinux環境に適応できているという判断によります。 
+
+要は、WSLでDockerをつかったWebアプリケーション開発ができるかどうかという点に焦点をしぼります。   > 対象環境対象環境 
+
+- Windows 10 Pro 1709 16299.64 Hyper-V 10.0.16299.15 Docker for Windows 17.09.0-ce-win33 Ubuntu 16.04 (Linux 4.4.0-43-Microsoft) Docker Client 1.12.6 
+- Hyper-V 10.0.16299.15
+- Docker for Windows 17.09.0-ce-win33
+- Ubuntu 16.04 (Linux 4.4.0-43-Microsoft) Docker Client 1.12.6 
+- Docker Client 1.12.6   > Windowsの開発環境を構築するWindowsの開発環境を構築する 
+
+まず、Windowsの開発環境の構築ですが、既知の情報をふまえつつTIPSを順次紹介します。   > WSLのインストールWSLのインストール 
+
+- Windows Subsystem for Linuxをインストールしてみよう！ 
+
+WSLのパッケージ管理は下記3つを押さえておけば問題ないでしょう。 
+
+1. apt WSLではデーモンがつかえないのでDockerクライアントを入れましょう、Dockerデーモンの詳細は後ほど言及します 
+2. WSLではデーモンがつかえないのでDockerクライアントを入れましょう、Dockerデーモンの詳細は後ほど言及します
+3. anyenv プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう exenvがビルドで失敗するためElixirインストールできないほかは、各言語問題なくビルドできます 
+4. プログラミング言語をバージョンごとにわけて使いたい場合はこちらをつかいましょう
+5. exenvがビルドで失敗するためElixirインストールできないほかは、各言語問題なくビルドできます
+6. nix ElixirやHaskellのようにanyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう また、aptのバージョンが古すぎるパッケージもnixが最適です 
+7. ElixirやHaskellのようにanyenvでインストールできない、あるいは、扱われいないパッケージはnixをつかいましょう
+8. また、aptのバージョンが古すぎるパッケージもnixが最適です   > ターミナルのインストールターミナルのインストール 
+
+WSLttyかConEmuをおすすめします。各々の特徴は下記のとおりですが、通常のWebアプリケーション開発であればWSLttyがいいでしょう。 
+
+- WSLtty Pros ConEmuとくらべてファイルの読込速度が速い (VMよりは遅い) EmacsでCtrl-SPC set-mark が機能する 画面サイズの変更が柔軟 Cons PowerShellなどほかのコンソールの呼び出しが面倒 
+- Pros ConEmuとくらべてファイルの読込速度が速い (VMよりは遅い) EmacsでCtrl-SPC set-mark が機能する 画面サイズの変更が柔軟 
+- ConEmuとくらべてファイルの読込速度が速い (VMよりは遅い)
+- EmacsでCtrl-SPC set-mark が機能する
+- 画面サイズの変更が柔軟
+- Cons PowerShellなどほかのコンソールの呼び出しが面倒 
+- PowerShellなどほかのコンソールの呼び出しが面倒
+- ConEmu Pros PowerShellなどほかのコンソールの呼び出しが楽 Cons ファイルの読込速度がおそい EmacsでCtrl-SPC set-mark が機能しない 画面サイズの変更に制限がある 
+- Pros PowerShellなどほかのコンソールの呼び出しが楽 
+- PowerShellなどほかのコンソールの呼び出しが楽
+- Cons ファイルの読込速度がおそい EmacsでCtrl-SPC set-mark が機能しない 画面サイズの変更に制限がある 
+- ファイルの読込速度がおそい
+- EmacsでCtrl-SPC set-mark が機能しない
+- 画面サイズの変更に制限がある   > WSLttyWSLtty 
+
+- mintty/wsltty 
+
+WSL用ターミナルとしてのMinttyです。操作はMinttyとかわらず、元Cygwinづかいにはうれしい操作感です。というわけで、いつものごとく起動用ショートカットのターゲットを準備します。WSLは chsh がつかえないのでログイン時につかいたいシェルを指定します。もし、 screen をつかいたい場合は /run/screen ディレクトリを作成してからコマンド指定します。   bat 
+
+%LOCALAPPDATA%\wsltty\bin\mintty.exe --wsl -o Locale=C -o Charset=UTF-8 /bin/wslbridge -t /bin/bash -c 'sudo mkdir /run/screen && sudo chmod 775 $_ && sudo chown root:utmp $_ && SHELL=/usr/bin/zsh screen'   ConEmu 
+
+- ConEmu - Handy Windows Terminal 
+
+WSL上で日本語を表示するため、また、WSLのLinux環境とWindows環境でターミナルをわけるため、ConEmuをつかいましょう。ConEmuをスマートにしたCmderはWSLとの相性がわるい1のでおすすめしません。 
+
+ConEmuの設定「Startup-Tasks」では、WSL用にパラメータ、コマンドを下記のように指定しています。   bash 
+
+# task parameters /icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1604.2017.922.0_x64__79rhkp1fndgsc\images\icon.ico" # task command bash -c 'sudo mkdir /run/screen && sudo chmod 775 $_ && sudo chown root:utmp $_ && SHELL=/usr/bin/zsh screen' -new_console:d:%USERPROFILE%     > Docker for WindowsのインストールDocker for Windowsのインストール 
+
+- Docker For Windows 
+
+WSLではDockerデーモンがつかえないのでNTFS (WSLからみるとdrvfs) 側で用意します。インストールはDockerのダウンロードページから手順通りおこないます。 
+
+構成は下記のようになります。 
+
+ 
+
+DockerクライアントからDockerデーモンにつなぐには、セキュリティリスクはありますが、 DOCKER_HOST をつかうのが簡易的です。Docker for WindowsとDockerクライアント、各々設定します。 
+
+1. Docker for WindowsよりDockerデーモンを「Expose daemon on tcp://localhost:2375 without TLS」として設定
+2. WSL上のDockerクライアントに DOCKER_HOST=tcp://0.0.0.0:2375 を設定 
+
+WSLには下記のようなaliasを用意しておくといいでしょう。   bash 
+
+export DOCKER_HOST=tcp://0.0.0.0:2375 alias docker="DOCKER_HOST=${DOCKER_HOST} docker" alias docker-compose="docker-compose -H ${DOCKER_HOST}"     > さて、WSLからDocker for Windowsはどの程度つかえるのかさて、WSLからDocker for Windowsはどの程度つかえるのか 
+
+WSLがlxfs、Docker for WindowsがNTFS (drvfs) 上で動いていることからわかるように、ファイルシステム上の制約があります。具体的には下記4点です。 
+
+1. Docker for WindowsはNTFS (WSLからみるとdrvfs /mnt/) 上のファイルしかVolumeマウントできません
+2. WSLはLinux形式のパスしか扱えません、C:\Dev のようなドライブ名にコロンをつけたURIスキーマは扱えません
+3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません2 
+4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります3  
+
+ひとつずつ解決方法を見ていきましょう。   > 1. Docker for WindowsはNTFS (WSLからみるとdrvfs /mnt/) 上のファイルしかVolumeマウントできません1. Docker for WindowsはNTFS (WSLからみるとdrvfs /mnt/) 上のファイルしかVolumeマウントできません 
+
+開発用ディレクトリをNTFS上につくりましょう。普段からWindowsで開発されている方はCドライブ直下につくっているとおもいます。   > 2. WSLはLinux形式のパスしか扱えません、ドライブ名にコロンをつけたURIスキーマは扱えません2. WSLはLinux形式のパスしか扱えません、ドライブ名にコロンをつけたURIスキーマは扱えません 
+
+NTFSからのパス参照とWSLからのパス参照を共通化するために、WSLに各ドライブのシンボリックリンクをはりましょう。   bash 
+
+$ ln -s /mnt/c /C # 開発ディレクトリはこんな感じで参照できます $ ls -al /C/Dev total 0 drwxrwxrwx 0 root root 512 Oct 27 00:54 . drwxrwxrwx 0 root root 512 Dec 8 07:49 .. drwxrwxrwx 0 root root 512 Jul 14 03:06 app-test-1 drwxrwxrwx 0 root root 512 Oct 25 00:38 app-test-2     > 3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません3. WSL上のdocker-composeはパスを絶対参照しかできません、相対参照できません 
+
+各OS間での違いを吸収するため、プロジェクトに PRJ_ROOT のような環境変数を用意しましょう。   yaml 
+
+services: app-front: image: 561534604247952616898.dkr.ecr.amazonaws.com/test/front volumes: - ${PRJ_ROOT}/front:/var/www/front     > 4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります4. WSL上のnpm/yarnによるJSビルドをNTFS (drvfs)上でおこなうとエラーになります 
+
+こちらはFall Creators Updateのデグレですが、更新プログラム (KB4051963) でこの問題が修正されました  
+
+もし更新プログラムが適用できない場合は、シンボリックリンクでNTFS上のnode_modulesディレクトリをWSLに移しましょう。   bash 
+
+$ mkdir /home/foo/tmp/app-test-1/front/node_modules $ ln -s /home/foo/tmp/app-test-1/front/node_modules /C/Dev/app-test-1/front/node_modules     > WRAPUPWRAPUP 
+
+まだ未検証な部分はのこっていますが、ひととおりmacOSとWindowsによるWebアプリケーション開発は共有できるところまできている、と言えそうです。 
+
+随時、気になる課題が出てきたら追記します。  
+
+1. https://github.com/cmderdev/cmder/issues/901 ↩ 
+2. https://github.com/docker/compose/issues/4039#issuecomment-269558432 ↩ 
+3. https://github.com/Microsoft/WSL/issues/2448 ↩]]></description><link>https://nabinno.github.io/posts/58</link><guid isPermaLink="false">58</guid><pubDate>Sat, 09 Dec 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[Surface Bookの画面端に黄色いシミがでる]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- Surface Bookの画面端に黄色いシミがでる 液晶の問題かOSの問題かで対応がかわってくるので確認方法が知りたい 
+- 液晶の問題かOSの問題かで対応がかわってくるので確認方法が知りたい   > SOLUTIONSOLUTION 
+
+- というわけで、Surface BookのUEFI（ファームウェア画面）で黄色いシミがでるか確認する。 もしUEFIでシミがあったら、サポート相談して機器交換 もしUEFIでシミがなかったら、OSを初期化 もしOS初期化してシミがなかったら、問題解決 もしOS初期化してシミがあったら、サポート相談 
+- もしUEFIでシミがあったら、サポート相談して機器交換
+- もしUEFIでシミがなかったら、OSを初期化 もしOS初期化してシミがなかったら、問題解決 もしOS初期化してシミがあったら、サポート相談 
+- もしOS初期化してシミがなかったら、問題解決
+- もしOS初期化してシミがあったら、サポート相談   > UEFI 確認のながれUEFI 確認のながれ 
+
+1. Surfaceをシャットダウンした状態で、電源ボタンと音量を上げるボタンを同時に長押し
+2. 英語表記の「UEFI画面（背景が白い画面）」が表示される
+3. UEFI画面で黄色いシミがあるか確認する（あったら、サポート相談して機器交換）   > OS初期化のながれOS初期化のながれ 
+
+1. WindowsキーとIキー（アルファベット）を一緒に押して設定メニューを表示させる
+2. [更新とセキュリティー] を選択
+3. [回復] を選択
+4. [このPCを初期状態に戻す] の項目の［開始する] を選択
+5. [すべて削除する] を選択
+6. [ファイルの削除のみ行う] を選択
+7. [初期状態に戻す] を選択
+8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Fri, 23 Jun 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- 大量のCSVを読み込む際、毎回時間がかかる   > SOLUTIONSOLUTION 
+
+というわけで、Dalibor Nasevicのベンチマーク記事にPyCallのベンチマークをくわえて比較してみることに。記事では CSV.foreach が速いとの結論だった。    kind_of_parse time (real) memory (MB)     1. CSV.read  39.13 866.6   2. CSV.parse  36.16 936.87   3. line by line from String Object 23.39 73.42   4. line by line from IO Object 24.55 0.0   5. CSV.foreach  24.04 0.0      > PyCallのベンチマークPyCallのベンチマーク 
+
+コードはこんな感じ。   ruby 
+
+require_relative './helpers' require 'pycall/import' include PyCall::Import pyimport :pandas, as: :pd print_memory_usage do print_time_spent do csv = pd.read_csv.('data.csv') sum = csv['id'].sum.() puts "Sum: #{sum}" end end   
+
+pyenv との相性が悪いのでSystemインストールしたPythonでたたく。   sh 
+
+$ PYTHON=/usr/bin/python3.4 ruby parse_6_pycall.rb Sum: 499999500000 Time: 1.49 Memory: 54.99 MB   
+
+結果    kind_of_parse time (real) memory (MB)     1. CSV.read  39.13 866.6   2. CSV.parse  36.16 936.87   3. line by line from String Object 23.39 73.42   4. line by line from IO Object 24.55 0.0   5. CSV.foreach  24.04 0.0   6. PyCall 1.49 54.99    
+
+16倍の実行速度、 
+
+つかえそう。 
+
+ただ、PyCallのオブジェクトは PyObject なので、
+ Railsだとまだ相性がわるいかなあ。]]></description><link>https://nabinno.github.io/posts/56</link><guid isPermaLink="false">56</guid><pubDate>Sun, 04 Jun 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[LYSE本を読む]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
+- 巷でいわれているSLA 99.9999999% などの実際がどうなのか腹落ちしてない   > TLDRTLDR 
+
+- 下記Erlang機能を中心に高いSLAを提供する素地になっている 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 ライフサイクル、再起動戦略を備えたライブラリ（分散OTP） CPシステムでNoSQLデータベース「Mnesia」 
+- 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 
+- 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。
+- EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 
+- 耐障害性（スケーリングはやや弱い）
+- マルチプロセス
+- ネットワークの障害監視
+- ライフサイクル、再起動戦略を備えたライブラリ（分散OTP）
+- CPシステムでNoSQLデータベース「Mnesia」   > SOLUTIONSOLUTION 
+
+というわけで、LYSE本を読むことにした。Elixirに関係ありそうな箇所を抜粋している。   > 1-3 Erlang概要1-3 Erlang概要   > 1.2 Erlangって何？1.2 Erlangって何？ 
+
+- 関数型言語 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う 
+- 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う
+- アクターモデル 同時並行性 高可用性 Ex: Blue-Green deployment Log management Policy: Let it crash - クラッシュするならさせておけ As bad as anything else let it crashが生んだ誤解 
+- 同時並行性
+- 高可用性
+- Ex: Blue-Green deployment Log management 
+- Blue-Green deployment
+- Log management
+- Policy: Let it crash - クラッシュするならさせておけ As bad as anything else let it crashが生んだ誤解 
+- Let it crash - クラッシュするならさせておけ As bad as anything else let it crashが生んだ誤解 
+- As bad as anything else
+- let it crashが生んだ誤解
+- 開発環境 クロスプラットフォーム BEAM 開発ツール コンパイラ デバッガ プロファイラ テストフレームワーク 
+- クロスプラットフォーム BEAM 
+- BEAM
+- 開発ツール コンパイラ デバッガ プロファイラ テストフレームワーク 
+- コンパイラ
+- デバッガ
+- プロファイラ
+- テストフレームワーク
+- ライブラリ OTPフレームワーク Webサーバー パーサジェネレータ Mnesiaデータベース 
+- OTPフレームワーク
+- Webサーバー
+- パーサジェネレータ
+- Mnesiaデータベース   > 1.3 Don't drink too much Kool-Aid1.3 Don't drink too much Kool-Aid 
+
+- 軽量プロセスによるスケール タスクを細かく分けすぎる＝むやみに並行処理させると処理速度に影響がでる 
+- タスクを細かく分けすぎる＝むやみに並行処理させると処理速度に影響がでる
+- CPUコア数によるスケール すべてを同時に稼働させることができない 
+- すべてを同時に稼働させることができない
+- 技術領域 適切でない技術領域 画像処理 信号処理 OSのデバイスドライバ 適切な技術領域 巨大なサーバソフトウェア - QMS, MapReduce 多言語との接続 高レベルプロトコルの実装 Ex: IANOというUNICTチームが作成したロボット Wings 3D 
+- 適切でない技術領域 画像処理 信号処理 OSのデバイスドライバ 
+- 画像処理
+- 信号処理
+- OSのデバイスドライバ
+- 適切な技術領域 巨大なサーバソフトウェア - QMS, MapReduce 多言語との接続 高レベルプロトコルの実装 Ex: IANOというUNICTチームが作成したロボット Wings 3D 
+- 巨大なサーバソフトウェア - QMS, MapReduce
+- 多言語との接続
+- 高レベルプロトコルの実装
+- Ex: IANOというUNICTチームが作成したロボット Wings 3D 
+- IANOというUNICTチームが作成したロボット
+- Wings 3D   > 3.2. 変化できない変数3.2. 変化できない変数 
+
+- パターンマッチング（= 演算子） 比較の役割も果たしている 値が違っていたらエラーを出す 値が同じだったら当該の値を返す 
+- 比較の役割も果たしている 値が違っていたらエラーを出す 値が同じだったら当該の値を返す 
+- 値が違っていたらエラーを出す
+- 値が同じだったら当該の値を返す   erlang 
+
+> 47 = 45 + 2. > 47 = 45 + 3. ** exception error: no match of right hand side value 48   
+
+- アンダースコア変数（_） 使用はできるが値の格納はできない 
+- 使用はできるが値の格納はできない   erlang 
+
+> _ = 14+3. 17 > _. * 1: variable '_' is unbound     > 3.3. アトム3.3. アトム 
+
+- アトムと予約語 いくつかのアトムは予約語 after and andalso band begin bnot bor bsl bsr bxor case catch cond div end fun if let not of or orelse query receive rem try when xor false true 
+- いくつかのアトムは予約語 after and andalso band begin bnot bor bsl bsr bxor case catch cond div end fun if let not of or orelse query receive rem try when xor false true 
+- after and andalso band begin bnot bor bsl bsr bxor case catch cond div end fun if let not of or orelse query receive rem try when xor false true   > 3.4. ブール代数と比較演算子3.4. ブール代数と比較演算子 
+
+- false trueはアトムなので数値の代替にはならない
+- アトムなどのほかの型も比較対象になる number < atom < reference < fun < port < pid < tuple < list < bit string 
+- number < atom < reference < fun < port < pid < tuple < list < bit string   erlang 
+
+> 0 == false. false > 1 < false. true     > 3.8. ビット構文!3.8. ビット構文! 
+
+- Erlangはおもいデータを数値処理するにはむいてない
+- 一方、数値処理が必要ないアプリケーションの中では速い 次のような処理にむいている イベントに反応する イベントをミリ秒単位でしょりできリアルタイムアプリケーションに適している メッセージングパッシング アトムをつかうと軽く処理できる 
+- 次のような処理にむいている イベントに反応する イベントをミリ秒単位でしょりできリアルタイムアプリケーションに適している メッセージングパッシング アトムをつかうと軽く処理できる 
+- イベントに反応する イベントをミリ秒単位でしょりできリアルタイムアプリケーションに適している 
+- イベントをミリ秒単位でしょりできリアルタイムアプリケーションに適している
+- メッセージングパッシング アトムをつかうと軽く処理できる 
+- アトムをつかうと軽く処理できる
+- 軽量なビット文字列 Pros リストで表現する文字列は1文字につき1ノード ビット文字列はC言語の配列のようなもの - <<"this is a bit string!">> Cons パターンマッチなどの捜査の際に単純さが失われる 
+- Pros リストで表現する文字列は1文字につき1ノード ビット文字列はC言語の配列のようなもの - <<"this is a bit string!">> 
+- リストで表現する文字列は1文字につき1ノード
+- ビット文字列はC言語の配列のようなもの - <<"this is a bit string!">> 
+- Cons パターンマッチなどの捜査の際に単純さが失われる 
+- パターンマッチなどの捜査の際に単純さが失われる   > 4-5 パターンマッチング4-5 パターンマッチング 
+
+4-5章からIDEがないとreplなどに時間がとられるので整備しておこう。Emacsならerlang.elがある。インデント、フィルコメント、コメントアウト、OTPなどのscafold、Eshell、コンパイル等ひととおりそろっている。   > 5.5. 関数呼び出しによるパターンマッチガードはcase文よりも優れているのか？5.5. 関数呼び出しによるパターンマッチガードはcase文よりも優れているのか？ 
+
+まず、パフォーマンス上かわらない。 
+
+つぎに、引数が複数あるときは関数をつかう。   erlang 
+
+beach(Temperature) -> case Temperature of {celsius, N} when N > 20 andalso N =< 45 -> 'favorable'; {kelvin, N} when N >= 293 andalso N =< 318 -> 'scientifically favorable'; {fahrenheit, N} when N >= 68 andalso N =< 113 -> 'favorable in the US'; _ -> 'avoid beach' end.   
+
+上記のようだと可読性がさがる、冗長的。以下のように関数でまとめる。   erlang 
+
+beachf({celsius, N}) when N >= 20 andalso N =< 45 -> 'favorable'; beachf({kelvin, N}) when N >=293 andalso N =< 318 -> 'scientifically favorable'; beachf({fahrenheit, N}) when N >= 68 andalso N =< 113 -> 'favorable in the US'; beachf(_) -> 'avoid beach'.   
+
+ただし、引数が評価関数の対象の場合はcase文が向いている。   erlang 
+
+prepend(X, []) -> [X]; prepend(X, Set) -> case lists:member(X, Set) of true -> Set; false -> [X | Set] end.     > 6-11 文法6-11 文法 
+
+- 今回は標準文法について Erlangの特徴はざっと次の通り 型変換の関数が素朴 erlang:<type>_to_<type> という形式をとっているため、型が追加されるたびに変換用関数を BIF (built-in function) に追加しなければいけない 再帰、無名関数、エラーは普通、Ruby, JSっぽい レコードによってインターフェイスを定義できる データ構造にキーバリューストア、セット、配列、有効グラフ、キューがある ただ配列は、他の手続き型言語の配列とは逆に、一定時間での挿入や検索ができない Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため 
+- Erlangの特徴はざっと次の通り 型変換の関数が素朴 erlang:<type>_to_<type> という形式をとっているため、型が追加されるたびに変換用関数を BIF (built-in function) に追加しなければいけない 再帰、無名関数、エラーは普通、Ruby, JSっぽい レコードによってインターフェイスを定義できる データ構造にキーバリューストア、セット、配列、有効グラフ、キューがある ただ配列は、他の手続き型言語の配列とは逆に、一定時間での挿入や検索ができない Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため 
+- 型変換の関数が素朴 erlang:<type>_to_<type> という形式をとっているため、型が追加されるたびに変換用関数を BIF (built-in function) に追加しなければいけない 
+- erlang:<type>_to_<type> という形式をとっているため、型が追加されるたびに変換用関数を BIF (built-in function) に追加しなければいけない
+- 再帰、無名関数、エラーは普通、Ruby, JSっぽい
+- レコードによってインターフェイスを定義できる
+- データ構造にキーバリューストア、セット、配列、有効グラフ、キューがある ただ配列は、他の手続き型言語の配列とは逆に、一定時間での挿入や検索ができない Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため 
+- ただ配列は、他の手続き型言語の配列とは逆に、一定時間での挿入や検索ができない Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため 
+- Erlangでなされるプログラミングスタイルでは配列や行列と結びつける必要がなく、実際にはめったに使われないため   > 7. 再帰7. 再帰 
+
+- lists モジュール sort/1 join/2 last/1 flatten/1 all/1 reverse/1 map/2 filter/2 
+- sort/1
+- join/2
+- last/1
+- flatten/1
+- all/1
+- reverse/1
+- map/2
+- filter/2
+- gb_tree モジュール lookup/2 map/2 
+- lookup/2
+- map/2   > 8.2. 無名関数8.2. 無名関数   erlang 
+
+> (fun() -> a end)(). a > lists:filter(fun(X) -> X rem 2 == 0 end, lists:seq(1, 10)). [2,4,6,8,10]     > 9. エラー9. エラー コンパイル時エラー    type error description     Module Module name 'madule' does not match file name 'module'  -module 属性内に書いたモジュール名がファイル名と一致していない   Function Warning: function somefunction/0 is unused 関数を公開していない、あるいはその関数が使われている場所が間違った関数名やアリティになっている   Function function somefunction/1 undefined 関数が存在していない:  -export 属性内あるいは関数を宣言するときに間違った関数名やアリティを書いてる   Function head mismatch 関数定義を他の関数での先頭の節の間に差し込んでいる   Syntax syntax error before: 'SomeCharacterOrWord' Ex: 括弧の閉じ忘れやタプルやおかしな式接尾辞、予約語・おかしな文字コードにエンコードされたUnicode文字の使用   Syntax syntax error before: 行末がおかしい   Variable Warning: this expression will fail with a 'badarith' exception Ex: llama + 5    Variable Warning: a term is constructed, but never used 関数の中に、リス作成、タプル宣言、どんな変数にも束縛されていない無名関数・自身を返す無名関数の宣言がある   Variable Warning: variable 'Var' is unused 使わない変数を宣言している   Variable Warning: this clause cannot match because a previous clause at line 4 always matches モジュール内で定義された関数が catch-all 節のあとに特定の節を持っている   Variable variable 'A' unsafe in 'case'  case ... of の中で宣言されている変数を、その外側で使っている    ランタイムエラー (exception error)    type error description     function clause no function clause matching somefunction 関数内のすべてのガード節で失敗、あるいはすべてのパターンマッチで失敗   case clause no case clause matching 'value' 条件の書き忘れ、誤った種類のデータ送信、 catch-all 節が必要な場合   if clause no true branch found when evaluating an if expression 条件の書き忘れ、 catch-all 節が必要な場合   badmatch no match of right hand side value 無理なパターンマッチ、変数束縛の繰り返し   badarg bad argument 誤った引数の呼び出し   undef undefined function somefunction 未定義関数の呼び出し   badarith bad argument in an arithmetic expression 誤った算術演算   badfun bad function 変数を関数として呼び出した場合   badarity interpreted function with arity 1 called with two arguments 誤ったアリティ    例外処理   erlang 
+
+1> erlang:error(badarith). ** exception error: bad argument in an arithmetic expression 2> erlang:error(custom_error). ** exception error: custom_error     > 11.2 レコード11.2 レコード   erlang 
+
+-record(robot, {name, type=industrial, hobbies, details=[]}).     erlang 
+
+5> Crusher = #robot{name="Crusher", hobbies=["Crushing people","petting cats"]}. #robot{name = "Crusher",type = industrial, hobbies = ["Crushing people","petting cats"], details = []} 6> Crusher#robot.hobbies. %% 参照 ["Crushing people","petting cats"] 7> NestedBot = #robot{details=#robot{name="erNest"}}. #robot{name = undefined,type = industrial, hobbies = undefined, details = #robot{name = "erNest",type = industrial, hobbies = undefined,details = []}} 8> NestedBot#robot.details#robot.name. %% ネスト参照 "erNest"     > 11.3. キーバリューストア11.3. キーバリューストア 
+
+キーバリューストアは4つのモジュールで提供されている。    module methods description     proplist  get_value/2, get_all_values/2, lookup/2, lookup_all/2  少量データ向け, 緩いデータ構造   orddict  store/3, find/2, fetch/2, erase/2  少量データ向け（75要素くらい）   dict  store/3, find/2, fetch/2, erase/2, map/2, fold/2  大量データ向け、ordict と同じインターフェイス   gb_trees  enter/2, lookup/2, delete_any/2, insert/3, get/2, update/3, delete/2  大量データ向け、データ構造の入出力がわかるスマートモードとわからないネイティブモードがあるため状況に応じて安全性とパフォーマンスのバランスを取ることができる      > 11.5.セット11.5.セット 
+
+セット（集合）は4つのモジュールで提供されている。    module methods description     ordsets  new/0, is_element/2, add_element/2, del_element/2, union/1, intersection/1  少量セット向け、遅いが可読性が高い   sets - 大量セット向け、ordsets と同じインターフェイス   gb_sets - 大量セット向け、スマートモード・ネイティブモードがあるため状況に応じ安全性とパフォーマンスのバランスを取ることができる   sofs - 一意な要素の集合だけではなく、数学的な概念として集合が必要な場合      > 11.6. 有効グラフ11.6. 有効グラフ 
+
+有効グラフは2つのモジュールで提供されている。    module description     digraph 生成、変更、エッジ・辺の操作、経路・周の検索   digraph_utils グラフの誘導、木のテスト、隣接ノードの検索      > 11.7. キュー11.7. キュー 
+
+queue モジュール    api methods description     Original API  new/0, in/2, out/1  キューの作成・削除   Extended API  get/1, peek/1, drop/1  キューの中身の確認   Okasaki API - 関数型データ構造にもとづく      > 12-13 並列性について12-13 並列性について   > 12.2.1. 並列性の概念12.2.1. 並列性の概念 
+
+- Erlangの開発の背景 大抵の人は並行ソフトウェアを書くことにうんざりしてる 並行の解決策のほとんどがロックやミューテックスと呼ばれる小さな理論を扱うことに終始する 通信業界では並行性・並列性をめざす文化があった PLEX AXE 
+- 大抵の人は並行ソフトウェアを書くことにうんざりしてる 並行の解決策のほとんどがロックやミューテックスと呼ばれる小さな理論を扱うことに終始する 
+- 並行の解決策のほとんどがロックやミューテックスと呼ばれる小さな理論を扱うことに終始する
+- 通信業界では並行性・並列性をめざす文化があった PLEX AXE 
+- PLEX
+- AXE
+- 満たすべき要求 スケーラビリティ リニアスケールが可能 実装方針 小さなプロセス プロセスに共有メモリの使用を禁じる フォールトレランス (交換機上の何千ものユーザをサポートすること) クラッシュが可能 クラッシュ後リスタートが可能 実装方針 分散 非同期メッセージングパッシング 
+- スケーラビリティ リニアスケールが可能 実装方針 小さなプロセス プロセスに共有メモリの使用を禁じる 
+- リニアスケールが可能
+- 実装方針 小さなプロセス プロセスに共有メモリの使用を禁じる 
+- 小さなプロセス
+- プロセスに共有メモリの使用を禁じる
+- フォールトレランス (交換機上の何千ものユーザをサポートすること) クラッシュが可能 クラッシュ後リスタートが可能 実装方針 分散 非同期メッセージングパッシング 
+- クラッシュが可能
+- クラッシュ後リスタートが可能
+- 実装方針 分散 非同期メッセージングパッシング 
+- 分散
+- 非同期メッセージングパッシング
+- 実装 並列・並行に最適化されたVM コア1つに対してスケジューラとして1つのスケジューラを起動 実行キューにあるタスクが多すぎた場合、他スレッドのスケジューラに移される 過負荷なプロセスに対して送れるメッセージ量を制御 
+- 並列・並行に最適化されたVM コア1つに対してスケジューラとして1つのスケジューラを起動 実行キューにあるタスクが多すぎた場合、他スレッドのスケジューラに移される 過負荷なプロセスに対して送れるメッセージ量を制御 
+- コア1つに対してスケジューラとして1つのスケジューラを起動
+- 実行キューにあるタスクが多すぎた場合、他スレッドのスケジューラに移される
+- 過負荷なプロセスに対して送れるメッセージ量を制御   > 12.3. すべてが線形にスケールするわけではない12.3. すべてが線形にスケールするわけではない 
+
+- アムダールの法則 50%並行にしたコードは2倍ほど速くなる 95%並行にしたコードは20倍ほど速くなる 
+- 50%並行にしたコードは2倍ほど速くなる
+- 95%並行にしたコードは20倍ほど速くなる   > 14 プロセス間通信14 プロセス間通信 
+
+- 今回は2つのプロセス間通信のプロセス管理について 片方のプロセスがエラーになっても、もう片方のプロセスが死なないようにする プロセスがエラーになったものはクラッシュさせる クラッシュしたプロセスをリスタートさせる また、そのクラッシュ情報をもう片方にメッセージとして送る 
+- 片方のプロセスがエラーになっても、もう片方のプロセスが死なないようにする プロセスがエラーになったものはクラッシュさせる クラッシュしたプロセスをリスタートさせる また、そのクラッシュ情報をもう片方にメッセージとして送る 
+- プロセスがエラーになったものはクラッシュさせる クラッシュしたプロセスをリスタートさせる 
+- クラッシュしたプロセスをリスタートさせる
+- また、そのクラッシュ情報をもう片方にメッセージとして送る   > エラーとプロセスエラーとプロセス 
+
+以下、3つの関数をつかい実装する。 
+
+1. erlang:exit(Pid, Why) - Pid に対して自分が異常終了で死んだとつたえる。自身は死なない。
+2. erlang:process_flag(trap_exit, Value) - Value が true ならシステムプロセスとなり、 false ならシステムプロセスでなくなる。デフォルトは false。この関数によりクラッシュしたプロセスをリスタートさせる
+3. erlang:register(Atom, Pid) と erlang:make_ref() - register/2 で予測不可能な Pid を Atom として登録し、make_ref/0 で生成された Reference をもとにメッセージ送信をおこなう。なお、ここで生成される Reference は同一Erlang VM上、あるいはクラスタリングしたVM上のみでユニークになる。   erlang 
+
+start_critic2() -> spawn(?MODULE, restarter, []). restarter() -> process_flag(trap_exit, true), Pid = spawn_link(?MODULE, critic2, []), register(critic2, Pid), receive {'EXIT', Pid, normal} -> % not a crash  ok; {'EXIT', Pid, shutdown} -> % manual termination, not a crash  ok; {'EXIT', Pid, _} -> restarter() end. judge2(Band, Album) -> Ref = make_ref(), critic2 ! {self(), Ref, {Band, Album}}, receive {Ref, Criticism} -> Criticism after 2000 -> timeout end. critic2() -> receive {From, Ref, {"Rage Against the Turing Machine", "Unit Testify"}} -> From ! {Ref, "They are great!"}; {From, Ref, {"System of a Downtime", "Memoize"}} -> From ! {Ref, "They're not Johnny Crash but they're good."}; {From, Ref, {"Johnny Crash", "The Token Ring of Fire"}} -> From ! {Ref, "Simply incredible."}; {From, Ref, {_Band, _Album}} -> From ! {Ref, "They are terrible!"} end, critic2().     erlang 
+
+27> functions:start_critic2(). <0.125.0> 28> functions:judge2("The Doors", "Light my Firewall"). "They are terrible!" 29> exit(whereis(critic2), kill). true 30> whereis(critic2). <0.129.0> 31> functions:judge2("The Doors", "Light my Firewall"). "They are terrible!"     > 15 アプリケーションを作成する15 アプリケーションを作成する   > リマインダーアプリケーションリマインダーアプリケーション 
+
+- 仕様 イベントを追加 イベントには締切り（警告する時間）、イベント名、詳細が含まれます イベントの時間が来たら警告 イベント名でイベントをキャンセル 永続的なディスク保存先を持たない 注 これは今回見ようとしているのアーキテクチャの概念を示すのに必要ありません これは実際のアプリケーションを作るなら全然ダメなことですが、代わりにもし実装したくなったらその機能はどこに挿入されるかを示して、ちょっとだけその実装の手助けになる関数も示します 永続化保存先がないとした場合、実行中にコードを更新しなければいけません ソフトウェアとのやりとりはコマンドライン経由で あとでこれは拡張できる たとえばGUI、Webページアクセス、IMソフト、メールなど 
+- イベントを追加 イベントには締切り（警告する時間）、イベント名、詳細が含まれます 
+- イベントには締切り（警告する時間）、イベント名、詳細が含まれます
+- イベントの時間が来たら警告
+- イベント名でイベントをキャンセル
+- 永続的なディスク保存先を持たない 注 これは今回見ようとしているのアーキテクチャの概念を示すのに必要ありません これは実際のアプリケーションを作るなら全然ダメなことですが、代わりにもし実装したくなったらその機能はどこに挿入されるかを示して、ちょっとだけその実装の手助けになる関数も示します 永続化保存先がないとした場合、実行中にコードを更新しなければいけません 
+- 注 これは今回見ようとしているのアーキテクチャの概念を示すのに必要ありません これは実際のアプリケーションを作るなら全然ダメなことですが、代わりにもし実装したくなったらその機能はどこに挿入されるかを示して、ちょっとだけその実装の手助けになる関数も示します 
+- これは今回見ようとしているのアーキテクチャの概念を示すのに必要ありません
+- これは実際のアプリケーションを作るなら全然ダメなことですが、代わりにもし実装したくなったらその機能はどこに挿入されるかを示して、ちょっとだけその実装の手助けになる関数も示します
+- 永続化保存先がないとした場合、実行中にコードを更新しなければいけません
+- ソフトウェアとのやりとりはコマンドライン経由で あとでこれは拡張できる たとえばGUI、Webページアクセス、IMソフト、メールなど 
+- あとでこれは拡張できる たとえばGUI、Webページアクセス、IMソフト、メールなど 
+- たとえばGUI、Webページアクセス、IMソフト、メールなど
+- ユースケース Client イベントサーバをサブスクライブして、メッセージとして通知を受ける こうすることで、すべてイベントサーバをサブスクライブしている多くのクライアントを設計するのが簡単になる 各クライアントは潜在的に、前述した異なるゲートウェイとなる GUI、Webページ、IMソフト、メールなど サーバにイベントを詳細情報とともに追加するように依頼 サーバにイベントをキャンセルするように依頼 サーバを（落ちたかどうか知る為に）監視 必要があればイベントサーバを終了 Event Server メソッド クライアントからのサブスクライブを受取 イベントプロセスから出された通知を各サブスクライバに転送 イベントを追加するためにメッセージを受取 必要なX, Y, Zプロセスを起動 イベントキャンセルのメッセージを受取 イベントプロセスを殺す クライアントから終了できる シェルから自分自身のコードを再読込出来る Process X, Y, Z 発報が待たれる通知を表す 天気にはイベントサーバにリンクされたタイマーに過ぎない 時間が来たらイベントサーバにメッセージを送る キャンセルのメッセージを受け取って死ぬ 
+- Client イベントサーバをサブスクライブして、メッセージとして通知を受ける こうすることで、すべてイベントサーバをサブスクライブしている多くのクライアントを設計するのが簡単になる 各クライアントは潜在的に、前述した異なるゲートウェイとなる GUI、Webページ、IMソフト、メールなど サーバにイベントを詳細情報とともに追加するように依頼 サーバにイベントをキャンセルするように依頼 サーバを（落ちたかどうか知る為に）監視 必要があればイベントサーバを終了 
+- イベントサーバをサブスクライブして、メッセージとして通知を受ける こうすることで、すべてイベントサーバをサブスクライブしている多くのクライアントを設計するのが簡単になる 各クライアントは潜在的に、前述した異なるゲートウェイとなる GUI、Webページ、IMソフト、メールなど 
+- こうすることで、すべてイベントサーバをサブスクライブしている多くのクライアントを設計するのが簡単になる
+- 各クライアントは潜在的に、前述した異なるゲートウェイとなる GUI、Webページ、IMソフト、メールなど 
+- GUI、Webページ、IMソフト、メールなど
+- サーバにイベントを詳細情報とともに追加するように依頼
+- サーバにイベントをキャンセルするように依頼
+- サーバを（落ちたかどうか知る為に）監視
+- 必要があればイベントサーバを終了
+- Event Server メソッド クライアントからのサブスクライブを受取 イベントプロセスから出された通知を各サブスクライバに転送 イベントを追加するためにメッセージを受取 必要なX, Y, Zプロセスを起動 イベントキャンセルのメッセージを受取 イベントプロセスを殺す クライアントから終了できる シェルから自分自身のコードを再読込出来る Process X, Y, Z 発報が待たれる通知を表す 天気にはイベントサーバにリンクされたタイマーに過ぎない 時間が来たらイベントサーバにメッセージを送る キャンセルのメッセージを受け取って死ぬ 
+- メソッド クライアントからのサブスクライブを受取 イベントプロセスから出された通知を各サブスクライバに転送 イベントを追加するためにメッセージを受取 必要なX, Y, Zプロセスを起動 イベントキャンセルのメッセージを受取 イベントプロセスを殺す クライアントから終了できる シェルから自分自身のコードを再読込出来る 
+- クライアントからのサブスクライブを受取
+- イベントプロセスから出された通知を各サブスクライバに転送
+- イベントを追加するためにメッセージを受取 必要なX, Y, Zプロセスを起動 
+- 必要なX, Y, Zプロセスを起動
+- イベントキャンセルのメッセージを受取 イベントプロセスを殺す 
+- イベントプロセスを殺す
+- クライアントから終了できる
+- シェルから自分自身のコードを再読込出来る
+- Process X, Y, Z 発報が待たれる通知を表す 天気にはイベントサーバにリンクされたタイマーに過ぎない 時間が来たらイベントサーバにメッセージを送る キャンセルのメッセージを受け取って死ぬ 
+- 発報が待たれる通知を表す 天気にはイベントサーバにリンクされたタイマーに過ぎない 
+- 天気にはイベントサーバにリンクされたタイマーに過ぎない
+- 時間が来たらイベントサーバにメッセージを送る
+- キャンセルのメッセージを受け取って死ぬ
+- 実装 ディレクトリ構成 ebin/ include/ priv/ src/ event.erl - event module loop/1 normalize/1 start/2 start_link/2 cancel/1 time_to_go/1 init/3 evserv.erl - event server loop/1 valid_datetime/1 valid_time/1 valid_time/3 send_to_clients/2 start/0 start_link/0 terminate/0 subscribe/1 add_event/3 add_event2/3 cancel/1 listen/1 init/0 sup.erl - supervisor start/2 start_link/2 init/1 loop/1 Emakefile{'src/*', [debug_info, {i, "src"}, {i, "include"}, {outdir, "ebin"}]}. 
+- ディレクトリ構成 ebin/ include/ priv/ src/ event.erl - event module loop/1 normalize/1 start/2 start_link/2 cancel/1 time_to_go/1 init/3 evserv.erl - event server loop/1 valid_datetime/1 valid_time/1 valid_time/3 send_to_clients/2 start/0 start_link/0 terminate/0 subscribe/1 add_event/3 add_event2/3 cancel/1 listen/1 init/0 sup.erl - supervisor start/2 start_link/2 init/1 loop/1 Emakefile{'src/*', [debug_info, {i, "src"}, {i, "include"}, {outdir, "ebin"}]}. 
+- ebin/
+- include/
+- priv/
+- src/ event.erl - event module loop/1 normalize/1 start/2 start_link/2 cancel/1 time_to_go/1 init/3 evserv.erl - event server loop/1 valid_datetime/1 valid_time/1 valid_time/3 send_to_clients/2 start/0 start_link/0 terminate/0 subscribe/1 add_event/3 add_event2/3 cancel/1 listen/1 init/0 sup.erl - supervisor start/2 start_link/2 init/1 loop/1 
+- event.erl - event module loop/1 normalize/1 start/2 start_link/2 cancel/1 time_to_go/1 init/3 
+- loop/1
+- normalize/1
+- start/2
+- start_link/2
+- cancel/1
+- time_to_go/1
+- init/3
+- evserv.erl - event server loop/1 valid_datetime/1 valid_time/1 valid_time/3 send_to_clients/2 start/0 start_link/0 terminate/0 subscribe/1 add_event/3 add_event2/3 cancel/1 listen/1 init/0 
+- loop/1
+- valid_datetime/1
+- valid_time/1
+- valid_time/3
+- send_to_clients/2
+- start/0
+- start_link/0
+- terminate/0
+- subscribe/1
+- add_event/3
+- add_event2/3
+- cancel/1
+- listen/1
+- init/0
+- sup.erl - supervisor start/2 start_link/2 init/1 loop/1 
+- start/2
+- start_link/2
+- init/1
+- loop/1
+- Emakefile{'src/*', [debug_info, {i, "src"}, {i, "include"}, {outdir, "ebin"}]}.    sh 
+
+$ erl -make && erl -pa ebin/ Erlang/OTP 19 [erts-8.1] [source] [64-bit] [smp:2:2] [async-threads:10] [kernel-poll:false] Eshell V8.1 (abort with ^G) 1> evserv:start(). <0.59.0> 2> evserv:subscribe(self()). {ok,#Ref<0.0.2.84>} 3> evserv:add_event("Hey there3", "test", { {2017, 7, 9}, {1, 23, 59} }). ok 4> evserv:listen(2000). [{done,"Hey there3","test"}]     > TIPSTIPS 
+
+- Erlangのタイムアウト値はミリ秒でおよそ50日に制限されている   > 16 OTP16 OTP   > OTPとはなにかOTPとはなにか 
+
+- Erlangの特徴 並列・分散 エラー処理 
+- 並列・分散
+- エラー処理
+- 組込関数 リンク モニター タイムアウト 終了の補足 
+- リンク
+- モニター
+- タイムアウト
+- 終了の補足
+- OTP 下記のようなバグになりやすい箇所をモジュールとして吸収 プロセスの順番 競合条件をどのように避けるか プロセスはいつでも死ぬ可能性があること ホットコードローディング 名前付きプロセス Supervisor Pros バグを解決するための時間を大幅に減らせる 個々のモジュールのテストが行いやすい 個々のモジュールの最適化が利用者全員の恩恵となる 
+- 下記のようなバグになりやすい箇所をモジュールとして吸収 プロセスの順番 競合条件をどのように避けるか プロセスはいつでも死ぬ可能性があること ホットコードローディング 名前付きプロセス Supervisor 
+- プロセスの順番
+- 競合条件をどのように避けるか プロセスはいつでも死ぬ可能性があること 
+- プロセスはいつでも死ぬ可能性があること
+- ホットコードローディング
+- 名前付きプロセス
+- Supervisor
+- Pros バグを解決するための時間を大幅に減らせる 個々のモジュールのテストが行いやすい 個々のモジュールの最適化が利用者全員の恩恵となる 
+- バグを解決するための時間を大幅に減らせる
+- 個々のモジュールのテストが行いやすい
+- 個々のモジュールの最適化が利用者全員の恩恵となる   > 17 gen_server17 gen_server 
+
+今回はよくつかわれるビヘイビア gen_server 。この汎用化によって、メンテナンス、コードの単純化、テストの簡易化へとつながる。下記に gen_server のコールバックの概要を記す。   > クライアントとサーバクライアントとサーバ 
+
+- gen_server init/1 Return {ok, State} {ok, State, TimeOut} {ok, State, hibernate} {stop, Reason} ignore handle_call/3 Params Request, From, State Return {reply, Reply, NewState} {reply, Reply, NewState, Timeout} {reply, Reply, NewState, hibernate} {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, Reply, NewState} {stop, Reason, NewState} handle_cast/2 Params Message, State Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} handle_info/2 Callback case bang operator (!) TimeOut モニター通知 'EXIT' シグナル Params Message, State Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} terminate/2 Callback case handle_* 関数の返値 {stop, Reason, NewState} {stop, Reason, Reply, NewState} 親が死んで、gen_serverが終了を補足していた場合 Params Reason, State Return init/1 の反対 VMがETS (erlang term storage) を削除 code_change/3 Params PreviousVersion {down, Version} State {ok, NewState} Extra 
+- init/1 Return {ok, State} {ok, State, TimeOut} {ok, State, hibernate} {stop, Reason} ignore 
+- Return {ok, State} {ok, State, TimeOut} {ok, State, hibernate} {stop, Reason} ignore 
+- {ok, State}
+- {ok, State, TimeOut}
+- {ok, State, hibernate}
+- {stop, Reason}
+- ignore
+- handle_call/3 Params Request, From, State Return {reply, Reply, NewState} {reply, Reply, NewState, Timeout} {reply, Reply, NewState, hibernate} {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, Reply, NewState} {stop, Reason, NewState} 
+- Params Request, From, State 
+- Request, From, State
+- Return {reply, Reply, NewState} {reply, Reply, NewState, Timeout} {reply, Reply, NewState, hibernate} {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, Reply, NewState} {stop, Reason, NewState} 
+- {reply, Reply, NewState}
+- {reply, Reply, NewState, Timeout}
+- {reply, Reply, NewState, hibernate}
+- {noreply, NewState}
+- {noreply, NewState, Timeout}
+- {noreply, NewState, hibernate}
+- {stop, Reason, Reply, NewState}
+- {stop, Reason, NewState}
+- handle_cast/2 Params Message, State Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} 
+- Params Message, State 
+- Message, State
+- Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} 
+- {noreply, NewState}
+- {noreply, NewState, Timeout}
+- {noreply, NewState, hibernate}
+- {stop, Reason, NewState}
+- handle_info/2 Callback case bang operator (!) TimeOut モニター通知 'EXIT' シグナル Params Message, State Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} 
+- Callback case bang operator (!) TimeOut モニター通知 'EXIT' シグナル 
+- bang operator (!)
+- TimeOut
+- モニター通知
+- 'EXIT' シグナル
+- Params Message, State 
+- Message, State
+- Return {noreply, NewState} {noreply, NewState, Timeout} {noreply, NewState, hibernate} {stop, Reason, NewState} 
+- {noreply, NewState}
+- {noreply, NewState, Timeout}
+- {noreply, NewState, hibernate}
+- {stop, Reason, NewState}
+- terminate/2 Callback case handle_* 関数の返値 {stop, Reason, NewState} {stop, Reason, Reply, NewState} 親が死んで、gen_serverが終了を補足していた場合 Params Reason, State Return init/1 の反対 VMがETS (erlang term storage) を削除 
+- Callback case handle_* 関数の返値 {stop, Reason, NewState} {stop, Reason, Reply, NewState} 親が死んで、gen_serverが終了を補足していた場合 
+- handle_* 関数の返値 {stop, Reason, NewState} {stop, Reason, Reply, NewState} 
+- {stop, Reason, NewState}
+- {stop, Reason, Reply, NewState}
+- 親が死んで、gen_serverが終了を補足していた場合
+- Params Reason, State 
+- Reason, State
+- Return init/1 の反対 VMがETS (erlang term storage) を削除 
+- init/1 の反対
+- VMがETS (erlang term storage) を削除
+- code_change/3 Params PreviousVersion {down, Version} State {ok, NewState} Extra 
+- Params PreviousVersion {down, Version} State {ok, NewState} Extra 
+- PreviousVersion {down, Version} 
+- {down, Version}
+- State {ok, NewState} 
+- {ok, NewState}
+- Extra   > 18 gen_fsm18 gen_fsm 
+
+今回は有限ステートマシン (finite state machine)。ビヘイビア gen_fsm をとりあげる。このビヘイビアは gen_server に基本似た挙動をするが、呼び出しやメッセージ投入をあつかうのではなく同期や非同期のイベントをあつう。   > 18.1. 有限ステートマシン18.1. 有限ステートマシン 
+
+- 状態遷移図 (state diagram) による記述
+- シーケンス図による記述
+- gen_fsm init/1 Return {ok, StateName, Data} {ok, StateName, Data, Timeout} {ok, StateName, Data, hibernate} {stop, Reason} StateName/2 非同期イベント Params Event, StateData Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} StateName/3 同期イベント Params Event, From, StateData Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} handle_event/3 非同期イベント、グローバルイベント Params Event, StateData Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} handle_sync_event/4 同期イベント、グローバルイベント Params Event, From, StateData Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} code_change/4 Params OldVersion, StateName, Data, Extra Return {ok, NextStateName, NewStateData} terminate/3 init/1 と逆の挙動をする 
+- init/1 Return {ok, StateName, Data} {ok, StateName, Data, Timeout} {ok, StateName, Data, hibernate} {stop, Reason} 
+- Return {ok, StateName, Data} {ok, StateName, Data, Timeout} {ok, StateName, Data, hibernate} {stop, Reason} 
+- {ok, StateName, Data}
+- {ok, StateName, Data, Timeout}
+- {ok, StateName, Data, hibernate}
+- {stop, Reason}
+- StateName/2 非同期イベント Params Event, StateData Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} 
+- 非同期イベント
+- Params Event, StateData 
+- Event, StateData
+- Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} 
+- {next_state, NextStateName, NewData}
+- {next_state, NextStateName, NewData, Timeout}
+- {next_state, NextStateName, hibernate}
+- {stop, Reason, Data}
+- StateName/3 同期イベント Params Event, From, StateData Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} 
+- 同期イベント
+- Params Event, From, StateData 
+- Event, From, StateData
+- Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} 
+- {reply, Reply, NextStateName, NewStateData}
+- {reply, Reply, NextStateName, NewStateData, Timeout}
+- {reply, Reply, NextStateName, NewStateData, hibernate}
+- {next_state, NextStateName, NewStateData}
+- {next_state, NextStateName, NewStateData, Timeout}
+- {next_state, NextStateName, NewStateData, hibernate}
+- {stop, Reason, Reply, NewStateData}
+- {stop, Reason, NewStateData}
+- handle_event/3 非同期イベント、グローバルイベント Params Event, StateData Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} 
+- 非同期イベント、グローバルイベント
+- Params Event, StateData 
+- Event, StateData
+- Return {next_state, NextStateName, NewData} {next_state, NextStateName, NewData, Timeout} {next_state, NextStateName, hibernate} {stop, Reason, Data} 
+- {next_state, NextStateName, NewData}
+- {next_state, NextStateName, NewData, Timeout}
+- {next_state, NextStateName, hibernate}
+- {stop, Reason, Data}
+- handle_sync_event/4 同期イベント、グローバルイベント Params Event, From, StateData Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} 
+- 同期イベント、グローバルイベント
+- Params Event, From, StateData 
+- Event, From, StateData
+- Return {reply, Reply, NextStateName, NewStateData} {reply, Reply, NextStateName, NewStateData, Timeout} {reply, Reply, NextStateName, NewStateData, hibernate} {next_state, NextStateName, NewStateData} {next_state, NextStateName, NewStateData, Timeout} {next_state, NextStateName, NewStateData, hibernate} {stop, Reason, Reply, NewStateData} {stop, Reason, NewStateData} 
+- {reply, Reply, NextStateName, NewStateData}
+- {reply, Reply, NextStateName, NewStateData, Timeout}
+- {reply, Reply, NextStateName, NewStateData, hibernate}
+- {next_state, NextStateName, NewStateData}
+- {next_state, NextStateName, NewStateData, Timeout}
+- {next_state, NextStateName, NewStateData, hibernate}
+- {stop, Reason, Reply, NewStateData}
+- {stop, Reason, NewStateData}
+- code_change/4 Params OldVersion, StateName, Data, Extra Return {ok, NextStateName, NewStateData} 
+- Params OldVersion, StateName, Data, Extra 
+- OldVersion, StateName, Data, Extra
+- Return {ok, NextStateName, NewStateData} 
+- {ok, NextStateName, NewStateData}
+- terminate/3 init/1 と逆の挙動をする 
+- init/1 と逆の挙動をする
+- イベント送信関数 ローカル send_event/2 sync_send_event/2-3 グローバル send_all_state_event/2-3 sync_send_event/2-3 
+- ローカル send_event/2 sync_send_event/2-3 
+- send_event/2
+- sync_send_event/2-3
+- グローバル send_all_state_event/2-3 sync_send_event/2-3 
+- send_all_state_event/2-3
+- sync_send_event/2-3   > 18.2. ユーザー同士の取引システム例18.2. ユーザー同士の取引システム例 
+
+- 
+-    > 19 gen_event19 gen_event 
+
+今回はイベントハンドラ。ビヘイビアは gen_event をつかう。 
+
+- 人々（あるいは、あるプロセスやアプリケーション）にイベントが起きたことを知らせる機能の実装方法 単純出力方式 結果を出力するのみ 単純サブスクライバ方式 メッセージ送信前にサブスクライバのPidを取得 Cons コールバックのために待機プロセスが必要 イベントマネージャ方式 関数をうけとるプロセスをたて、すべてのイベントに対して当該関数をはしらせる Pros サーバのサブスクライバがたくさんあっても稼働し続けられる すべてのコールバックは同じインスタンスで操作される 短命なタスクに対して新しいプロセスを生成する必要がない Cons 関数が長時間動作する必要があった場合、お互いブロックしあう イベントマネージャをイベントフォワーダにすれば防ぐことができる 無限ループする関数はクラッシュするまで新規イベントをブロックする 
+- 単純出力方式 結果を出力するのみ 
+- 結果を出力するのみ
+- 単純サブスクライバ方式 メッセージ送信前にサブスクライバのPidを取得 Cons コールバックのために待機プロセスが必要 
+- メッセージ送信前にサブスクライバのPidを取得
+- Cons コールバックのために待機プロセスが必要 
+- コールバックのために待機プロセスが必要
+- イベントマネージャ方式 関数をうけとるプロセスをたて、すべてのイベントに対して当該関数をはしらせる Pros サーバのサブスクライバがたくさんあっても稼働し続けられる すべてのコールバックは同じインスタンスで操作される 短命なタスクに対して新しいプロセスを生成する必要がない Cons 関数が長時間動作する必要があった場合、お互いブロックしあう イベントマネージャをイベントフォワーダにすれば防ぐことができる 無限ループする関数はクラッシュするまで新規イベントをブロックする 
+- 関数をうけとるプロセスをたて、すべてのイベントに対して当該関数をはしらせる
+- Pros サーバのサブスクライバがたくさんあっても稼働し続けられる すべてのコールバックは同じインスタンスで操作される 短命なタスクに対して新しいプロセスを生成する必要がない 
+- サーバのサブスクライバがたくさんあっても稼働し続けられる
+- すべてのコールバックは同じインスタンスで操作される
+- 短命なタスクに対して新しいプロセスを生成する必要がない
+- Cons 関数が長時間動作する必要があった場合、お互いブロックしあう イベントマネージャをイベントフォワーダにすれば防ぐことができる 無限ループする関数はクラッシュするまで新規イベントをブロックする 
+- 関数が長時間動作する必要があった場合、お互いブロックしあう イベントマネージャをイベントフォワーダにすれば防ぐことができる 
+- イベントマネージャをイベントフォワーダにすれば防ぐことができる
+- 無限ループする関数はクラッシュするまで新規イベントをブロックする   > 19.2. 汎用イベントハンドラ gen_event19.2. 汎用イベントハンドラ gen_event  
+
+- gen_event の各関数 init/1 Response {ok, State} terminate/2 handle_event/2 非同期 すべてのイベントマネージャは戻り値を返さないことで呼び出しプロセスをブロックする Params Event, State Response {ok, NewState} gen_server:handle_cast/2 と似た動作 {ok, NewState, hibernate} {remove_handler} イベントマネージャからハンドラを削除する {swap_handler, Args1, NewState, NewHandler, Args2} 今あるイベントハンドラを削除して新しいものに置き換える notify/2 すべての流入イベントを通知する (非同期) sync_notify/2 すべての流入イベントを通知する (同期) cast/2 非同期 handle_call gen_server:handle_call コールバックに似ているがレスポンスが異なる gen_server:call/3-4 が呼び出しに使われている Response {ok, Reply, NewState} {ok, Reply, NewState, hibernate} {remove_handler, Reply} {swap_handler, Reply, Args1, NewState, Handle_Call} handle_info/2 hendle_event と同じレスポンスだが、終了シグナルや ! 演算子でイベントマネージャに贈られたメッセージのみを扱う点で異なる code_change/3 gen_server:code_change と同じ動作をする Params OldVsn バージョン番号, State ハンドラの状態, Extra Response {ok, NewState} 
+- init/1 Response {ok, State} 
+- Response {ok, State} 
+- {ok, State}
+- terminate/2
+- handle_event/2 非同期 すべてのイベントマネージャは戻り値を返さないことで呼び出しプロセスをブロックする Params Event, State Response {ok, NewState} gen_server:handle_cast/2 と似た動作 {ok, NewState, hibernate} {remove_handler} イベントマネージャからハンドラを削除する {swap_handler, Args1, NewState, NewHandler, Args2} 今あるイベントハンドラを削除して新しいものに置き換える 
+- 非同期 すべてのイベントマネージャは戻り値を返さないことで呼び出しプロセスをブロックする 
+- すべてのイベントマネージャは戻り値を返さないことで呼び出しプロセスをブロックする
+- Params Event, State 
+- Event, State
+- Response {ok, NewState} gen_server:handle_cast/2 と似た動作 {ok, NewState, hibernate} {remove_handler} イベントマネージャからハンドラを削除する {swap_handler, Args1, NewState, NewHandler, Args2} 今あるイベントハンドラを削除して新しいものに置き換える 
+- {ok, NewState} gen_server:handle_cast/2 と似た動作 
+- gen_server:handle_cast/2 と似た動作
+- {ok, NewState, hibernate}
+- {remove_handler} イベントマネージャからハンドラを削除する 
+- イベントマネージャからハンドラを削除する
+- {swap_handler, Args1, NewState, NewHandler, Args2} 今あるイベントハンドラを削除して新しいものに置き換える 
+- 今あるイベントハンドラを削除して新しいものに置き換える
+- notify/2 すべての流入イベントを通知する (非同期) 
+- すべての流入イベントを通知する (非同期)
+- sync_notify/2 すべての流入イベントを通知する (同期) 
+- すべての流入イベントを通知する (同期)
+- cast/2 非同期 
+- 非同期
+- handle_call gen_server:handle_call コールバックに似ているがレスポンスが異なる gen_server:call/3-4 が呼び出しに使われている Response {ok, Reply, NewState} {ok, Reply, NewState, hibernate} {remove_handler, Reply} {swap_handler, Reply, Args1, NewState, Handle_Call} 
+- gen_server:handle_call コールバックに似ているがレスポンスが異なる
+- gen_server:call/3-4 が呼び出しに使われている
+- Response {ok, Reply, NewState} {ok, Reply, NewState, hibernate} {remove_handler, Reply} {swap_handler, Reply, Args1, NewState, Handle_Call} 
+- {ok, Reply, NewState}
+- {ok, Reply, NewState, hibernate}
+- {remove_handler, Reply}
+- {swap_handler, Reply, Args1, NewState, Handle_Call}
+- handle_info/2 hendle_event と同じレスポンスだが、終了シグナルや ! 演算子でイベントマネージャに贈られたメッセージのみを扱う点で異なる 
+- hendle_event と同じレスポンスだが、終了シグナルや ! 演算子でイベントマネージャに贈られたメッセージのみを扱う点で異なる
+- code_change/3 gen_server:code_change と同じ動作をする Params OldVsn バージョン番号, State ハンドラの状態, Extra Response {ok, NewState} 
+- gen_server:code_change と同じ動作をする
+- Params OldVsn バージョン番号, State ハンドラの状態, Extra 
+- OldVsn バージョン番号, State ハンドラの状態, Extra
+- Response {ok, NewState} 
+- {ok, NewState}   > 20 supervisor20 supervisor 
+
+今回のビヘイビアはスーパバイザ supervisor。 監視戦略の概要にふれてみる。 
+
+- init/1 レスポンス {ok, { {RestartStrategy, MaxRestart, MaxTime}, [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}] } }. 例 {ok, { {one_for_all, 5, 60}, [ {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic} ] } }. 再起動戦略 one_for_one 1つのワーカがクラッシュしたら当該ワーカを再起動する 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう one_for_all 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する 各々のワーカが互いに強く依存している場合につかう rest_for_one 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する 各々のワーカがチェーン状態に依存している場合につかう simple_one_for_one one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している 再起動制限 MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする ワーカ (子プロセス) 構成要素 ChildId StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する Shutdown 終了期限 Type 子プロセスの種類 ワーカ スーパバイザ Modules コールバックモジュールのリスト 
+- レスポンス {ok, { {RestartStrategy, MaxRestart, MaxTime}, [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}] } }. 例 {ok, { {one_for_all, 5, 60}, [ {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic} ] } }. 再起動戦略 one_for_one 1つのワーカがクラッシュしたら当該ワーカを再起動する 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう one_for_all 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する 各々のワーカが互いに強く依存している場合につかう rest_for_one 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する 各々のワーカがチェーン状態に依存している場合につかう simple_one_for_one one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している 再起動制限 MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする ワーカ (子プロセス) 構成要素 ChildId StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する Shutdown 終了期限 Type 子プロセスの種類 ワーカ スーパバイザ Modules コールバックモジュールのリスト 
+- {ok, { {RestartStrategy, MaxRestart, MaxTime}, [{ChildId, StartFunc, Restart, Shutdown, Type, Modules}] } }. 例 {ok, { {one_for_all, 5, 60}, [ {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic} ] } }. 再起動戦略 one_for_one 1つのワーカがクラッシュしたら当該ワーカを再起動する 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう one_for_all 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する 各々のワーカが互いに強く依存している場合につかう rest_for_one 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する 各々のワーカがチェーン状態に依存している場合につかう simple_one_for_one one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している 再起動制限 MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする ワーカ (子プロセス) 構成要素 ChildId StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する Shutdown 終了期限 Type 子プロセスの種類 ワーカ スーパバイザ Modules コールバックモジュールのリスト 
+- 例 {ok, { {one_for_all, 5, 60}, [ {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic} ] } }. 
+- {ok, { {one_for_all, 5, 60}, [ {fake_id, {fake_mod, start_link, [SomeArg]}, permanent, 5000, worker, [fake_mod]}, {other_id, {event_manager_mod, start_link, []}, transient, infinity, worker, dynamic} ] } }.
+- 再起動戦略 one_for_one 1つのワーカがクラッシュしたら当該ワーカを再起動する 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう one_for_all 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する 各々のワーカが互いに強く依存している場合につかう rest_for_one 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する 各々のワーカがチェーン状態に依存している場合につかう simple_one_for_one one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している 
+- one_for_one 1つのワーカがクラッシュしたら当該ワーカを再起動する 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう 
+- 1つのワーカがクラッシュしたら当該ワーカを再起動する
+- 各々のワーカが独立している、互いが関係していない、あるいは、ワーカが再起動して状態が消えても隣のワーカに影響を与えない場合につかう
+- one_for_all 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する 各々のワーカが互いに強く依存している場合につかう 
+- 1つのワーカがクラッシュしたらすべてのワーカをクラッシュさせて再起動する
+- 各々のワーカが互いに強く依存している場合につかう
+- rest_for_one 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する 各々のワーカがチェーン状態に依存している場合につかう 
+- 1つのワーカがクラッシュした当該ワーカのら子ワーカたちをクラッシュさせて再起動する
+- 各々のワーカがチェーン状態に依存している場合につかう
+- simple_one_for_one one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している 
+- one_for_one はワーカのリストを起動した順で保持している一方 、simple_one_for_one はワーカへの定義を dict で保持している
+- 再起動制限 MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする 
+- MaxTime 秒以内に MaxRestart 回起動したら、スーパバイザは再起動をやめて自身をシャットダウンする
+- ワーカ (子プロセス) 構成要素 ChildId StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する Shutdown 終了期限 Type 子プロセスの種類 ワーカ スーパバイザ Modules コールバックモジュールのリスト 
+- 構成要素 ChildId StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する Shutdown 終了期限 Type 子プロセスの種類 ワーカ スーパバイザ Modules コールバックモジュールのリスト 
+- ChildId
+- StartFunc スーパバイザの起動方法をつたえるためのタプル {M, F, A} 
+- スーパバイザの起動方法をつたえるためのタプル {M, F, A}
+- Restart 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する 
+- 再起動戦略 permanent 常に再起動 temporary 再起動しない transient 正常終了の場合は再起動しない 異常終了の場合は再起動する 
+- permanent 常に再起動 
+- 常に再起動
+- temporary 再起動しない 
+- 再起動しない
+- transient 正常終了の場合は再起動しない 異常終了の場合は再起動する 
+- 正常終了の場合は再起動しない
+- 異常終了の場合は再起動する
+- Shutdown 終了期限 
+- 終了期限
+- Type 子プロセスの種類 ワーカ スーパバイザ 
+- 子プロセスの種類 ワーカ スーパバイザ 
+- ワーカ
+- スーパバイザ
+- Modules コールバックモジュールのリスト 
+- コールバックモジュールのリスト   > 21 プロセスプールをつくる21 プロセスプールをつくる 
+
+今回はプロセスプール管理アプリケーションをOTPを使ってつくる。   > 要件要件 
+
+- サーバを最大でN個の並列接続に制限
+- アプリケーションによって開かれるファイルの数を制限
+- サブシステムに優先順位を与える
+- 不定期なアクセス負荷に対してキューにタスクを貯めることで、可用性を高める   > 実装実装 
+
+機能 
+
+- アプリケーション 起動 停止 
+- 起動
+- 停止
+- 特定のプロセスプール 起動 停止 
+- 起動
+- 停止
+- プール内のタスク プールに余裕がある場合 実行 タスクが実行されたら呼び出し元は解放 できる限りタスクを非同期に実行 プールに余裕がない場合 起動できないと告げる タスクがキューの中にある間は呼び出し元のプロセスを待たせておく タスクをキューに貯める 
+- プールに余裕がある場合 実行 タスクが実行されたら呼び出し元は解放 できる限りタスクを非同期に実行 
+- 実行
+- タスクが実行されたら呼び出し元は解放
+- できる限りタスクを非同期に実行
+- プールに余裕がない場合 起動できないと告げる タスクがキューの中にある間は呼び出し元のプロセスを待たせておく タスクをキューに貯める 
+- 起動できないと告げる
+- タスクがキューの中にある間は呼び出し元のプロセスを待たせておく
+- タスクをキューに貯める 
+
+状態 
+
+- 静的な状態 下記から容易に取得 設定ファイル 他のプロセス アプリケーションを再起動しているスーパーバイザ 
+- 下記から容易に取得 設定ファイル 他のプロセス アプリケーションを再起動しているスーパーバイザ 
+- 設定ファイル
+- 他のプロセス
+- アプリケーションを再起動しているスーパーバイザ
+- 動的な状態 再計算できるデータから取得 状態の種類 初期からの状態 現在までの状態 変換すべき状態 
+- 再計算できるデータから取得
+- 状態の種類 初期からの状態 現在までの状態 変換すべき状態 
+- 初期からの状態
+- 現在までの状態
+- 変換すべき状態
+- 再計算できない動的なデータ 下記から取得 ユーザの入力 生のデータ 逐次的な外部イベント など 保存方法 データベースに登録 
+- 下記から取得 ユーザの入力 生のデータ 逐次的な外部イベント など 
+- ユーザの入力
+- 生のデータ
+- 逐次的な外部イベント
+- など
+- 保存方法 データベースに登録 
+- データベースに登録    > 25 ホットコードローディング25 ホットコードローディング 
+
+- 今回はホットコードローディング（更新）についてかんがえる。
+- ホットコードローディングはホットスワップの1種でElixir/Erlangの信頼性につながっている。
+- ホットコードローディングは systools により複数の appup から relup として構成されている。   > リリースの更新リリースの更新 
+
+バージョンがあがるほどリリースの更新は煩雑になっていく。 
+
+- OTPアプリケーションを書く (ver. 1.0.0) それらをリリースにする 
+- それらをリリースにする
+- 1つ以上のOTPアプリケーションのバージョンを更新する (ver. 1.1.0) そのアプリケーションの古いバージョンから新しいバージョンへの遷移を行うために、何を変更すべきかを説明した appup ファイルを作成する 
+- そのアプリケーションの古いバージョンから新しいバージョンへの遷移を行うために、何を変更すべきかを説明した appup ファイルを作成する
+- 新しいアプリケーションで新しいリリースを作る (ver. 1.2.0) appup ファイルをこれらのリリースから生成する 新しいアプリケーションを稼働しているErlangシェルにインストールする 
+- appup ファイルをこれらのリリースから生成する
+- 新しいアプリケーションを稼働しているErlangシェルにインストールする 
+
+リリース作業として以下の通り。relup 構成ツールとして、Erlangは relx 、Elixirは distillery がある。 
+
+- 巻き戻しできるようアップグレードとダウングレード双方を appup ファイルに記述
+- モジュールによるリリース構成を config ファイルに記述
+- systools:make_relup で relup を作成
+- release_hanlder によって更新   appup 
+
+%% {NewVersion, %% [{VersionUpgradingFrom, [Instructions]}] %% [{VersionDownGradingTo, [Instructions]}]}. {"1.1.0", [{"1.0.0", [{add_module, pq_quest}, {load_module, pq_enemy}, {load_module, pq_events}, {update, pq_player, {advanced, []}, [pq_quest, pq_events]}]}], [{"1.0.0", [{update, pq_player, {advanced, []}}, {delete_module, pq_quest}, {load_module, pq_enemy}, {load_module, pq_events}]}]}. {"1.0.1", [{"1.0.0", [{load_module, sockserv_serv}]}], [{"1.0.0", [{load_module, sockserv_serv}]}]}.     > 27 EUnit27 EUnit 
+
+- 今回は単体テストEUnitについてかんがえる。   > EUnitの特徴EUnitの特徴 
+
+- eunit:test(モジュール名, [verbose]) で実行
+- postfixがtestの関数 _test() に対してテストをおこなう
+- モジュールの内外ともにテストコードをかける
+- モジュール外に書いた場合プライベート関数に対するテストはできなくなる
+- テスト用モジュールはpostfixがtestsとなる _tests.erl    > EUnitの関数EUnitの関数 
+
+- 表現系 テスト foo_test -> ?assert(is_number(ops:add(1, 2))), ?assertEqual(4, ops:add(2, 2)). テストジェネレータ foo_test_ -> [test_them_1(), test_them_2, ?_assertError(badarith, 1/0)]. フィクスチャー setup {setup, Setup, Instantiator} {setup, Setup, Cleanup, Instantiator} {setup, Where, Setup, Instantiator} {setup, Where, Setup, Cleanup, Instantiator} foreach {foreach, Setup, [Instantiator]} {foreach, Setup, Cleanup, [Instantiator]} {foreach, Where, Setup, [Instantiator]} {foreach, Where, Setup, Cleanup, [Instantiator]} instantiator制御 {spawn, TestSet} - 並行処理 {timeout, (時間 秒), TestSet} - 時間指定処理 {inorder, TestSet} - 逐次処理 {inparallel, TestSet} - 並列処理 コメント {Comment, Fixture} 
+- テスト foo_test -> ?assert(is_number(ops:add(1, 2))), ?assertEqual(4, ops:add(2, 2)). 
+- foo_test -> ?assert(is_number(ops:add(1, 2))), ?assertEqual(4, ops:add(2, 2)).
+- テストジェネレータ foo_test_ -> [test_them_1(), test_them_2, ?_assertError(badarith, 1/0)]. 
+- foo_test_ -> [test_them_1(), test_them_2, ?_assertError(badarith, 1/0)].
+- フィクスチャー setup {setup, Setup, Instantiator} {setup, Setup, Cleanup, Instantiator} {setup, Where, Setup, Instantiator} {setup, Where, Setup, Cleanup, Instantiator} foreach {foreach, Setup, [Instantiator]} {foreach, Setup, Cleanup, [Instantiator]} {foreach, Where, Setup, [Instantiator]} {foreach, Where, Setup, Cleanup, [Instantiator]} instantiator制御 {spawn, TestSet} - 並行処理 {timeout, (時間 秒), TestSet} - 時間指定処理 {inorder, TestSet} - 逐次処理 {inparallel, TestSet} - 並列処理 コメント {Comment, Fixture} 
+- setup {setup, Setup, Instantiator} {setup, Setup, Cleanup, Instantiator} {setup, Where, Setup, Instantiator} {setup, Where, Setup, Cleanup, Instantiator} 
+- {setup, Setup, Instantiator}
+- {setup, Setup, Cleanup, Instantiator}
+- {setup, Where, Setup, Instantiator}
+- {setup, Where, Setup, Cleanup, Instantiator}
+- foreach {foreach, Setup, [Instantiator]} {foreach, Setup, Cleanup, [Instantiator]} {foreach, Where, Setup, [Instantiator]} {foreach, Where, Setup, Cleanup, [Instantiator]} 
+- {foreach, Setup, [Instantiator]}
+- {foreach, Setup, Cleanup, [Instantiator]}
+- {foreach, Where, Setup, [Instantiator]}
+- {foreach, Where, Setup, Cleanup, [Instantiator]}
+- instantiator制御 {spawn, TestSet} - 並行処理 {timeout, (時間 秒), TestSet} - 時間指定処理 {inorder, TestSet} - 逐次処理 {inparallel, TestSet} - 並列処理 
+- {spawn, TestSet} - 並行処理
+- {timeout, (時間 秒), TestSet} - 時間指定処理
+- {inorder, TestSet} - 逐次処理
+- {inparallel, TestSet} - 並列処理
+- コメント {Comment, Fixture} 
+- {Comment, Fixture}
+- アサーション系 ?assert(expression) ?assertNot(expression) ?assertEqual(A, B) ?assertMatch(Pattern, Expression) ?assertError(Pattern, Expression) ?assertThrow(Pattern, Expression) ?assertExit(Pattern, Expression) ?assertException(Class, Pattern, Expression) 
+- ?assert(expression)
+- ?assertNot(expression)
+- ?assertEqual(A, B)
+- ?assertMatch(Pattern, Expression)
+- ?assertError(Pattern, Expression)
+- ?assertThrow(Pattern, Expression)
+- ?assertExit(Pattern, Expression)
+- ?assertException(Class, Pattern, Expression) 
+
+フィクスチャー (foreach) をつかったテストジェネレータ   erlang 
+
+-define(setup(F), {setup, fun start/0, fun stop/1, F}). %% 関数some2について some2_test_() -> [{"SetupData1を適切に評価できること", {foreach, ?setup(fun (SetupData1) -> [some_instantiator1(SetupData1), some_instantiator2(SetupData1), ... some_instantiatorN(SetupData1)] end}}, {"SetupData2を並列処理で適切に評価できること", {foreach, ?setup(fun (SetupData2) -> {inparallel, [some_instantiator1(SetupData2), some_instantiator2(SetupData2), ... some_instantiatorN(SetupData2)]} end)}}].   
+
+並列・並行でテストする際の注意点 
+
+- 名前をa、b、cのようにハードコードすると、並列で走らせている際、名前の衝突が起きる可能性がある。可能な限り名前はハードコードせずに make_ref() によって一意の値をつかうこと。   > 28 インメモリーデータベース ETS28 インメモリーデータベース ETS   > ETSの特徴ETSの特徴 
+
+- データへの並列平行なアクセスが可能 ただし、安全性と並行性が低下する可能性がある ETSのデフォルト使用数は1400 erl -env ERL_MAX_ETS_TABLES Number で設定 
+- ただし、安全性と並行性が低下する可能性がある
+- ETSのデフォルト使用数は1400 erl -env ERL_MAX_ETS_TABLES Number で設定 
+- erl -env ERL_MAX_ETS_TABLES Number で設定   > ETSのテーブル種類ETSのテーブル種類 
+
+- set 標準 
+- 標準
+- ordered_set テーブルデータのソート機能あり ユースケース: 範囲指定してデータ取得する (ただし、アクセス時間が遅くなる O(log N)) 
+- テーブルデータのソート機能あり
+- ユースケース: 範囲指定してデータ取得する (ただし、アクセス時間が遅くなる O(log N))
+- bag 同一キーのタプル（レコード）を保持可能 
+- 同一キーのタプル（レコード）を保持可能
+- duplicate_bag 同一内容のタプル（レコード）を保持可能 
+- 同一内容のタプル（レコード）を保持可能
+- 共通機能 テーブル所有権 ETSテーブル起動関数であらたにコールしたプロセスがそのテーブルの所有者 権限 protected level 所有者 read, write その他 read public level 所有者 read, write その他 read, write private level 所有者 read, write その他 n/a テーブルの移譲 ETSテーブルはプロセスが死ぬと消滅する 移譲の種類 都度指定する移譲 プロセスが死んだ場合の自動移譲 
+- テーブル所有権 ETSテーブル起動関数であらたにコールしたプロセスがそのテーブルの所有者 権限 protected level 所有者 read, write その他 read public level 所有者 read, write その他 read, write private level 所有者 read, write その他 n/a 
+- ETSテーブル起動関数であらたにコールしたプロセスがそのテーブルの所有者
+- 権限 protected level 所有者 read, write その他 read public level 所有者 read, write その他 read, write private level 所有者 read, write その他 n/a 
+- protected level 所有者 read, write その他 read 
+- 所有者 read, write
+- その他 read
+- public level 所有者 read, write その他 read, write 
+- 所有者 read, write
+- その他 read, write
+- private level 所有者 read, write その他 n/a 
+- 所有者 read, write
+- その他 n/a
+- テーブルの移譲 ETSテーブルはプロセスが死ぬと消滅する 移譲の種類 都度指定する移譲 プロセスが死んだ場合の自動移譲 
+- ETSテーブルはプロセスが死ぬと消滅する
+- 移譲の種類 都度指定する移譲 プロセスが死んだ場合の自動移譲 
+- 都度指定する移譲
+- プロセスが死んだ場合の自動移譲   > ETSの関数ETSの関数 
+
+- テーブル作成・削除 ets:new/2 
+- ets:new/2
+- データ挿入・参照 ets:insert(Table, ObjectOrObjects) ets:lookup(Table, Key) 
+- ets:insert(Table, ObjectOrObjects)
+- ets:lookup(Table, Key)
+- その他 ets:delete(Table, Key) ets:match(Table, MatchClause) ets:match_object(Table, MatchClause) ets:fun2ms(MatchSpecClause) 
+- ets:delete(Table, Key)
+- ets:match(Table, MatchClause)
+- ets:match_object(Table, MatchClause)
+- ets:fun2ms(MatchSpecClause) 
+
+setテーブルでnamed_tableオプションをつける場合   erlang 
+
+21> ets:new(ingredients, [set, named_table]). ingredients 22> ets:insert(ingredients, {bacon, great}). true 23> ets:lookup(ingredients, bacon). [{bacon,great}] 24> ets:insert(ingredients, [{bacon, awesome}, {cabbage, alright}]). true 25> ets:lookup(ingredients, bacon). [{bacon,awesome}] 26> ets:lookup(ingredients, cabbage). [{cabbage,alright}] 27> ets:delete(ingredients, cabbage). true 28> ets:delete(ingredients, cabbage). true 29> ets:lookup(ingredients, cabbage). [] 32> ets:insert_new(ingredients, {tomato, hey}). true 33> ets:insert_new(ingredients, {tomato, hey}). false   
+
+bagテーブルでnamed_tableオプションをつけない場合   erlang 
+
+34> TabId = ets:new(ingredients, [bag]). 16401 35> ets:insert(TabId, {bacon, delicious}). true 36> ets:insert(TabId, {bacon, fat}). true 37> ets:insert(TabId, {bacon, fat}). true 38> ets:lookup(TabId, bacon). [{bacon,delicious},{bacon,fat}]   
+
+ordered_setターブルで、named_tableオプションをつける場合   erlang 
+
+42> ets:new(ingredients, [ordered_set, named_table]). ingredients 43> ets:insert(ingredients, [{ketchup, "not much"}, {mustard, "a lot"}, {cheese, "yes", "goat"}, {patty, "moose"}, {onions, "a lot", "caramelized"}]). true 44> Res1 = ets:first(ingredients). cheese 45> Res2 = ets:next(ingredients, Res1). ketchup 46> Res3 = ets:next(ingredients, Res2). mustard 47> ets:last(ingredients). patty 48> ets:prev(ingredients, ets:last(ingredients)). onions   
+
+named_tableオプションつきbagテーブルでパターンマッチをする   erlang 
+
+53> ets:new(table, [named_table, bag]). table 54> ets:insert(table, [{items, a, b, c, d}, {items, a, b, c, a}, {cat, brown, soft, loveable, selfish}, {friends, [jem, jeff, etc]}, {items, 1, 2, 3, 1}]). true 55> ets:match(table, {items, '$1', '$2', '_', '$1'}). [[a,b],[1,2]] 56> ets:match(table, {items, '$114', '$212', '_', '$6'}). [[d,a,b],[a,a,b],[1,1,2]] 57> ets:match_object(table, {items, '$1', '$2', '_', '$1'}). [{items,a,b,c,a},{items,1,2,3,1}] 58> ets:delete(table). true     > 29 分散システム EPMD29 分散システム EPMD 
+
+- 今回は分散システム Erlang Port Mapper Daemon (EPMD) についてかんがえる。今回の章がSLAにもっとも関係しているといえそうである。ほかの言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくるだろう。   > 分散システムEPMDの特徴分散システムEPMDの特徴 
+
+前提 
+
+- 分散システムによるFault toleranceについて ソフトウェアの稼働状況と対ハードウェア障害リスク マシン1台 リスク対策できない マシン複数台 アプリケーションが正しく構築されない場合、リスク対策できない 
+- ソフトウェアの稼働状況と対ハードウェア障害リスク マシン1台 リスク対策できない マシン複数台 アプリケーションが正しく構築されない場合、リスク対策できない 
+- マシン1台 リスク対策できない 
+- リスク対策できない
+- マシン複数台 アプリケーションが正しく構築されない場合、リスク対策できない 
+- アプリケーションが正しく構築されない場合、リスク対策できない
+- 「分散コンピューティングの落とし穴」へのErlangの対応 ネットワークは信頼できる Erlangの対応 非同期通信モード（リンクやモニタ）により、メッセージを送信に正常な場合に必ず返信するように設計 ただし、ノード間でリンクやモニタを張った際にネットワーク障害起きた場合、リンクやモニタが一斉にトリガーされシステムに予期しない負荷をかけることになる レイテンシはゼロである Erlangの対応 タイムアウト、リンク、モニタ、非同期パターンにより遅延を想定し設計 帯域幅は無限である Erlangの対応 大きなメッセージを送らない ネットワークはセキュアである Erlangの対応 Erlangはネットワークの安全性を確認しないため 異なるデータセンター間で自動的にクラスタ化しない あるいは、SSLに切り替える 安全なチャンネル越しにトンネルする ノード間の通信プロトコルを再実装する ネットワーク構成は変化せず一定である Erlangの対応 アプリケーションでネットワーク構成（トポロジー）を管理しない 管理者は1人である Erlangの対応 デバッグツールによる個別障害対応 ノード監視ツールによるシステム運用状況の共有 実装プロトコルやAPIのバージョン管理 転送コストはゼロである Erlangの対応 Erlangはほかのノードに渡されるメッセージを圧縮しないため 送るメッセージを小さくする あるいは、独自の通信レイヤを実装する ネットワークは均質である Erlangの対応 Erlangノードと同じプロトコル形式にして通信 Cノード BERT BERT-RPC 
+- ネットワークは信頼できる Erlangの対応 非同期通信モード（リンクやモニタ）により、メッセージを送信に正常な場合に必ず返信するように設計 ただし、ノード間でリンクやモニタを張った際にネットワーク障害起きた場合、リンクやモニタが一斉にトリガーされシステムに予期しない負荷をかけることになる 
+- Erlangの対応 非同期通信モード（リンクやモニタ）により、メッセージを送信に正常な場合に必ず返信するように設計 ただし、ノード間でリンクやモニタを張った際にネットワーク障害起きた場合、リンクやモニタが一斉にトリガーされシステムに予期しない負荷をかけることになる 
+- 非同期通信モード（リンクやモニタ）により、メッセージを送信に正常な場合に必ず返信するように設計
+- ただし、ノード間でリンクやモニタを張った際にネットワーク障害起きた場合、リンクやモニタが一斉にトリガーされシステムに予期しない負荷をかけることになる
+- レイテンシはゼロである Erlangの対応 タイムアウト、リンク、モニタ、非同期パターンにより遅延を想定し設計 
+- Erlangの対応 タイムアウト、リンク、モニタ、非同期パターンにより遅延を想定し設計 
+- タイムアウト、リンク、モニタ、非同期パターンにより遅延を想定し設計
+- 帯域幅は無限である Erlangの対応 大きなメッセージを送らない 
+- Erlangの対応 大きなメッセージを送らない 
+- 大きなメッセージを送らない
+- ネットワークはセキュアである Erlangの対応 Erlangはネットワークの安全性を確認しないため 異なるデータセンター間で自動的にクラスタ化しない あるいは、SSLに切り替える 安全なチャンネル越しにトンネルする ノード間の通信プロトコルを再実装する 
+- Erlangの対応 Erlangはネットワークの安全性を確認しないため 異なるデータセンター間で自動的にクラスタ化しない あるいは、SSLに切り替える 安全なチャンネル越しにトンネルする ノード間の通信プロトコルを再実装する 
+- Erlangはネットワークの安全性を確認しないため 異なるデータセンター間で自動的にクラスタ化しない あるいは、SSLに切り替える 安全なチャンネル越しにトンネルする ノード間の通信プロトコルを再実装する 
+- 異なるデータセンター間で自動的にクラスタ化しない
+- あるいは、SSLに切り替える
+- 安全なチャンネル越しにトンネルする
+- ノード間の通信プロトコルを再実装する
+- ネットワーク構成は変化せず一定である Erlangの対応 アプリケーションでネットワーク構成（トポロジー）を管理しない 
+- Erlangの対応 アプリケーションでネットワーク構成（トポロジー）を管理しない 
+- アプリケーションでネットワーク構成（トポロジー）を管理しない
+- 管理者は1人である Erlangの対応 デバッグツールによる個別障害対応 ノード監視ツールによるシステム運用状況の共有 実装プロトコルやAPIのバージョン管理 
+- Erlangの対応 デバッグツールによる個別障害対応 ノード監視ツールによるシステム運用状況の共有 実装プロトコルやAPIのバージョン管理 
+- デバッグツールによる個別障害対応
+- ノード監視ツールによるシステム運用状況の共有
+- 実装プロトコルやAPIのバージョン管理
+- 転送コストはゼロである Erlangの対応 Erlangはほかのノードに渡されるメッセージを圧縮しないため 送るメッセージを小さくする あるいは、独自の通信レイヤを実装する 
+- Erlangの対応 Erlangはほかのノードに渡されるメッセージを圧縮しないため 送るメッセージを小さくする あるいは、独自の通信レイヤを実装する 
+- Erlangはほかのノードに渡されるメッセージを圧縮しないため 送るメッセージを小さくする あるいは、独自の通信レイヤを実装する 
+- 送るメッセージを小さくする
+- あるいは、独自の通信レイヤを実装する
+- ネットワークは均質である Erlangの対応 Erlangノードと同じプロトコル形式にして通信 Cノード BERT BERT-RPC 
+- Erlangの対応 Erlangノードと同じプロトコル形式にして通信 Cノード BERT BERT-RPC 
+- Erlangノードと同じプロトコル形式にして通信 Cノード BERT BERT-RPC 
+- Cノード
+- BERT
+- BERT-RPC
+- 障害（ノードの応答不能）への対応 下記の中から原因を特定するが確実には対応できない ハードウェア障害 アプリケーションクラッシュ ネットワーク分断 輻輳 遮断 ゾンビ化するということ ネットワーク分断が起きている間アプリケーションが生きていた場合 当該ノードで保持していたデータがクラスタ間で保持していたデータと整合性がとれず、欠損扱いになる（一貫性の欠如） 当該ノードからレスポンスが返ってこないため生きているか死んでいるかわからない（可用性の欠如） CAP（Consistency, Availability, Partition Tolerance）定理 ノード間において、同時に下記3つの要素を保証することはできない 一貫性 Consistency すべてのデータ読み込みにおいて、最新の書き込みデータもしくはエラーのどちらかを受け取れること 可用性 Availability システム要求に応答できること（SPOFがない） 分断耐性 Partition tolerance ネットワーク分断時でもシステムを継続して運用できること 組合せ、採用条件、採用ケース CA 採用条件 ネットワークが絶対に落ちない場合 ネットワークが1つの塊として動作している場合 データの読み書きが多い場合 採用ケース RDBMS NFS AP 採用条件 ネットワーク分断が起きやすい場合 SPOFがない場合 ネットワーク分断時データ変更不可だと問題がある場合 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 採用ケース Amazon SimpleDB Apache Cassandra DNS HTTPキャッシュ CP 採用条件 ネットワーク分断が起きやすい場合 SPOFがある場合 ネットワーク分断時データ変更不可でも問題ない場合 採用ケース Mnesia Apache HBase 
+- 下記の中から原因を特定するが確実には対応できない ハードウェア障害 アプリケーションクラッシュ ネットワーク分断 輻輳 遮断 
+- ハードウェア障害
+- アプリケーションクラッシュ
+- ネットワーク分断 輻輳 遮断 
+- 輻輳
+- 遮断
+- ゾンビ化するということ ネットワーク分断が起きている間アプリケーションが生きていた場合 当該ノードで保持していたデータがクラスタ間で保持していたデータと整合性がとれず、欠損扱いになる（一貫性の欠如） 当該ノードからレスポンスが返ってこないため生きているか死んでいるかわからない（可用性の欠如） 
+- ネットワーク分断が起きている間アプリケーションが生きていた場合 当該ノードで保持していたデータがクラスタ間で保持していたデータと整合性がとれず、欠損扱いになる（一貫性の欠如） 当該ノードからレスポンスが返ってこないため生きているか死んでいるかわからない（可用性の欠如） 
+- 当該ノードで保持していたデータがクラスタ間で保持していたデータと整合性がとれず、欠損扱いになる（一貫性の欠如）
+- 当該ノードからレスポンスが返ってこないため生きているか死んでいるかわからない（可用性の欠如）
+- CAP（Consistency, Availability, Partition Tolerance）定理 ノード間において、同時に下記3つの要素を保証することはできない 一貫性 Consistency すべてのデータ読み込みにおいて、最新の書き込みデータもしくはエラーのどちらかを受け取れること 可用性 Availability システム要求に応答できること（SPOFがない） 分断耐性 Partition tolerance ネットワーク分断時でもシステムを継続して運用できること 組合せ、採用条件、採用ケース CA 採用条件 ネットワークが絶対に落ちない場合 ネットワークが1つの塊として動作している場合 データの読み書きが多い場合 採用ケース RDBMS NFS AP 採用条件 ネットワーク分断が起きやすい場合 SPOFがない場合 ネットワーク分断時データ変更不可だと問題がある場合 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 採用ケース Amazon SimpleDB Apache Cassandra DNS HTTPキャッシュ CP 採用条件 ネットワーク分断が起きやすい場合 SPOFがある場合 ネットワーク分断時データ変更不可でも問題ない場合 採用ケース Mnesia Apache HBase 
+- ノード間において、同時に下記3つの要素を保証することはできない 一貫性 Consistency すべてのデータ読み込みにおいて、最新の書き込みデータもしくはエラーのどちらかを受け取れること 可用性 Availability システム要求に応答できること（SPOFがない） 分断耐性 Partition tolerance ネットワーク分断時でもシステムを継続して運用できること 
+- 一貫性 Consistency すべてのデータ読み込みにおいて、最新の書き込みデータもしくはエラーのどちらかを受け取れること 
+- すべてのデータ読み込みにおいて、最新の書き込みデータもしくはエラーのどちらかを受け取れること
+- 可用性 Availability システム要求に応答できること（SPOFがない） 
+- システム要求に応答できること（SPOFがない）
+- 分断耐性 Partition tolerance ネットワーク分断時でもシステムを継続して運用できること 
+- ネットワーク分断時でもシステムを継続して運用できること
+- 組合せ、採用条件、採用ケース CA 採用条件 ネットワークが絶対に落ちない場合 ネットワークが1つの塊として動作している場合 データの読み書きが多い場合 採用ケース RDBMS NFS AP 採用条件 ネットワーク分断が起きやすい場合 SPOFがない場合 ネットワーク分断時データ変更不可だと問題がある場合 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 採用ケース Amazon SimpleDB Apache Cassandra DNS HTTPキャッシュ CP 採用条件 ネットワーク分断が起きやすい場合 SPOFがある場合 ネットワーク分断時データ変更不可でも問題ない場合 採用ケース Mnesia Apache HBase 
+- CA 採用条件 ネットワークが絶対に落ちない場合 ネットワークが1つの塊として動作している場合 データの読み書きが多い場合 採用ケース RDBMS NFS 
+- 採用条件 ネットワークが絶対に落ちない場合 ネットワークが1つの塊として動作している場合 データの読み書きが多い場合 
+- ネットワークが絶対に落ちない場合
+- ネットワークが1つの塊として動作している場合
+- データの読み書きが多い場合
+- 採用ケース RDBMS NFS 
+- RDBMS
+- NFS
+- AP 採用条件 ネットワーク分断が起きやすい場合 SPOFがない場合 ネットワーク分断時データ変更不可だと問題がある場合 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 採用ケース Amazon SimpleDB Apache Cassandra DNS HTTPキャッシュ 
+- 採用条件 ネットワーク分断が起きやすい場合 SPOFがない場合 ネットワーク分断時データ変更不可だと問題がある場合 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 
+- ネットワーク分断が起きやすい場合
+- SPOFがない場合
+- ネットワーク分断時データ変更不可だと問題がある場合
+- 結果整合性を適用可能な場合 時間ベース 個別にコンフリクト解消 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 
+- 時間ベース
+- 個別にコンフリクト解消
+- 全ノードによる合意 合意割合による調整 問い合わせ対象による調整 
+- 合意割合による調整
+- 問い合わせ対象による調整
+- 採用ケース Amazon SimpleDB Apache Cassandra DNS HTTPキャッシュ 
+- Amazon SimpleDB
+- Apache Cassandra
+- DNS
+- HTTPキャッシュ
+- CP 採用条件 ネットワーク分断が起きやすい場合 SPOFがある場合 ネットワーク分断時データ変更不可でも問題ない場合 採用ケース Mnesia Apache HBase 
+- 採用条件 ネットワーク分断が起きやすい場合 SPOFがある場合 ネットワーク分断時データ変更不可でも問題ない場合 
+- ネットワーク分断が起きやすい場合
+- SPOFがある場合
+- ネットワーク分断時データ変更不可でも問題ない場合
+- 採用ケース Mnesia Apache HBase 
+- Mnesia
+- Apache HBase 
+
+Erlangが提供する道具 
+
+- ノードとEPMD 特徴 ノードとはErlang VMのインスタンスのこと 各ノードはEPMDに接続されている 新しいノードは自動的にErlangクラスタに接続され、各ノードに接続される 接続されているノードでも完全に独立している 各ノードが固有に保持しているもの プロセスレジストリ ETSテーブル 読み込んだモジュール EPMDはErlangクラスタの一部として、各コンピューター上で稼働する EPMDは名前サーバとして機能する Pros Fault tolerance Cons 1ノードにつき1エフェメラルポートが必要になるため、Scalingに制限がある 対処として、ノードのグループを小さなクラスタに分割 
+- 特徴 ノードとはErlang VMのインスタンスのこと 各ノードはEPMDに接続されている 新しいノードは自動的にErlangクラスタに接続され、各ノードに接続される 接続されているノードでも完全に独立している 各ノードが固有に保持しているもの プロセスレジストリ ETSテーブル 読み込んだモジュール EPMDはErlangクラスタの一部として、各コンピューター上で稼働する EPMDは名前サーバとして機能する 
+- ノードとはErlang VMのインスタンスのこと
+- 各ノードはEPMDに接続されている 新しいノードは自動的にErlangクラスタに接続され、各ノードに接続される 
+- 新しいノードは自動的にErlangクラスタに接続され、各ノードに接続される
+- 接続されているノードでも完全に独立している 各ノードが固有に保持しているもの プロセスレジストリ ETSテーブル 読み込んだモジュール 
+- 各ノードが固有に保持しているもの プロセスレジストリ ETSテーブル 読み込んだモジュール 
+- プロセスレジストリ
+- ETSテーブル
+- 読み込んだモジュール
+- EPMDはErlangクラスタの一部として、各コンピューター上で稼働する
+- EPMDは名前サーバとして機能する
+- Pros Fault tolerance 
+- Fault tolerance
+- Cons 1ノードにつき1エフェメラルポートが必要になるため、Scalingに制限がある 対処として、ノードのグループを小さなクラスタに分割 
+- 1ノードにつき1エフェメラルポートが必要になるため、Scalingに制限がある 対処として、ノードのグループを小さなクラスタに分割 
+- 対処として、ノードのグループを小さなクラスタに分割
+- シリアライズ、デシリアライズ
+- マルチプロセス
+- ネットワークの障害監視 
+
+Erlangクラスタを設定する 
+
+- ノードの名前解決 長い名前 aaa.bbb.cccのような完全修飾ドメイン名 DNSリゾルバによって解決 erl -name LongName 短い名前 ピリオドがないホスト名 ホストファイルやDNSエントリによって解決 erl -sname ShortName 注意点 1台のコンピューター上でErlangノードを設定する際は通常短い名前をつかう 長い名前と短い名前、双方でのやり取りはできない 
+- 長い名前 aaa.bbb.cccのような完全修飾ドメイン名 DNSリゾルバによって解決 erl -name LongName 
+- aaa.bbb.cccのような完全修飾ドメイン名
+- DNSリゾルバによって解決
+- erl -name LongName
+- 短い名前 ピリオドがないホスト名 ホストファイルやDNSエントリによって解決 erl -sname ShortName 
+- ピリオドがないホスト名
+- ホストファイルやDNSエントリによって解決
+- erl -sname ShortName
+- 注意点 1台のコンピューター上でErlangノードを設定する際は通常短い名前をつかう 長い名前と短い名前、双方でのやり取りはできない 
+- 1台のコンピューター上でErlangノードを設定する際は通常短い名前をつかう
+- 長い名前と短い名前、双方でのやり取りはできない
+- 関数 net_kernel:connect_node/1 - ノード接続 ノード名参照 node/0 - 現在のノード名を参照 nodes/0 - 接続ノード参照 リンクとモニタ link - ノードをまたいだリンク erlang:monitor/2 - ノードをまたいだモニタ（ネットワーク分断時に一斉に活性化し負荷が増加する可能性あり） erlang:monitor_node/2 - ノードを指定したモニタ 遠隔操作 spawn/2 spawn/4 spawn_link/2 spawn_link/4 
+- net_kernel:connect_node/1 - ノード接続
+- ノード名参照 node/0 - 現在のノード名を参照 nodes/0 - 接続ノード参照 
+- node/0 - 現在のノード名を参照
+- nodes/0 - 接続ノード参照
+- リンクとモニタ link - ノードをまたいだリンク erlang:monitor/2 - ノードをまたいだモニタ（ネットワーク分断時に一斉に活性化し負荷が増加する可能性あり） erlang:monitor_node/2 - ノードを指定したモニタ 
+- link - ノードをまたいだリンク
+- erlang:monitor/2 - ノードをまたいだモニタ（ネットワーク分断時に一斉に活性化し負荷が増加する可能性あり）
+- erlang:monitor_node/2 - ノードを指定したモニタ
+- 遠隔操作 spawn/2 spawn/4 spawn_link/2 spawn_link/4 
+- spawn/2
+- spawn/4
+- spawn_link/2
+- spawn_link/4
+- クラスタのUIDトークンとしてのCookie 関数 erl -sname ShortName -setcookie CookieName erlang:get_cookei/0 erlang:set_cookei/2 
+- 関数 erl -sname ShortName -setcookie CookieName erlang:get_cookei/0 erlang:set_cookei/2 
+- erl -sname ShortName -setcookie CookieName
+- erlang:get_cookei/0
+- erlang:set_cookei/2
+- 隠しノード クラスタを介してノード接続すると、クラスタ間で予期しないメッセージ通信がおこなわれる可能性があるため、それを防止する策としてクラスタを介さず接続可能な隠しノード機能がある 関数 erlang:send(Dest, Message, [noconnect]) - クラスタを介さずにノードに接続 erl -sname ShortName -hidden - クラスタを介さずに隠しノードに接続 nodes(hidden) - 隠しノードを参照 
+- クラスタを介してノード接続すると、クラスタ間で予期しないメッセージ通信がおこなわれる可能性があるため、それを防止する策としてクラスタを介さず接続可能な隠しノード機能がある
+- 関数 erlang:send(Dest, Message, [noconnect]) - クラスタを介さずにノードに接続 erl -sname ShortName -hidden - クラスタを介さずに隠しノードに接続 nodes(hidden) - 隠しノードを参照 
+- erlang:send(Dest, Message, [noconnect]) - クラスタを介さずにノードに接続
+- erl -sname ShortName -hidden - クラスタを介さずに隠しノードに接続
+- nodes(hidden) - 隠しノードを参照
+- ポート範囲指定 EPMDのポート番号は 4369 設定方法 erl -name LongName -kernel inet_dist_listen_min 9100 -kernel inet_dist_listen_max 9115 erl -name LongName -config ports ports.config: [{kernel, [{inet_dist_listen_min, 9100}, {inet_dist_listen_max, 9115}]}]. 
+- EPMDのポート番号は 4369 
+- 設定方法 erl -name LongName -kernel inet_dist_listen_min 9100 -kernel inet_dist_listen_max 9115 erl -name LongName -config ports ports.config: [{kernel, [{inet_dist_listen_min, 9100}, {inet_dist_listen_max, 9115}]}]. 
+- erl -name LongName -kernel inet_dist_listen_min 9100 -kernel inet_dist_listen_max 9115
+- erl -name LongName -config ports ports.config: [{kernel, [{inet_dist_listen_min, 9100}, {inet_dist_listen_max, 9115}]}]. 
+- ports.config: [{kernel, [{inet_dist_listen_min, 9100}, {inet_dist_listen_max, 9115}]}]. 
+- 分散用モジュール net_kernel start([Name, Type, HeartbeatInMilliseconds]) - インスタンスを一時的にノード化 set_net_ticktime(Milliseconds) - Ticktime（ハートビートを4倍した時間、ノードの死亡判定時間）を設定変更 global - プロセスレジストリの代替 register_name(Name, Pid) - gloabl登録し名前変更 unregister_name(Name, Pid) - globalから名前解除 re_register_name(Name, Pid) - 参照先の喪失を防ぎながらglobal登録し名前変更 whereis_name(Name) - PID探索 send(Name, Message) - メッセージ送信 random_exit_name/3 - ランダムにプロセスをkillする random_notify_name/3 - 2つのプロセスのうちいかすプロセスをランダムに1つ選び、globalから解除されるプロセスに {global_name_conflict, Name} というメッセージを送信 notify_all_name/3 - 指定したPIDプロセスをglobalから解除し、 {global_name_conflict, Name, OtherPid} というメッセージを送信、コンフリクト解消を促す rpc call(Node, Module, Function, Args[, Timout]) async_call(Node, Mod, Fun, Args[, Timout]) yield(AsyncPid) nb_yield(AsyncPid[, Timeout]) - ポーリング、ロングポーリング cast(Node, Mod, Fun, Args) - 返値なしのコール multicall(Nodes, Mod, Fun, Args) - 複数ノードへのコール eval_everywhere(Nodes, Mod, Fun, Args) - 複数ノードへの命令（コールとほぼ同じ） 
+- net_kernel start([Name, Type, HeartbeatInMilliseconds]) - インスタンスを一時的にノード化 set_net_ticktime(Milliseconds) - Ticktime（ハートビートを4倍した時間、ノードの死亡判定時間）を設定変更 
+- start([Name, Type, HeartbeatInMilliseconds]) - インスタンスを一時的にノード化
+- set_net_ticktime(Milliseconds) - Ticktime（ハートビートを4倍した時間、ノードの死亡判定時間）を設定変更
+- global - プロセスレジストリの代替 register_name(Name, Pid) - gloabl登録し名前変更 unregister_name(Name, Pid) - globalから名前解除 re_register_name(Name, Pid) - 参照先の喪失を防ぎながらglobal登録し名前変更 whereis_name(Name) - PID探索 send(Name, Message) - メッセージ送信 random_exit_name/3 - ランダムにプロセスをkillする random_notify_name/3 - 2つのプロセスのうちいかすプロセスをランダムに1つ選び、globalから解除されるプロセスに {global_name_conflict, Name} というメッセージを送信 notify_all_name/3 - 指定したPIDプロセスをglobalから解除し、 {global_name_conflict, Name, OtherPid} というメッセージを送信、コンフリクト解消を促す 
+- register_name(Name, Pid) - gloabl登録し名前変更
+- unregister_name(Name, Pid) - globalから名前解除
+- re_register_name(Name, Pid) - 参照先の喪失を防ぎながらglobal登録し名前変更
+- whereis_name(Name) - PID探索
+- send(Name, Message) - メッセージ送信
+- random_exit_name/3 - ランダムにプロセスをkillする
+- random_notify_name/3 - 2つのプロセスのうちいかすプロセスをランダムに1つ選び、globalから解除されるプロセスに {global_name_conflict, Name} というメッセージを送信
+- notify_all_name/3 - 指定したPIDプロセスをglobalから解除し、 {global_name_conflict, Name, OtherPid} というメッセージを送信、コンフリクト解消を促す
+- rpc call(Node, Module, Function, Args[, Timout]) async_call(Node, Mod, Fun, Args[, Timout]) yield(AsyncPid) nb_yield(AsyncPid[, Timeout]) - ポーリング、ロングポーリング cast(Node, Mod, Fun, Args) - 返値なしのコール multicall(Nodes, Mod, Fun, Args) - 複数ノードへのコール eval_everywhere(Nodes, Mod, Fun, Args) - 複数ノードへの命令（コールとほぼ同じ） 
+- call(Node, Module, Function, Args[, Timout])
+- async_call(Node, Mod, Fun, Args[, Timout])
+- yield(AsyncPid)
+- nb_yield(AsyncPid[, Timeout]) - ポーリング、ロングポーリング
+- cast(Node, Mod, Fun, Args) - 返値なしのコール
+- multicall(Nodes, Mod, Fun, Args) - 複数ノードへのコール
+- eval_everywhere(Nodes, Mod, Fun, Args) - 複数ノードへの命令（コールとほぼ同じ）   > 30 分散OTP30 分散OTP 
+
+- 前回の分散の章でnine ninesのなぞが見えてきた。今回はそれを補完する分散OTPについてかんがえる。   > 分散アプリケーションの特徴分散アプリケーションの特徴 
+
+構成 
+
+- 標準アプリケーション アプリケーションコントローラ（ノード） アプリケーションマスタ スーパーバイザ 
+- アプリケーションコントローラ（ノード） アプリケーションマスタ スーパーバイザ 
+- アプリケーションマスタ スーパーバイザ 
+- スーパーバイザ
+- 分散アプリケーション アプリケーションコントローラ（ノード） アプリケーションマスタ スーパーバイザ 
+- アプリケーションコントローラ（ノード） アプリケーションマスタ スーパーバイザ 
+- アプリケーションマスタ スーパーバイザ 
+- スーパーバイザ 
+
+ライフサイクル 
+
+- 標準アプリケーション 1. 読込中2. 起動中3. 停止中4. 解放中 
+- 分散アプリケーション 1. 読込中2. 起動中 稼働中の分散ノードが死んだら稼働中ステータスに移行 3. 稼働中の分散ノードが死んだら稼働中ステータスに移行4. 稼働中 稼働中ステータスは1つのノードのみ 5. 稼働中ステータスは1つのノードのみ6. 停止中7. 解放中  
+
+再起動戦略 
+
+- 特徴 ハードウェア障害を前提にしたCAシステムでよくとられます ネットワーク分断を前提にしたCPシステムの場合は採用を熟慮すること 
+- ハードウェア障害を前提にしたCAシステムでよくとられます
+- ネットワーク分断を前提にしたCPシステムの場合は採用を熟慮すること
+- 2つの戦略 フェイルオーバー アプリケーション停止後、別の場所で再起動する戦略 メインとバックアップを入れ替える方法 複数台サーバを立ち上げて相互に負荷を補完しあう方法 テイクオーバー アプリケーション復活後、バックアップからメインに移行する戦略 
+- フェイルオーバー アプリケーション停止後、別の場所で再起動する戦略 メインとバックアップを入れ替える方法 複数台サーバを立ち上げて相互に負荷を補完しあう方法 
+- アプリケーション停止後、別の場所で再起動する戦略 メインとバックアップを入れ替える方法 複数台サーバを立ち上げて相互に負荷を補完しあう方法 
+- メインとバックアップを入れ替える方法
+- 複数台サーバを立ち上げて相互に負荷を補完しあう方法
+- テイクオーバー アプリケーション復活後、バックアップからメインに移行する戦略 
+- アプリケーション復活後、バックアップからメインに移行する戦略   > 32 Mnesia32 Mnesia   > Mnesiaの特徴Mnesiaの特徴 
+
+- Pros CPシステム（NoSQL） トランザクション機能 (ACID) ネットワーク分断につよい ただし、10ノード前後が実用上の限界と考えられている 
+- CPシステム（NoSQL） トランザクション機能 (ACID) ネットワーク分断につよい ただし、10ノード前後が実用上の限界と考えられている 
+- トランザクション機能 (ACID)
+- ネットワーク分断につよい ただし、10ノード前後が実用上の限界と考えられている 
+- ただし、10ノード前後が実用上の限界と考えられている
+- Cons 各テーブルにつき2Gの容量制限 Table Frangmentation機能で回避可能 厳密なシステム要求に応答することはむずかしい 数テラバイトの大きなデータをあつかうのに向いていない 組込型制限がない 
+- 各テーブルにつき2Gの容量制限 Table Frangmentation機能で回避可能 
+- Table Frangmentation機能で回避可能
+- 厳密なシステム要求に応答することはむずかしい
+- 数テラバイトの大きなデータをあつかうのに向いていない
+- 組込型制限がない 
+
+適切なユースケース 
+
+- 下記条件をみたした場合 ノード数、データ量双方を見積もることが可能 ETS/DETS（タプル）形式でアクセス可能 
+- ノード数、データ量双方を見積もることが可能
+- ETS/DETS（タプル）形式でアクセス可能 
+
+テーブルオプション 
+
+- 保存方法 ram_copies - データをETS（メモリ）にのみ保存、32ビットマシンで4Gの容量制限 disc_only_copies - データをDETSにのみ保存、2Gの容量制限 disc_copies - データをETSとDETS双方に保存、DETSの2G容量制限はない、通常はこちらはつかう 
+- ram_copies - データをETS（メモリ）にのみ保存、32ビットマシンで4Gの容量制限
+- disc_only_copies - データをDETSにのみ保存、2Gの容量制限
+- disc_copies - データをETSとDETS双方に保存、DETSの2G容量制限はない、通常はこちらはつかう
+- テーブル種類 set bag ordered_set 
+- set
+- bag
+- ordered_set 
+
+CLI 
+
+- erl -name LongName -mnesia dir path/to/db - dir 変数でスキーマ保存場所を指定 
+
+関数 
+
+- mnesia create_schema(ListOfNodes) create_table(TableName, Option) オプション {attributes, List} - テーブルのカラム名 {disc_copies, NodeList} {disc_only_copies, NodeList} {ram_copies, NodeList} - テーブルの保存場所 {index, ListOfIntegers} - インデックスをはる {record_name, Atom} - テーブルの別名（非推奨） {type, Type} - テーブル種類 (set, ordered_set, bag) {local_content, Boolean} - デフォルト false。true にすると、多数のノード上に共有されない固有のローカルテーブルを作成する wait_for_tables - テーブル読込完了まで待機 activity(AccessContext, Fun[, Args]) - クエリの実行方法を指定 AccessContextの種類 transaction - 非同期トランザクション、トランザクションの完了を待つわけではないので正確ではない sync_transaction - 同期トランザクション async_dirty - 非同期のロックなし処理 sync_dirty - 同期のロックなし処理 ets - MnesiaをつかわずETSテーブルで処理 write delete read match_object select 
+- create_schema(ListOfNodes)
+- create_table(TableName, Option) オプション {attributes, List} - テーブルのカラム名 {disc_copies, NodeList} {disc_only_copies, NodeList} {ram_copies, NodeList} - テーブルの保存場所 {index, ListOfIntegers} - インデックスをはる {record_name, Atom} - テーブルの別名（非推奨） {type, Type} - テーブル種類 (set, ordered_set, bag) {local_content, Boolean} - デフォルト false。true にすると、多数のノード上に共有されない固有のローカルテーブルを作成する 
+- オプション {attributes, List} - テーブルのカラム名 {disc_copies, NodeList} {disc_only_copies, NodeList} {ram_copies, NodeList} - テーブルの保存場所 {index, ListOfIntegers} - インデックスをはる {record_name, Atom} - テーブルの別名（非推奨） {type, Type} - テーブル種類 (set, ordered_set, bag) {local_content, Boolean} - デフォルト false。true にすると、多数のノード上に共有されない固有のローカルテーブルを作成する 
+- {attributes, List} - テーブルのカラム名
+- {disc_copies, NodeList} {disc_only_copies, NodeList} {ram_copies, NodeList} - テーブルの保存場所
+- {index, ListOfIntegers} - インデックスをはる
+- {record_name, Atom} - テーブルの別名（非推奨）
+- {type, Type} - テーブル種類 (set, ordered_set, bag)
+- {local_content, Boolean} - デフォルト false。true にすると、多数のノード上に共有されない固有のローカルテーブルを作成する
+- wait_for_tables - テーブル読込完了まで待機
+- activity(AccessContext, Fun[, Args]) - クエリの実行方法を指定 AccessContextの種類 transaction - 非同期トランザクション、トランザクションの完了を待つわけではないので正確ではない sync_transaction - 同期トランザクション async_dirty - 非同期のロックなし処理 sync_dirty - 同期のロックなし処理 ets - MnesiaをつかわずETSテーブルで処理 
+- AccessContextの種類 transaction - 非同期トランザクション、トランザクションの完了を待つわけではないので正確ではない sync_transaction - 同期トランザクション async_dirty - 非同期のロックなし処理 sync_dirty - 同期のロックなし処理 ets - MnesiaをつかわずETSテーブルで処理 
+- transaction - 非同期トランザクション、トランザクションの完了を待つわけではないので正確ではない
+- sync_transaction - 同期トランザクション
+- async_dirty - 非同期のロックなし処理
+- sync_dirty - 同期のロックなし処理
+- ets - MnesiaをつかわずETSテーブルで処理
+- write
+- delete
+- read
+- match_object
+- select
+- application set_env(mnesia, dir, "path/to/db") - スキーマ保存場所を指定 
+- set_env(mnesia, dir, "path/to/db") - スキーマ保存場所を指定 
+
+クエリリスト内包表記 
+
+- qlc q(Fun, Generator) - クエリハンドル eval(QueryHandle) - 評価 fold(Fun, Dict, QueryHandle) 
+- q(Fun, Generator) - クエリハンドル
+- eval(QueryHandle) - 評価
+- fold(Fun, Dict, QueryHandle)   > 33 Dialyzer33 Dialyzer 
+
+今回は静的型チェッカーDialyzerについてかんがえる。   > Dialyzerの特徴Dialyzerの特徴 
+
+CLI 
+
+- PLT (Persistent Lookup Table 永続的探索表) dialyzer --build_plt --apps erts kernel stdlib mnesia sasl common_test eunit - PLT作成 dialyzer --add_to_plt --apps reltool - PLT追加 
+- dialyzer --build_plt --apps erts kernel stdlib mnesia sasl common_test eunit - PLT作成
+- dialyzer --add_to_plt --apps reltool - PLT追加
+- 型チェック dialyzer foo/src/bar.erl - ファイルを解析 dialyzer -r foo/src bar/src --src - ディレクトリ指定してerlファイルを解析 
+- dialyzer foo/src/bar.erl - ファイルを解析
+- dialyzer -r foo/src bar/src --src - ディレクトリ指定してerlファイルを解析 
+
+Erlangの型 
+
+- シングルトン型 - それ自体が型を示すオブジェクト 'some atom - アトム 42 - 整数 [] - 空リスト {} - 空タプル <<>> - 空バイナリ 
+- 'some atom - アトム
+- 42 - 整数
+- [] - 空リスト
+- {} - 空タプル
+- <<>> - 空バイナリ
+- BIF型 any() none() pid() port() reference() atom() atom() binary() <<_:Integer>> - 特定サイズのバイナリ <<_:*Integer>> - 特定のユニットサイズで長さは指定されていないバイナリ <<_:Integer, _:_*OtherInteger>> - 上記2つの組み合わせ、バイナリの最小の長さを指定する形式 integer() N..M - 整数の範囲 non_neg_integer() pos_integer() - ゼロより大きい自然数 neg_integer() - 負の整数 float() fun() - あらゆる種類の関数 fun((...) -> Type) - 引数のアリティが決まっていない、特定の肩を返す無名関数 fun(() -> Type) fun((Type1, Type2, ..., TypeN) -> Type) [Type()] - 特定の型を持つリスト [Type(), ...] - 特定の型を持つリスト、またリストが空でないことを示す tuple() {Type1, Type2, ..., TypeN} - 全要素の型とサイズがわかっているタプル 
+- any()
+- none()
+- pid()
+- port()
+- reference()
+- atom()
+- atom()
+- binary()
+- <<_:Integer>> - 特定サイズのバイナリ
+- <<_:*Integer>> - 特定のユニットサイズで長さは指定されていないバイナリ
+- <<_:Integer, _:_*OtherInteger>> - 上記2つの組み合わせ、バイナリの最小の長さを指定する形式
+- integer()
+- N..M - 整数の範囲
+- non_neg_integer()
+- pos_integer() - ゼロより大きい自然数
+- neg_integer() - 負の整数
+- float()
+- fun() - あらゆる種類の関数
+- fun((...) -> Type) - 引数のアリティが決まっていない、特定の肩を返す無名関数
+- fun(() -> Type)
+- fun((Type1, Type2, ..., TypeN) -> Type)
+- [Type()] - 特定の型を持つリスト
+- [Type(), ...] - 特定の型を持つリスト、またリストが空でないことを示す
+- tuple()
+- {Type1, Type2, ..., TypeN} - 全要素の型とサイズがわかっているタプル
+- エイリアス型 term() boolean() - 'true' | 'false' byte() - 0..255 char() - 0..16#10ffff number() - integer() | float() maybe_improper_list() - maybe_improper_list(any(), any()) maybe_improper_list(T) - maybe_improper_list(T, any()) string() - [char()] iolist() - maybe_improper_list(char() | binary() | iolist(), binary() | []) module() - atom() timeout() - non_neg_integer() node() - アトム no_return() - none() 
+- term()
+- boolean() - 'true' | 'false' 
+- byte() - 0..255 
+- char() - 0..16#10ffff 
+- number() - integer() | float() 
+- maybe_improper_list() - maybe_improper_list(any(), any()) 
+- maybe_improper_list(T) - maybe_improper_list(T, any()) 
+- string() - [char()] 
+- iolist() - maybe_improper_list(char() | binary() | iolist(), binary() | []) 
+- module() - atom() 
+- timeout() - non_neg_integer() 
+- node() - アトム
+- no_return() - none()  
+
+判定できない例と対策   erlang 
+
+-module(cards). -export([kind/1, main/0]). -type suit() :: spades | clubs | hearts | diamonds. -type value() :: 1..10 | j | q | k. -type card() :: {suit(), value()}. -spec kind(card()) -> 'face' | 'number'. % 注釈をくわえることでdialyzerに警告させる kind({_, A}) when A >= 1, A =< 10 -> number; kind(_) -> face. main() -> number = kind({spades, 7}), face = kind({hearts, k}), number = kind({rubies, 4}), % タプルの中の型が違う  face = kind({clubs, q}).     erlang 
+
+-module(convert). -export([main/0]). %% 注釈をつけないとdialyzerは下記のように判定する % -spec convert(list() | tuple()) -> list() | tuple(). -spec convert(tuple()) -> list(); (list()) -> tuple(). main() -> [_, _] = convert({a, b}), {_, _} = convert([a, b]), [_, _] = convert([a, b]), {_, _} = convert({a, b}). %% private convert(Tup) when is_tuple(Tup) -> tuple_to_list(Tup); convert(L=[_|_]) -> list_to_tuple(L).]]></description><link>https://nabinno.github.io/posts/65</link><guid isPermaLink="false">65</guid><pubDate>Fri, 28 Apr 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[PositiveSSLをHerokuに適用する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- HerokuのSSLの期限がきた。   > SOLUTIONSOLUTION 
+
+- というわけで、いつもつかっているSSL販売代理店「NameCheap社のSSLs.com」でPositiveSSL（運用Comodo社）をHerokuに適用することに。   > HOWTOHOWTO 
+
+1. 証明書を購入する まあ、SSL販売代理店であればどこでもいいんですが 
+2. まあ、SSL販売代理店であればどこでもいいんですが
+3. 秘密鍵と署名リクエストをつくる 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 署名リクエスト openssl req -new -key server.key -out server.csr 
+4. 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 
+5. 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 
+6. 署名リクエスト openssl req -new -key server.key -out server.csr 
+7. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信する 
+8. SSL販売代理店より署名リクエストserver.csrと関連情報を送信する
+9. ドメイン保持の証明をする PositiveSSLの運用会社Comodoにたいしドメイン保持の証明をする 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択 
+10. PositiveSSLの運用会社Comodoにたいしドメイン保持の証明をする
+11. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択
+12. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書がおくられてくる Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+13. 証明タスクをこなししばらくすると、Comodo社より複数の証明書がおくられてくる
+14. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+15. Herokuに証明書を適用する 新規で適用する場合 heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合 heroku certs:update server.crt server.key 
+16. 新規で適用する場合 heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
+17. heroku addons:add ssl:endpoint
+18. heroku certs:add server.crt server.key
+19. 更新する場合 heroku certs:update server.crt server.key 
+20. heroku certs:update server.crt server.key]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sat, 22 Apr 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレームワークがわからない 適切なXAMLプレビュワーがわからない 適切なAndroidエミュレーターがわからない 
+- Visual Studio Community 2015の動作がもっさりしている
+- 適切な開発フローがわからない
+- 適切なアプリケーションフレームワークがわからない
+- 適切なXAMLプレビュワーがわからない
+- 適切なAndroidエミュレーターがわからない   > SOLUTIONSOLUTION 
+
+というわけで、動作が快適になったといわれるVisual Studio 2017がでたのでそちらを中心に開発環境を暫定で整理する（WIP）。   > 開発フロー開発フロー 
+
+まず、想定している開発フローは下記の通り。 
+
+- テスト駆動開発 デバッグ エミュレーター画面の動作確認 - ビルドスピード等考慮してUWPでおこなう アウトプット - Debug.WriteLineなどの確認 イミディエイト - 変数の追跡 C# REPL - C#やパッケージの動作確認 XAMLのプレビュー - いらない子 テスト 単体テスト - NUnit UIテスト - 保留 
+- デバッグ エミュレーター画面の動作確認 - ビルドスピード等考慮してUWPでおこなう アウトプット - Debug.WriteLineなどの確認 イミディエイト - 変数の追跡 C# REPL - C#やパッケージの動作確認 XAMLのプレビュー - いらない子 
+- エミュレーター画面の動作確認 - ビルドスピード等考慮してUWPでおこなう
+- アウトプット - Debug.WriteLineなどの確認
+- イミディエイト - 変数の追跡
+- C# REPL - C#やパッケージの動作確認
+- XAMLのプレビュー - いらない子
+- テスト 単体テスト - NUnit UIテスト - 保留 
+- 単体テスト - NUnit
+- UIテスト - 保留
+- Github Flowにそったデプロイ featureブランチをきってプルリクエストをたてる 当該ブランチに対してCIツールでビルド・テスト・配布を自動化 - ビルド・テスト後にレビュアーにメールにて配布しスマホで確認してもらう流れ。 CIツール Visual Studio Mobile Center - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。 Wercker - masterマージ後にいらなくなったfeatureブランチを消すなどの後片付け役。 Appストアへデプロイ Android iOS UWP 
+- featureブランチをきってプルリクエストをたてる
+- 当該ブランチに対してCIツールでビルド・テスト・配布を自動化 - ビルド・テスト後にレビュアーにメールにて配布しスマホで確認してもらう流れ。 CIツール Visual Studio Mobile Center - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。 Wercker - masterマージ後にいらなくなったfeatureブランチを消すなどの後片付け役。 
+- CIツール Visual Studio Mobile Center - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。 Wercker - masterマージ後にいらなくなったfeatureブランチを消すなどの後片付け役。 
+- Visual Studio Mobile Center - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。
+- Wercker - masterマージ後にいらなくなったfeatureブランチを消すなどの後片付け役。
+- Appストアへデプロイ Android iOS UWP 
+- Android
+- iOS
+- UWP 
+
+ちなみにWerckerでのfeatureブランチなどの後片付けはこんな感じ。masterマージのタイミングではしらせる。   yaml 
+
+box: ruby:2.4.0 build: steps: - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Add git-tag code: | _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S) git remote add origin git@github.com:nabinno/utagaki.git git config --global user.email 'wercker@blahfe.com' git config --global user.name 'Wercker Bot' git tag -a $_tag master -m 'wercker deploy' git push origin $_tag after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > 開発環境開発環境 
+
+その上で開発環境は下記の通りに。Visual Studio 2017版Xamarinは現時点でHypervisorがHyper-Vを考慮していない、Intel HAXMやVirtualBoxなどのホスト型を前提としている。ただ私見としては、VirtualBoxなどのホスト型はWindowsアップデート時に動作検証対象となっておらずクラッシュが起きやすい、Hyper-Vを開発環境とすることをすすめる。いずれにせよ、デバッグはビルドスピード等がHypervisorに左右されるAndroidではなくUWPでおこなうといい。 
+
+- IDE Visual Studio Community 2017 Basic extentions Microsoft Visual Studio Community 2017 Version 15.0.26228.9 D15RTWSVC Microsoft .NET Framework Version 4.6.01586 Visual C# 2017 JavaScript Language Service 2.0 JavaScript Project System 2.0 JavaScript UWP Project System 2.0 TypeScript 2.1.5.0 Microsoft Visual Studio VC Package 1.0 Xamarin 4.3.0.784 (73f58d6) Xamarin.Android SDK 7.1.0.41 (9578cdc) Xamarin.iOS and Xamarin.Mac SDK 10.4.0.123 (35d1ccd) Visual Studio Tools for Unity 3.0.0.1 Visual Studio Tools for Universal Windows Apps 15.0.26228.00 Mono Debugging for Visual Studio Mono.Debugging.VisualStudio ASP.NET and Web Tools 2017 15.0.30223.0 NuGet Package Manager 4.0.0 Common Azure Tools 1.9 NpgsqlVSPackage Extension 1.0 Merq 1.1.13-alpha (2f64b6d) VSPackage Extension 1.2 Other extentions JetBrains ReSharper Ultimate 2016.3.2 - なにはともあれ入れておく。 CodeMaid 10.2.7 - 気軽にコード整形してくれる。 .ignore 1.2.71 Markdown Editor 1.11.201 File Nesting 2.6.67 GitHub.VisualStudio 2.2.0.8 VSColorOutput 2.5 HideMenu 1.0 - MinimaliticViewとの組み合わせでEmacsっぽい画面になる。 MinimaliticView Extension 1.0 Debug用エミュレーター XAML Previewer for Xamarin.Forms - Gorilla PlayerはVS2017未対応の上、Data Bindingを参照できないため機能的にXAML Previewer for Xamarin.Formsとほぼかわらない様子。 Android Emulator Manager/Android SDK Manager - VS2017ではHyper-VベースのVisual Studio Emulator for Xamarinがなくなり、Intel HAXMベースのAndroid Emulator Manager/Android SDK Manager (Google)のみとなった。 
+- Visual Studio Community 2017
+- Basic extentions Microsoft Visual Studio Community 2017 Version 15.0.26228.9 D15RTWSVC Microsoft .NET Framework Version 4.6.01586 Visual C# 2017 JavaScript Language Service 2.0 JavaScript Project System 2.0 JavaScript UWP Project System 2.0 TypeScript 2.1.5.0 Microsoft Visual Studio VC Package 1.0 Xamarin 4.3.0.784 (73f58d6) Xamarin.Android SDK 7.1.0.41 (9578cdc) Xamarin.iOS and Xamarin.Mac SDK 10.4.0.123 (35d1ccd) Visual Studio Tools for Unity 3.0.0.1 Visual Studio Tools for Universal Windows Apps 15.0.26228.00 Mono Debugging for Visual Studio Mono.Debugging.VisualStudio ASP.NET and Web Tools 2017 15.0.30223.0 NuGet Package Manager 4.0.0 Common Azure Tools 1.9 NpgsqlVSPackage Extension 1.0 Merq 1.1.13-alpha (2f64b6d) VSPackage Extension 1.2 
+- Microsoft Visual Studio Community 2017 Version 15.0.26228.9 D15RTWSVC
+- Microsoft .NET Framework Version 4.6.01586
+- Visual C# 2017
+- JavaScript Language Service 2.0
+- JavaScript Project System 2.0
+- JavaScript UWP Project System 2.0
+- TypeScript 2.1.5.0
+- Microsoft Visual Studio VC Package 1.0
+- Xamarin 4.3.0.784 (73f58d6)
+- Xamarin.Android SDK 7.1.0.41 (9578cdc)
+- Xamarin.iOS and Xamarin.Mac SDK 10.4.0.123 (35d1ccd)
+- Visual Studio Tools for Unity 3.0.0.1
+- Visual Studio Tools for Universal Windows Apps 15.0.26228.00
+- Mono Debugging for Visual Studio Mono.Debugging.VisualStudio
+- ASP.NET and Web Tools 2017 15.0.30223.0
+- NuGet Package Manager 4.0.0
+- Common Azure Tools 1.9
+- NpgsqlVSPackage Extension 1.0
+- Merq 1.1.13-alpha (2f64b6d)
+- VSPackage Extension 1.2
+- Other extentions JetBrains ReSharper Ultimate 2016.3.2 - なにはともあれ入れておく。 CodeMaid 10.2.7 - 気軽にコード整形してくれる。 .ignore 1.2.71 Markdown Editor 1.11.201 File Nesting 2.6.67 GitHub.VisualStudio 2.2.0.8 VSColorOutput 2.5 HideMenu 1.0 - MinimaliticViewとの組み合わせでEmacsっぽい画面になる。 MinimaliticView Extension 1.0 
+- JetBrains ReSharper Ultimate 2016.3.2 - なにはともあれ入れておく。
+- CodeMaid 10.2.7 - 気軽にコード整形してくれる。
+- .ignore 1.2.71
+- Markdown Editor 1.11.201
+- File Nesting 2.6.67
+- GitHub.VisualStudio 2.2.0.8
+- VSColorOutput 2.5
+- HideMenu 1.0 - MinimaliticViewとの組み合わせでEmacsっぽい画面になる。
+- MinimaliticView Extension 1.0
+- Debug用エミュレーター XAML Previewer for Xamarin.Forms - Gorilla PlayerはVS2017未対応の上、Data Bindingを参照できないため機能的にXAML Previewer for Xamarin.Formsとほぼかわらない様子。 Android Emulator Manager/Android SDK Manager - VS2017ではHyper-VベースのVisual Studio Emulator for Xamarinがなくなり、Intel HAXMベースのAndroid Emulator Manager/Android SDK Manager (Google)のみとなった。 
+- XAML Previewer for Xamarin.Forms - Gorilla PlayerはVS2017未対応の上、Data Bindingを参照できないため機能的にXAML Previewer for Xamarin.Formsとほぼかわらない様子。
+- Android Emulator Manager/Android SDK Manager - VS2017ではHyper-VベースのVisual Studio Emulator for Xamarinがなくなり、Intel HAXMベースのAndroid Emulator Manager/Android SDK Manager (Google)のみとなった。
+- DevStack Prism Prism template - スキャフォールド、スニペット便利 Profile78 - Profile259になっているがWindows 8必要ないので Newtonsoft.Json FubarCoder.RestSharp.Portable.HttpClient NUnit Moq 
+- Prism Prism template - スキャフォールド、スニペット便利 Profile78 - Profile259になっているがWindows 8必要ないので Newtonsoft.Json FubarCoder.RestSharp.Portable.HttpClient NUnit Moq 
+- Prism template - スキャフォールド、スニペット便利
+- Profile78 - Profile259になっているがWindows 8必要ないので
+- Newtonsoft.Json
+- FubarCoder.RestSharp.Portable.HttpClient
+- NUnit
+- Moq   > キーバインドキーバインド 
+
+おまけのEmacs風キーバインド。Edit.Emacsメソッドは1級市民ではないのでその周辺で代替。Edit.LineCut、Edit.Outline、ReSharpeのいらないキーバインドは削除。    category command keybind     Navigation CodeMaid.SwitchFile C-c,:   Navigation Edit.CharLeft C-b   Navigation Edit.CharRight C-f   Navigation Edit.DocumentBottom M->   Navigation Edit.DocumentTop M-<   Navigation Edit.GoTo M-g   Navigation Edit.IncrementalSearch C-s   Navigation Edit.LineDown C-n   Navigation Edit.LineEnd C-e   Navigation Edit.LineStart C-a   Navigation Edit.LineUp C-p   Navigation Edit.NextMethod M-}   Navigation Edit.PageDown C-v   Navigation Edit.PageUp M-v   Navigation Edit.PreviousMethod M-{   Navigation Edit.ScrollLineCenter C-l   Navigation Edit.ToggleAllOutling C-u,M-c   Navigation Edit.ToggleOutlingExpansion C-i   Navigation Edit.WordNext M-f   Navigation Edit.WordPrevious M-b   Navigation ReSharper.ReSharper_GotoRecentFiles M-x,b   Navigation Team.TeamExplorerSearch C-x,g   Navigation View.C#Interactive C-c,i   Navigation Window.NewVerticalTabGroup C-x,&#124;   Navigation Window.PreviousTabGroup C-x,1   Edit Build.BuildSolution C-c,b   Edit Build.RebuildSolution C-c,r   Edit CodeMaid.JoinLine C-c,j   Edit CodeMaid.SortLines M-x,s   Edit Debug.Start C-c,d   Edit Edit.BackwardDelete C-h   Edit Edit.BackwardDelete M-h   Edit Edit.BreakLine C-m   Edit Edit.Capitalize M-c   Edit Edit.CommentSelection M-;   Edit Edit.Delete C-d   Edit Edit.InsertSnippet C-,   Edit Edit.LineCut C-k   Edit Edit.LineDownExtendColumn M-.   Edit Edit.LineUpExtendColumn M-,   Edit Edit.MakeLowercase M-l   Edit Edit.MakeUppercase M-u   Edit Edit.Paste C-y   Edit Edit.SelectCurrentWord C-SPC   Edit Edit.UncommentSelection M-:   Edit Edit.Undo M-/   Edit File.Close C-x,k   Edit File.SaveSelection C-x,C-s   Edit Project.AddNewItem C-c,s   Edit ReSharpe._ReSharper_DuplicateText C-c,p   Edit ReSharper.ReSharper_GotoRelatedFile C-c,;   Edit ReSharper.ReSharper_GotoText C-c,g   Edit Tools.ManageNuGetPackagesforSolution C-c,n   Edit Tools.Options M-0   Edit View.PackageManagerConsole C-q,1]]></description><link>https://nabinno.github.io/posts/54</link><guid isPermaLink="false">54</guid><pubDate>Thu, 30 Mar 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[Hyper-VモードでLinux OSとAndroid OSを同時使用する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- 普段の開発環境CentOS/Hyper-Vを変更することなく、Xamarinをつかいたい。 CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成。 
+- CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成。
+- Android EmulatorはIntel HAXM＋ホスト型Hypervisor前提のものが多い。 VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい。 なので、APIサーバーはHyper-Vでたてている。 また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。 
+- VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい。 なので、APIサーバーはHyper-Vでたてている。 また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。 
+- なので、APIサーバーはHyper-Vでたてている。
+- また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。   > SOLUTIONSOLUTION 
+
+というわけで、Hyper-Vでイメージ管理するVisual Studio Emulator for Android（VS Emulator）をつかうことにした。 
+
+注意点 
+
+- VS EmulatorはHyper-VのNetwork AdapterをEthernet（有線LAN）しか使用できない。Wi-Fi（無線LAN）は使用できない。
+- VS Emulatorの各デバイス(Android VM）を初回起動させる際に、有線LANと無線LAN双方からネットワークにつなげていると失敗する。   > Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法 
+
+1. 現在稼働しているLinux VMを停止する。 Stop-VM CentOS 
+2. 無線LANの接続を停止し、有線LANのみの接続にする。 Disable-NetAdapter Wi-Fi 
+3. VS EmulatorからAndroid VMを初回起動する。そうすると有線LAN用のvEthernetが作成される。
+4. 無線LAN、有線LAN、双方を接続する。 Enable-NetAdapter Wi-Fi 
+5. Linux VMを起動する。 Start-VM CentOS]]></description><link>https://nabinno.github.io/posts/53</link><guid isPermaLink="false">53</guid><pubDate>Wed, 08 Mar 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[HerokuとGAEのCIをDockerとパイプラインから構成されたWerckerで管理する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- パフォーマンス改善のための開発環境がいけてない。
+- 別PaaSへ移行するための開発環境が汎用化できてない。つらい。   > SOLUTIONSOLUTION 
+
+というわけで、まずはCI上のDockerに載せてから次の手（GAEあたり）を考えることにした。CIはWerckerを使用。以前から使っていたのだが、今回はボックスがDockerになったのでそちらに対応した。 
+
+Wercker3つの特徴 
+
+1. Dockerで環境を管理。今回は対応してないが、GAEのコンテナ（gcr.io/google_appengine/ruby:xxx）と共通化することもできる。ただし、HerokuのHobby Dynosはプロセス数に制限があるのでコンテナ運用は工夫が必要。
+2. 異なるサービス間のネットワークをWerckerが生成する環境変数で管理。Dockerのネットワーク設定の煩雑さを解消。
+3. タスクをワークフローとしてパイプラインで条件付け管理。パイプラインごとにコンテナを立ち上げているので、同じDocker環境でもパイプラインごとに環境変数を分けることが可能。Herokuのパイプラインでもいいが、今後別PaaSに移行する可能性を考えてCI管理にbetした。 
+
+Werckerのふるまいを定義するwercker.ymlは、下記のようにパイプラインごとに記述されている。    > devdev 
+
+devパイプラインはwercker devコマンドをローカルでたたく際につかう。下記の例だとRspec走らせているだけなのでおまけ程度。ただ、ローカル開発でDockerつかうことになったらこういう提案もありかもしれない。プロジェクトレポジトリすべてをDockerにしてローカル開発する辛み、所謂git-dockerバージョン管理問題があるので代替案として。   yaml 
+
+box: ruby:2.3.1 services: - postgres:9.6.1 - redis:3.0.3 dev: steps: - bundle-install - script: name: Install ImageMagick code: | apt-get update apt-get install -y nodejs imagemagick - script: name: Setup database code: | RAILS_ENV=test bundle exec rake db:create db:migrate - internal/watch: name: Run rspec code: | RAILS_ENV=test bundle exec rake spec reload: true     > buildbuild 
+
+buildパイプラインもdevと同じDockerボックスつかってる。やっていることはdevパイプラインと変わらず。すべてのブランチで走る。   yaml 
+
+build: steps: - bundle-install - script: name: Install ImageMagick code: | apt-get update apt-get install -y nodejs imagemagick - script: name: Echo Ruby information code: | env echo "ruby version $(ruby --version) running!" echo "from location $(which ruby)" echo -p "gem list: $(gem list)" - script: name: Setup database code: | RAILS_ENV=test bundle exec rake db:create db:migrate - script: name: Run rspec code: | RAILS_ENV=test bundle exec rake spec     > deploy-stagedeploy-stage 
+
+deploy-stageパイプラインはステージング環境用。現在Herokuを本番環境で利用しているので、デプロイごとにそれをフォークして環境構築している。また、Railsのアセットプリコンパイルの時間短縮はほかのCIと同様にキャッシュを利用している。 
+
+他のPaaSに移った場合に現在おこなっている本番環境のフォークをどうするかが検討課題となる。   yaml 
+
+deploy-stage-heroku: steps: - bundle-install - script: name: Install NodeJS code: | apt-get update apt-get install -y nodejs - nabinno/heroku-install: key: $HEROKU_KEY user: $HEROKU_USER app-name: $HEROKU_APP_NAME - script: name: Fork Application - destroy application code: | heroku apps:destroy --app $HEROKU_APP_NAME --confirm $HEROKU_APP_NAME - script: name: Fork Application - fork code: | heroku fork --from $FROM_HEROKU_APP_NAME --to $HEROKU_APP_NAME - script: name: Fork Application - setup addons of rediscloud code: | heroku addons:create rediscloud:30 --app $HEROKU_APP_NAME - script: name: Fork Application -change dynos code: | heroku ps:scale web=1:Free worker=1:Free --app $HEROKU_APP_NAME - script: name: Fork Application - change environment variables code: | _rediscloud_url=$(heroku run 'env | grep -e REDISCLOUD_.*_URL' --app $HEROKU_APP_NAME | awk -F= '{print $2}') heroku config:set \ S3_BUCKET=$S3_BUCKET \ HEROKU_APP=$HEROKU_APP_NAME \ REDISCLOUD_URL=$_rediscloud_url \ --app $HEROKU_APP_NAME - script: name: Assets Precompile - restore assets cache code: | [ -e $WERCKER_CACHE_DIR/public/assets ] && cp -fr $WERCKER_CACHE_DIR/public/assets $WERCKER_SOURCE_DIR/public || true mkdir -p $WERCKER_SOURCE_DIR/tmp/cache [ -e $WERCKER_CACHE_DIR/tmp/cache/assets ] && cp -fr $WERCKER_CACHE_DIR/tmp/cache/assets $WERCKER_SOURCE_DIR/tmp/cache || true - script: name: Assets Precompile - main process code: | RAILS_ENV=production bundle exec rake assets:precompile --trace - script: name: Assets Precompile - store assets cache code: | mkdir -p $WERCKER_CACHE_DIR/public/assets cp -fr $WERCKER_SOURCE_DIR/public/assets $WERCKER_CACHE_DIR/public mkdir -p $WERCKER_CACHE_DIR/tmp/cache/assets cp -fr $WERCKER_SOURCE_DIR/tmp/cache/assets $WERCKER_CACHE_DIR/tmp/cache - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Assets Precompile - git commit code: | { git add public/assets/.sprockets-manifest-*.json git commit -m 'Run `rake assets:precompile` on Wercker.' } || { echo 'Skip: keep precompiled assets manifest.' } - heroku-deploy: key: $HEROKU_KEY user: $HEROKU_USER app-name: $HEROKU_APP_NAME - script: name: DB Migrate code: | heroku run 'bundle exec rake db:migrate --trace' --app $HEROKU_APP_NAME after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > deploy-prod-herokudeploy-prod-heroku 
+
+deploy-prod-herokuパイプラインは本番環境へのリリース用。環境変数以外はdeploy-stageパイプラインと同じ。   yaml 
+
+deploy-prod-heroku: steps: - bundle-install - script: name: Install NodeJS code: | apt-get update apt-get install -y nodejs - script: name: Assets Precompile - restore assets cache code: | [ -e $WERCKER_CACHE_DIR/public/assets ] && cp -fr $WERCKER_CACHE_DIR/public/assets $WERCKER_SOURCE_DIR/public || true mkdir -p $WERCKER_SOURCE_DIR/tmp/cache [ -e $WERCKER_CACHE_DIR/tmp/cache/assets ] && cp -fr $WERCKER_CACHE_DIR/tmp/cache/assets $WERCKER_SOURCE_DIR/tmp/cache || true - script: name: Assets Precompile - main process code: | RAILS_ENV=production bundle exec rake assets:precompile --trace - script: name: Assets Precompile - store assets cache code: | mkdir -p $WERCKER_CACHE_DIR/public/assets cp -fr $WERCKER_SOURCE_DIR/public/assets $WERCKER_CACHE_DIR/public mkdir -p $WERCKER_CACHE_DIR/tmp/cache/assets cp -fr $WERCKER_SOURCE_DIR/tmp/cache/assets $WERCKER_CACHE_DIR/tmp/cache - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Assets Precompile - git commit code: | { git add public/assets/.sprockets-manifest-*.json git commit -m 'Run `rake assets:precompile` on Wercker.' } || { echo 'Skip: keep precompiled assets manifest.' } - script: name: Add git-tag code: | _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S) git config --global user.email 'wercker@blahfe.com' git config --global user.name 'Wercker Bot' git tag -a $_tag master -m 'wercker deploy' git push origin $_tag - heroku-deploy: key: $HEROKU_KEY user: $HEROKU_USER app-name: $HEROKU_APP_NAME install-toolbelt: true - script: name: DB Migrate code: | heroku run 'bundle exec rake db:migrate --trace' --app $HEROKU_APP_NAME after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > deploy-prod-gaedeploy-prod-gae 
+
+deploy-prod-gaeパイプラインはdeploy-prod-herokuパイプラインと同じく本番環境へのリリース用。GAEにいつでも移行できるように走らせている。 
+
+GAEのデプロイは癖があって、gcloud app deployコマンドをつかってDockerビルドを走らせるが、その時にDocker内に外部から環境変数を設定することができない。そのため、アセットプリコンパイルのビルドの際、asset_syncを使っていると別サーバーへ同期に失敗する。また、パイプライン上の別ステップに環境変数を当てて行うことはできるが、gcloudのデプロイステップとアセットプリコンパイルが重複して適切なダイジェストを発行できない。従って、GAEをつかう場合は./publicディレクトリをつかうのが現状の正解である。HerokuのSlugの取り扱い方針と違うので注意。 
+
+GAEのコンテナの中身は、gcloud beta app gen-config --runtime=ruby --customで出力されるDockerfileを参照。   yaml 
+
+deploy-prod-gae: steps: - bundle-install - script: name: Install ImageMagick code: | apt-get update apt-get install -y nodejs imagemagick - script: name: Echo Ruby information code: | env echo "ruby version $(ruby --version) running!" echo "from location $(which ruby)" echo -p "gem list: $(gem list)" - script: name: DB Migrate code: | RAILS_ENV=production \ DATABASE_URL=${DATABASE_URL} \ bundle exec rake db:create db:migrate --trace - script: name: Install gcloud code: | curl https://sdk.cloud.google.com | bash source ~/.bashrc - script: name: Authenticate gcloud code: | gcloud config set project utagaki-v2 openssl aes-256-cbc -k ${DECRYPT_KEY} -d -in ./gcloud.json.encrypted -out ./gcloud.json gcloud auth activate-service-account --key-file ./gcloud.json - script: name: Deploy app to Google App Engine code: | gcloud app deploy ./app.yaml --promote --stop-previous-version after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > post-deploypost-deploy 
+
+post-deployパイプラインは本番環境にデプロイした後の後処理用。参考程度にgit tagをつけてる。   yaml 
+
+post-deploy: steps: - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Add git-tag code: | _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S) git remote add origin git@github.com:nabinno/utagaki.git git config --global user.email 'wercker@blahfe.com' git config --global user.name 'Wercker Bot' git tag -a $_tag master -m 'wercker deploy' git push origin $_tag after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general]]></description><link>https://nabinno.github.io/posts/52</link><guid isPermaLink="false">52</guid><pubDate>Mon, 06 Feb 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[30代からの胸郭変形（漏斗胸）手術]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- 重度の胸郭変形（漏斗胸）をかかえているため内臓への負荷がもとよりある。ヘイラーインデックス（後述）が健常者の3倍。
+- 30代を超えたあたりから肋軟骨が硬化してきたため心臓、肺を圧迫するようになった。   > TLDRTLDR 
+
+漏斗胸患者の状況を医師から聞いたのだが、その話を考慮すると、1万人くらいは似たような課題をかかえる人がいるのではと思っている。本記事はあくまで患者の備忘なので、医療的な内容は 専門医に聞くといい。 
+
+漏斗胸患者の状況 
+
+- ナス法は2000年代に入ってから徐々に一般に知られるようなった
+- ナス法は10代のうちに受けるのが体力的・経済的にも適切
+- 日本人1000-300人に1人が漏斗胸患者の可能性がある
+- 漏斗胸患者の8-9割は男性である   > SOLUTIONSOLUTION 
+
+そんなわけで、今まで放置していた胸郭を矯正する手術（ナス法）を先日おこなった。まだ経過観察中だが、様態も安定してきたので、備忘のために今までおこなった対策を記す。30代でこの手術をする人の情報があまりなかったので試行錯誤ではある。 
+
+私の記憶がたしかなら、ナス法は2000年代に入ってから徐々に一般に知られるようなり、今では美容目的の手術としてもあつかわれている。それまでの胸郭変形の手術は、胸を切開して骨を切りとりその骨を表裏反転させるなど大掛かりなものだった。 
+
+その内容は歯の矯正と原理はおなじで矯正器具を患部周辺にとりつけて時間をかけて適正に形を整えていくというもの。ただし、矯正器具を骨の内側にとりつけるため、歯の強制よりも時間と痛みを多くともなうものである。 
+
+- 治療期間でみると、歯の矯正が4-6か月、胸の矯正が2-3年かかる。
+- 痛みの度合いでみると、強度の医療麻薬・鎮痛剤にお世話になる期間が歯の矯正では7日ほど、胸の矯正では40日ほど。また、鎮痛剤が不要になっても、施術部位の皮膚組成が治るまで、前者は2週間ほど噛むことが制限され、後者は90日ほど運動（胸郭をつかう運動のこと：例えば、満員電車への乗車、タクシー乗車、ジョギング、サイクリングなど）が制限される。
+- 治療リスクは、歯の矯正が口内炎、歯髄炎である一方、胸の矯正が心臓の損傷、無気肺、肺水腫など。 
+
+さて、費用とタスク、そして手術後みえてきた課題（リハビリ）を以下に記す。   > 費用費用 
+
+まずは費用。手術・入院費用は健康保険適用で10万ほど。これは入院保険に加入していれば気にする必要はない。 
+
+ただ、日常生活を送れるようになるまで4-6か月を有するので、収入分の金額を念頭にいれる必要がある。   > タスク、退院までの工程タスク、退院までの工程 
+
+次にタスク。下記5段階を順にみていく。調べてはじめて退院まで早くて6か月はみておいた方がいい。 
+
+1. ヘイラーインデックスを測る
+2. 入院保険にはいる
+3. 診察をうける、手術の打診
+4. 手術、入院
+5. 退院   > 1. ヘイラーインデックスを測る1. ヘイラーインデックスを測る 
+
+自分が診察にいった際は知らなかったが、重度かどうかの判断はヘイラーインデックス（インデックス）を測ればいい。下記の式でインデックスを算出する。本来であればCTで詳細をみて導き出すものだが、それほど複雑ではないのでまずは診察に行くかの判断材料として概算をだすといい。 
+
+ヘイラーインデックス = 肋骨の内側の距離 / 胸骨と背骨の距離  
+
+インデックスは通常は2.5ポイントぐらいでその値から離れるほど重症となる。重度の場合はさっと診察して、手術かどうかの判断を求められることがあるので準備に越したことはない。  
+
+参考までにWikipediaに掲載されているヘイラーインデックス算出画像をみる。画像で出されたインデックスは3.59ポイント (25.1cm / 7.0cm)で、心臓が圧迫されている様子が見て取れる。 
+
+ちなみに私は8.7～9.0ポイントで、第4胸骨（第6-7肋軟骨）と背骨の距離が通常の4分1ほど（3 cm）の状態、肺と心臓が押しつぶされていた。 
+
+個人的実感だが、胸郭変形は整形上の問題もあるが、年齢をかさねるにつれて硬化する肋軟骨にある。変形した骨が内臓への負荷をじょじょに増進し、気づいたら循環器系の機能低下、それにともなう免疫力低下につながる可能性がある。医師によると漏斗胸の患者には肺炎・心臓病が多く見られるが、その関係解明はこれからの課題だそうだ。   > 2. 入院保険にはいる2. 入院保険にはいる 
+
+入院保険について、すでに入っているなら必要ない。胸郭変形の手術は健康保険適用なので通常の民間保険であれば同様に適用されるはず。私はネットで安いところ、期間縛りでトータル20万（月2千）くらいの保険商品を購入した。 
+
+また、術後の合併症などで想定外に入院・手術費がかさむ可能性があるので、手術が確定したら市区町村の高額医療費制度を利用するといい。   > 3. 診察をうける、手術の打診3. 診察をうける、手術の打診 
+
+まだ、町のクリニックと形成外科との連携がとられるほどナス法手術が業界に浸透してないため、かかりつけの医師より紹介状をもらえる可能性は低い。従って、ネットで執刀数や論文提出数など勘案して信頼できる医師を選定する。ナス法が受けられる医療施設はこちら。外科には自分の体調不良とその原因を棚卸するため、診察してもらいに来たとでも言うと伝わるだろう。 
+
+診察ではX線、CTをとって、ヘイラーインデックスの状態と患部の状態をくらべて施術判断がされる。初回ではCT、X線のみ。2回目にあらためて専任の医師より判断される。医師の判断は一瞬で、施術リスクの重説と施術有無の打診がされ、スケジュール調整となる。   > 4. 入院、手術4. 入院、手術 
+
+手術を受けるようになっても入院までは普段と変わらない生活が送れる。それ以降は入院関連の慣習、業務フローを知らないと生活上でいろいろと不都合が生じる。 
+
+入院初日。入院手続きで連帯保証人が複数人必要と何人かの事務方にいわれる。ただ、この情報は、患者が死亡した際の身柄引き取り先や医療費滞納が起きることを想定して病院が事前に知りたいだけで、法的にグレーな慣習である。マストではないので情報提供を断っても強く追及してこない。 
+
+手術前日。貴重品を持てない、荷物を持てないという制約がかかる。警備体制が整ってていない病院は防犯がよわいのであえて金庫をおかない、貴重品をあずからない。手術時患者は貴重品をもつことができないので、実質貴重品なしで入院することになる。しかし、手ぶらでは入院手続きできないので1人身で入院するには工夫が必要である。 
+
+術後。突然ICUで目が覚める、6本カテーテルが体に刺さっていて医療麻薬・鎮痛剤投与のルーチンがはじまる。ICUから通常病棟への移管は受け入れ態勢によって変動する。術前に麻酔をうたれる辺りまでは記憶にあるが、それ以降のことはまったく覚えていないので混乱する時期である。 
+
+病棟移管後。ネット利用禁止。こちらはは昔からの慣習で建前上禁止になっているにすぎず、スマホの普及とともに黙認、あるいは容認するようになっている。ただ、手術前日の荷物をもてないという制約があることと、術後2週間は動くのがままならない状態なので1人身で入院すると外界と接続ができなくなる。   > 閑話休題 入院時の様子閑話休題 入院時の様子 
+
+ここでちょうど入院時の様子がTwitterに残っていたので、抜粋する。入院直後、手術前、手術後、退院間近の心境の変化がみてとれる。 
+
+入院直後 
+
+手術がおもったよりも大変そうと気づく。 
+
+nabinno, 02:26 PM October 01, 2016: かるい手術と思ったらICUに入ることになってる // from Twitter for Android [Tokyo, JP]  
+
+手術前 
+
+手術まで暇なのでPowerShellをいじりはじめる。 
+
+nabinno, 05:41 PM October 01, 2016: Hum > $($(curl http://www.yahoo.co.jp).Images | foreach {$_.src}) ` | sort ` | uniq ` | foreach { ` curl -Uri $_ -OutFile "$(pwd)\$(basename $_)" ` } // from Twitter Web Client [Tokyo, JP]  
+
+手術後 
+
+麻酔の痛みがきれてナーバスになる。 
+
+nabinno, 04:06 PM October 08, 2016: ナースコールは enqueue/dequue もされてるがワーカーがかなりの頻度 でこける。夜になると汚いログがはかれるのは #医療OS の仕様だろうか ... // from Twitter for Android [Tokyo, JP]  
+
+気持ちを落ち着かせるためにEmacsをさわる。 
+
+nabinno, 09:01 PM October 11, 2016: 可能なかぎり Emacs で #Xamarin さわりたいので、CentOS 上に samba 立てた。 https://t.co/XXCds2pwtx // from Twitter Web Client [Tokyo, JP]  
+
+BashOnWindowsで無茶をやる。少し落ち着く。 
+
+nabinno, 09:18 PM October 11, 2016: #BashOnWindows の Emacs から #Xamarin さわったら 関連ファイルが消 されたり権限が変更されたりしたのだった ... // from twmode [Tokyo, JP]  
+
+術後ずっと寝たきりだったが、なんとか動けるようになってきた。 
+
+nabinno, 06:50 AM October 18, 2016: 胸郭手術時の 🛏 起床と就寝をマスターした https://t.co/ipIU4LPlBq // from Twitter Web Client [Tokyo, JP]  
+
+激痛のためノートPCがもてない体になっていた。 
+
+nabinno, 08:35 PM October 20, 2016: ノート PC は肉体的にまだ持てない ... // from twmode [Tokyo, JP]  
+
+退院間近 
+
+アクティブトラッカーで客観的にみるよう心がけ始める。 
+
+nabinno, 05:22 PM October 21, 2016: #MicrosoftBand #HealthVault #MyFitnessPal で記録つけていて、ふと 医療機器がからだに入ってることにきづいた。他人事じゃないいんだけ ど、おもしろいなあ。 // from twmode [Tokyo, JP]    > 5. 退院5. 退院 
+
+退院は主治医が判断する、病棟の見回り医師ではない。そして、たいてい腕のたつ主治医は多忙なので1週間に1度しか顔を出さない。その時の様態次第で退院がどんどん後ろにずれていくので注意が必要だ。 
+
+退院の条件 
+
+- 肺の状態、肺の膨らみ
+- 歩行の有無
+- 起床の有無
+- 退院したいという意志 
+
+入院中は上記の条件をクリアできるようこころがけること。無為に過ごすと退院が遅れる。   > 手術後のリハビリ手術後のリハビリ   > 1か月後 ひたすら静養1か月後 ひたすら静養 
+
+退院直後の時期は風邪をひくと肺炎になる可能性が高まるので、2点注意する。 
+
+まずは内科。退院前に外科から出される鎮痛剤が強力なので薬の組み合わせには注意する。特に内科で出される風邪薬自体にも鎮痛剤が入っており、同時に飲むと神経系に支障をきたすことがある。内科医には、咳をしたら胸に激痛が走るため鎮痛剤を利用している旨をつたえ、抗生剤、鎮咳剤、去痰剤の薬を処方してもらうようにする。 
+
+また、肺炎の気がありX線検査する場合、内科医にバーが邪魔をして検査がむずかしい状況にあることを共有する。内科医によっては、外科医が処方・処置した鎮痛剤とバーが自分の仕事を邪魔していると考える人もいる。 
+
+次に、免疫力。できるだけ免疫力が高まるように工夫する。 
+
+食事。MyFitnessPal（Under Armour）のような栄養を主としたアクティビティトラッカーで不足栄養を観察し、まずは機能食品などで不足栄養を補う。私は皮膚の組成に関係しそうなマルチビタミン、ビタミンC、タンパク質を積極的にとった（ている）。余裕が出てきたらスーパー食材、外食チェーンHPの栄養表をみて、実際に食事し体調を観察する。体調はWithing BodyとMS Bandでトラックすると管理が楽だ。 
+
+運動。運動はウォーキング程度に控えるよう医師から注意される。従って、この期間はスクワットなど胸郭や脇の傷周囲の皮膚組織に動きつけない運動で落ちた筋力を回復させる程度にする。また、無理のないストレッチで胸郭にうめこまれたバー周辺の皮膚を徐々に伸ばす、あたしい皮膚組織をつくるよう心掛ける。室内での自重トレーニングよりもジムのトレーニングマシンで、リハビリという視点で負荷を調整しながら無理なくおこなうといい。実際にトレーニングする前に医師からリハビリスタッフを紹介してもらうのも手だろう。 
+
+3つの運動 
+
+- 有酸素運動。ウォーキングで循環器系をきたえる。退院後でも起床など胸郭をうごかすのがむずかしい状態なので、まずウォーキングが普通にできるようにのぞむ。慣れてきたら距離をのばして5km、10kmとのばすといいだろう。足の負担を気にするようだったらAsics DynaFlyteのような、機能性を追求したランニングシューズの検討をすすめる。
+- 無酸素運動。無理のない筋トレで筋骨格をきたえる、皮膚を生成する。退院直後は腹筋、三角筋はバー周囲の皮膚が生成されていないので痛みとともに力を出すことがむずかしい。僧帽筋、大胸筋あたりから皮膚の生成を促すようにする。また、有酸素運動を無理なく行えるように下腿三頭筋（ふくろはぎ）や大腿四頭筋を積極的に動かす。余裕が出てきたら筋肉とトレーニングマシンの対応表を参考にするといい。
+- ストレッチ。ヨガで皮膚の生成を促す。退院直後はヨガをする余裕はないが、軽いウォーキングや筋トレをはじめたあたりで、バウンドエンジェル、チャイルドポーズ、ハッピーベイビーポーズなど軽めなものを混ぜるといい。参考までにポーズ集がある。 
+
+また、入院時に手術用コンプレッションウェアのタイツを着ていたが、退院後はスポーツ用コンプレッションウェアをシャツ、タイツともに着るといい。適度な負荷が皮膚に与えられるとともに、交感神経の活性化につながる。 
+
+私はできなかったが、免疫力向上は準備するのに時間がかかるので入院・手術前から取り組んでおくといいだろう。   > 3か月後どうなったか3か月後どうなったか 
+
+下記にリハビリの経過を示すため体組成の一部を記す。    体組成 入院前 退院後1か月 退院後2か月 退院後3か月     胸囲 (cm) 68.5 80.8 82.7 82.9   体重 (kg) 51.0 46.6 49.6 50.8   筋肉 (kg) - 39.3 41.4 42.4   脂肪 (kg) - 4.9 5.8 5.9    
+
+退院後1か月目は胸囲が劇的に変わった一方で、体重が低下している。ノートパソコンを持てないほどだったので筋力も同様に低下しているものと推測される。退院後2か月目はリハビリを始めた効果が順当に出てどの体組成値も回復している。そして、3か月目あたりで本来の値にもどっている様子がうかがえる。 
+
+3か月目以降はほぼ手術前、あるいはそれ以上の生活の質を担保できるので、バーを抜く最終手術の3年後を見越して無理なくリハビリをつづけるといいと考えている。]]></description><link>https://nabinno.github.io/posts/50</link><guid isPermaLink="false">50</guid><pubDate>Sun, 05 Feb 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[Brother HL-L2365DWを無線LANで設定する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- Amazonのモノクロレーザープリンター売れ筋1位のBrother HL-L2365DWを購入したが、日本語のセットアップソフトだと設定方法がUSBあるいは有線LANしかない
+- 当該製品にはプリンター用USBは同梱されていない
+- 有線LANは手元にあるが、複数台設定するのはめんどう
+- ちなみにOSの基本言語を英語（US）にした状態で日本語のBrother Utilitiesをインストールすると文字化けする   > SOLUTIONSOLUTION 
+
+というわけで、英語（US）のセットアップソフトをつかったら、無線LANからセットアップできた上、Brother Utilitiesの文字化けも解消した。   > 手順手順 
+
+1. HL-L2360DWのセットアップソフトをダウンロード
+2. セットアップソフトを起動
+3. 言語をEnglish
+4. Connection TypeをWireless Network Connectionに選択
+5. このあとはデフォルトのままで選択していく
+6. しばらくすると、Wireless SetupウィザードになるのでAOSSなどプリンタ 本機とルーターをつなげる（すでにされている場合はウィザードは出てこ ない）
+7. （成功すると）Brother machine you want to installリストに当該機器 が表示されるので選択
+8. あとはデフォルトのまま選択クリックして終了]]></description><link>https://nabinno.github.io/posts/51</link><guid isPermaLink="false">51</guid><pubDate>Sun, 05 Feb 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[HydeをつかってEmacsをJekyllクライアントにする]]></title><description><![CDATA[> PROBLEMPROBLEM 
+
+- タスクメモがAsanaなどのタスク管理ツールに散在している
+- ブラウザをつかって文章を書くのがつらい
+- Gist/Yagist等でもいいのだけど編集がめんどうとか個人だとオーバースペックとか   > SOLUTIONSOLUTION 
+
+そんなわけで、Github Pages（Jekyll）をEmacsで楽に管理できないかと以前から考えていたのだが、いい塩梅のソフトを発見した。JekyllだからHydeという。jekyll doctor (hyde)とかぶってるが気にしない。 
+
+Pros 
+
+- gitの自動コメント
+- jekyll build、jekyll serveのショートカット 
+
+Cons 
+
+- キーバインドが既存のものとかぶる
+- hyde-homeがカスタム変数ではない
+- add-hookが効かない   > Hydeの設定Hydeの設定 
+
+下記はConsつぶし。Hyde本体がキーバインドをdefvarで割り当てているので、init.elの設定でrequire前に割り込みevalして、hyde関数にhyde-home引数をわたせば解決する。あと、折り返し回りは別設定になっているのでadaptive-wrapやtruncate-linesを設定とか。   emacs-lisp 
+
+;;; Hyde (Jekyll client) (require-package 'adaptive-wrap) (defun hyde/open-post-maybe-into-other-window (pos) "Opens the post under cursor in the editor (POS)." (interactive "d") (let ((post-file-name (nth 1 (split-string (strip-string (thing-at-point 'line)) " : "))) (dir (get-text-property pos 'dir))) (let ((hyde-buffer (current-buffer))) (find-file-other-window (strip-string (concat hyde-home "/" dir "/" post-file-name))) (hyde-markdown-activate-mode hyde-buffer) (adaptive-wrap-prefix-mode t) (set-default 'truncate-lines nil)))) (defun hyde/quit-wrap () "Quits hyde." (interactive) (progn (delete-other-windows) (kill-buffer (current-buffer)))) (defun create-markdown-scratch () "Create a markdown scratch buffer." (interactive) (switch-to-buffer (get-buffer-create "*markdown*")) (markdown-mode)) (defun hyde/nabinno () "Run hyde-wrap with home parameter." (interactive) (progn (delete-other-windows) (create-markdown-scratch) (split-window-horizontally) (other-window 1) (hyde "~/nabinno.github.io/"))) (defvar hyde-mode-map (let ((hyde-mode-map (make-sparse-keymap))) (define-key hyde-mode-map (kbd "N") 'hyde/new-post) (define-key hyde-mode-map (kbd "G") 'hyde/load-posts) (define-key hyde-mode-map (kbd "C") 'hyde/hyde-commit-post) (define-key hyde-mode-map (kbd "P") 'hyde/hyde-push) (define-key hyde-mode-map (kbd "J") 'hyde/run-jekyll) (define-key hyde-mode-map (kbd "S") 'hyde/serve) (define-key hyde-mode-map (kbd "K") 'hyde/stop-serve) (define-key hyde-mode-map (kbd "d") 'hyde/deploy) (define-key hyde-mode-map (kbd "D") 'hyde/delete-post) (define-key hyde-mode-map (kbd "U") 'hyde/promote-to-post) (define-key hyde-mode-map (kbd "X") 'hyde/quit-wrap) (define-key hyde-mode-map (kbd "O") 'hyde/open-post-maybe-into-other-window) hyde-mode-map) "Keymap for Hyde") (global-set-key (kbd "C-c ; j") 'hyde/nabinno) (require-package 'hyde) (require 'hyde)   
+
+Jekyllのルートにおく.hyde.elの中身はこんな感じ。JekyllはWebrickを使っているので、VMなどでホストをいじっている場合はhyde/serve-commandにホストIPを0.0.0.0（jekyll s -H 0.0.0.0）に変更する必要がある。   emacs-lisp 
+
+(setq hyde-deploy-dir "_site" hyde-posts-dir "_posts" hyde-drafts-dir "_drafts" hyde-images-dir "images" hyde/git/remote "upstream" ; The name of the remote to which we should push hyde/git/branch "master" ; The name of the branch on which your blog resides hyde/jekyll-command "jekyll b" ; Command to build hyde/serve-command "jekyll s -H 0.0.0.0 --force_polling" ; Command to serve hyde-custom-params '(("category" "personal") ("tags" "") ("cover" "false") ("cover-image" "")))]]></description><link>https://nabinno.github.io/posts/49</link><guid isPermaLink="false">49</guid><pubDate>Tue, 31 Jan 2017 15:00:00 GMT</pubDate></item><item><title><![CDATA[On Blahfe]]></title><description><![CDATA[txt 
+
+（小学校の感想文より） ぼくは、二年の時、友達と自転車で、じゅくから帰ってくるとちゅう、トラックに足をふまれてしまいました。おほりの近くの道路でトラックが来たから、よけようとした時、ころんで足を道路にだしてしまったのです。 いたみは感じなかったのに、なぜか泣いてしまい、トラックのおじさんたちが「けがはなかったかい」と心配してくれました。それでも、ぼくが泣いてるもんだから、病院に行って、レントゲンで見てもらいました。全然いじょうはなかったそうです。 その時、ぼくはほっとして、これからは自分で安全を守ろうと、決心しました。ただ、三年になってしまうと、安全を守ろうなんていう決心は、とっくに忘れてしまいました。 三年の五月になって、お父さんと兄弟と友達で郡山ダムまでサイクリングに行きました。行くときは、よかったんだけど、帰りの時、坂で足をすべらして、自転車のスポークの中につま先をはめてしまいました。その勢いで、自転車が、一回転してしまいました。 たまたま車が通って、中の農家の人が「どうしたんだい」と、話しかけてくれました。ぼくは、足の方のいたさで、話すこともできませんでした。それから、農家の人が、心配して、家までつれていってくれました。 家に帰ると、安心して、泣いてしまいました。それから、病院に行ってレントゲンをとって見ると、お医者さんがだいじょうぶといっていました。とってもよかったです。 また、ぼくは、自分で安全を守ろうと、心に決めました。     > サイト構成サイト構成 
+
+ある方曰く、痛みとは人の根源だそうで。小学校の感想文ではないですが、私がいつも気にしてるテーマです。 
+
+- 退屈
+- 寂しさ
+- 肉体の痛み
+- 健康喪失の恐れ
+- 金銭ストレス
+- 虚しさ 
+
+このブログでは個人的な課題解決をPROBLEM-SOLUTIONという2つのセクションで構成しています。PROBLEMは上記テーマのどれかが当てはまります。SOLUTIONはその時たまたま私がとった手法になります。基本職業に近いものが選ばれますが、そうでない場合もあります。]]></description><link>https://nabinno.github.io/posts/66</link><guid isPermaLink="false">66</guid><pubDate>Mon, 30 Jan 2017 15:00:00 GMT</pubDate></item></channel></rss>

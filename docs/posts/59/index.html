@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><style data-href="/styles.0d86aa92c5843d055886.css" id="gatsby-global-css">/*!
+ * ress.css • v2.0.4
+ * MIT License
+ * github.com/filipelinhares/ress
+ */html{box-sizing:border-box;-webkit-text-size-adjust:100%;word-break:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4}*,:after,:before{background-repeat:no-repeat;box-sizing:inherit}:after,:before{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace,monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}input{border-radius:0}[disabled]{cursor:default}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}[role=button],[type=button],[type=reset],[type=submit],button{cursor:pointer;color:inherit}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button:-moz-focusring{outline:1px dotted ButtonText}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}button,input,select,textarea{background-color:transparent;border-style:none}select{-moz-appearance:none;-webkit-appearance:none}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{-webkit-appearance:button;color:inherit;font:inherit}img{border-style:none}progress{vertical-align:baseline}svg:not([fill]){fill:currentColor}@media screen{[hidden~=screen]{display:inherit}[hidden~=screen]:not(:active):not(:focus):not(:target){position:absolute!important;clip:rect(0 0 0 0)!important}}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled]{cursor:default}</style><meta name="generator" content="Gatsby 2.30.1"/><title data-react-helmet="true">連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする - On Blahfe</title><link data-react-helmet="true" rel="canonical" href="https://nabinno.github.io/posts/59"/><meta data-react-helmet="true" name="google-site-verification" content=""/><meta data-react-helmet="true" name="description" content="&gt; PROBLEMPROBLEM 
+
+- サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
+- 拡張にともない技術スタックがふえるのを抑えたい
+- スケー"/><meta data-react-helmet="true" property="og:url" content="https://nabinno.github.io/posts/59"/><meta data-react-helmet="true" property="og:type" content="article"/><meta data-react-helmet="true" property="og:title" content="連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする - On Blahfe"/><meta data-react-helmet="true" property="og:description" content="&gt; PROBLEMPROBLEM 
+
+- サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
+- 拡張にともない技術スタックがふえるのを抑えたい
+- スケー"/><meta data-react-helmet="true" property="og:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/d19fe4dc-962c-4e58-b8e5-c1787fd566ed.png"/><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"/><meta data-react-helmet="true" name="twitter:creator" content="@nabinno"/><meta data-react-helmet="true" name="twitter:title" content="連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする - On Blahfe"/><meta data-react-helmet="true" name="twitter:description" content="&gt; PROBLEMPROBLEM 
+
+- サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
+- 拡張にともない技術スタックがふえるのを抑えたい
+- スケー"/><meta data-react-helmet="true" name="twitter:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/d19fe4dc-962c-4e58-b8e5-c1787fd566ed.png"/><link rel="icon" href="/favicon-32x32.png?v=381a3661ec5793ff376970a2019b6518" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#fff"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link as="script" rel="preload" href="/webpack-runtime-7db1496f8af88a51c8ad.js"/><link as="script" rel="preload" href="/framework-dbb498007a7447f28d8e.js"/><link as="script" rel="preload" href="/app-9871132b88557cd03cda.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-9cdc680d0978a25e3e04.js"/><link as="script" rel="preload" href="/component---src-templates-posts-tsx-cebecf5a0176658114a4.js"/><link as="script" rel="preload" href="/component---src-templates-post-tsx-57a3528f2ea549989519.js"/><link as="fetch" rel="preload" href="/page-data/posts/59/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><style data-emotion-css="ly78bw">.css-ly78bw{font-family:-apple-system-body,'Source Han Mono',BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans Japanese','游ゴシック  Medium','Yu Gothic Medium','メイリオ',meiryo,sans-serif;}@media screen and (-webkit-min-device-pixel-ratio:2),screen and (min-resolution:2dppx){.css-ly78bw{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;}}</style><div class="css-ly78bw e1j2fp1f0"><div><style data-emotion-css="10061d2">.css-10061d2{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}@media (min-width:980px){.css-10061d2{-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;}}</style><div class="css-10061d2 e1rphn8v0"><style data-emotion-css="1ur9eye">.css-1ur9eye{max-width:620px;width:100%;margin:20px auto;}</style><div style="margin-top:32px" class="css-1ur9eye e1rphn8v1"><style data-emotion-css="1igky03">.css-1igky03{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-right:auto;margin-bottom:1.75rem;}</style><h1 class="css-1igky03"><style data-emotion-css="1a6yofc">.css-1a6yofc{color:rgba(26,32,44,0.88);-webkit-text-decoration:none;text-decoration:none;font-family:Montserrat,sans-serif;font-weight:900;font-size:1.4427rem;line-height:1.1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;padding:16px;margin:-16px;}.css-1a6yofc:hover{background-color:rgba(255,255,255,0.1);}</style><a class="css-1a6yofc" href="/">On Blahfe</a></h1><style data-emotion-css="kvk3sk">.css-kvk3sk{padding:0 12px;}@media (min-width:600px){.css-kvk3sk{padding:0;}}</style><div class="css-kvk3sk epep3293"><style data-emotion-css="19sxenz">.css-19sxenz{display:block;margin-bottom:4px;font-weight:600;-webkit-letter-spacing:0.5px;-moz-letter-spacing:0.5px;-ms-letter-spacing:0.5px;letter-spacing:0.5px;opacity:0.6;font-size:15px;}</style><time class="css-19sxenz">2018.01.08</time><style data-emotion-css="1b1c2m5">.css-1b1c2m5{font-size:24px;line-height:1.4;font-weight:700;margin-bottom:4px;color:#1a202c;font-family:-apple-system,'Source Han Mono','BlinkMacSystemFont','Helvetica Neue','Hiragino Sans','游ゴシック Medium','YuGothic','Hiragino Kaku Gothic ProN','メイリオ','Meiryo,sans-serif';}@media (min-width:600px){.css-1b1c2m5{font-size:30px;}}</style><h1 class="css-1b1c2m5 epep3291">連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする</h1><style data-emotion-css="3bor06">.css-3bor06{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;margin-bottom:4px;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;}.css-3bor06:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-3bor06:before{content:'#';}.css-3bor06:hover{border-color:inherit;color:white;}.css-3bor06:before{content:'';}</style><a class="css-3bor06 epep3292" href="/categories/blog/backend">blog/backend</a><style data-emotion-css="1qp0zyo">.css-1qp0zyo{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;}.css-1qp0zyo:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-1qp0zyo:before{content:'#';}</style><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/phoenix-framework">phoenix-framework</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/elixir">elixir</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/ruby-on-rails">ruby-on-rails</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/ruby">ruby</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/wercker">wercker</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/heroku">heroku</a><style data-emotion-css="1f03b13">.css-1f03b13{margin-top:24px;margin-bottom:4.375rem;line-height:1.8;font-size:15px;word-break:break-all;color:rgba(26,32,44,0.88);}.css-1f03b13 .hidden{display:none;}.css-1f03b13 pre{display:block;padding:10.5px;margin:0 0 11px;font-size:13px;line-height:1.6;word-break:break-all;word-wrap:break-word;color:#4a5568;background-color:#3e4149;border:1px solid #ccc;border-radius:4px;}.css-1f03b13 pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0;}.css-1f03b13 h1{font-size:200%;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:10px;margin:30px 0;margin-bottom:10px;}.css-1f03b13 h1 .emoji{width:36px;height:36px;}.css-1f03b13 h1 a{color:#0a9b94;}.css-1f03b13 h1 a:hover{color:#1a202c;}.css-1f03b13 h2{font-size:160%;margin:30px 0 16px;font-weight:900;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:4px;position:relative;}.css-1f03b13 h2:before{position:absolute;content:' ';width:100px;bottom:-3px;height:3px;background-color:#80695F;}.css-1f03b13 h2 .emoji{width:28px;height:28px;}.css-1f03b13 h2 a{color:#0a9b94;}.css-1f03b13 h2 a:hover{color:#1a202c;}.css-1f03b13 h3{margin:24px 0;margin-bottom:10px;font-size:130%;font-weight:900;}.css-1f03b13 h3 .emoji{width:22px;height:22px;}.css-1f03b13 h4{font-size:120%;font-weight:900;}.css-1f03b13 .markdown > ul,.css-1f03b13 .markdown > ol{margin:16px 0;}.css-1f03b13 ul,.css-1f03b13 ol{padding-left:40px;}.css-1f03b13 li{margin:4px 0;}.css-1f03b13 li > p{margin:0;}.css-1f03b13 dt{margin-top:14px;margin-bottom:4px;}.css-1f03b13 dd{padding:0 14px;margin-bottom:4px;}.css-1f03b13 p{margin:16px 0;}.css-1f03b13 p img{margin-bottom:0;}.css-1f03b13 blockquote{font-size:100%;color:rgba(60,74,96,0.7);border-left:5px solid rgba(0,0,0,0.1);margin-bottom:30px;padding:0 20px;}.css-1f03b13 blockquote p{margin:10px 0 !important;}.css-1f03b13 code{color:#3c4a60;white-space:pre-wrap;border-radius:4px;background-color:rgba(0,0,0,0.05);}.css-1f03b13 pre{border:none;}.css-1f03b13 pre code{background:#f6f6f6;}.css-1f03b13 a{color:#58463C;}.css-1f03b13 a:hover{color:#80695F;}.css-1f03b13 .code-block .highlight{border-radius:4px;}.css-1f03b13 .code-block__copy-button{position:absolute;top:0;right:0;display:none;background-color:white;border:1px solid rgba(0,0,0,0.1);padding:2px 7px;font-size:10px;font-family:'Source Han Mono','Lato',Emoji,Arial,'ヒラギノ角ゴPro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;}.css-1f03b13 .code-block__copy-button i{color:rgba(60,74,96,0.3);}.css-1f03b13 .code-block__copy-button:hover{background-color:#f6f6f6;border:1px solid rgba(0,0,0,0.2);}.css-1f03b13 .code-block__copy-label::after{content:'Copy';}.css-1f03b13 .code-block__copy-label.copied::after{content:'Copied';}.css-1f03b13 .code-block .highlight{position:relative;}.css-1f03b13 .code-block:hover .code-block__copy-button{display:block;}.css-1f03b13 table{border:1px solid rgba(0,0,0,0.1);width:100%;border-collapse:collapse;border-spacing:0;margin:20px 0;margin-bottom:30px;}.css-1f03b13 table tr:nth-child(odd) td{background-color:#f9f9f9;}.css-1f03b13 table tr th,.css-1f03b13 table tr td{padding:8px;line-height:1.6;vertical-align:top;border:1px solid rgba(0,0,0,0.1);}.css-1f03b13 strong{font-weight:700;}.css-1f03b13 img{max-width:100%;border:1px solid #eee;border-radius:4px;}.css-1f03b13 .anchor{-webkit-transition-duration:0;transition-duration:0;display:none;margin-left:-20px;width:20px;height:20px;font-size:20px;text-align:right;padding-top:8px;}.css-1f03b13 .anchor i:hover{color:#08837d;}.css-1f03b13 .anchor .fa-pencil{-webkit-transform:rotateY(180deg);-webkit-transform:rotateY(180deg);-ms-transform:rotateY(180deg);transform:rotateY(180deg);}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4{-webkit-font-smoothing:antialiased;}.css-1f03b13 h1:hover .anchor,.css-1f03b13 h2:hover .anchor,.css-1f03b13 h3:hover .anchor{display:inline-block;}.css-1f03b13 h2 .anchor{padding-top:5px;font-size:18px;}.css-1f03b13 h2 .anchor i{top:4px;}.css-1f03b13 h3 .anchor{padding-top:3px;font-size:15px;}.css-1f03b13 h3 .anchor i{top:4px;}.css-1f03b13 .emoji{border:none;height:19px;width:19px;}.css-1f03b13 iframe{max-width:100%;}.css-1f03b13 hr{border-top-color:rgba(33,37,41,0.12);display:block;border-top-width:1px;border-top-style:solid;margin:32px 0;}.css-1f03b13 .code-filename{border-top-left-radius:4px;border-top-right-radius:4px;position:relative;top:auto;right:auto;bottom:auto;left:auto;top:4px;display:inline-block;padding:3px 10px;background-color:#3e4149;color:#fff;font-size:85%;line-height:1.5;margin-bottom:-10px;}.css-1f03b13 .code-filename i{color:rgba(60,74,96,0.3);}@media (max-width:900px){.css-1f03b13 video{width:100%;}}.css-1f03b13 .highlight code table td{padding:5px;}.css-1f03b13 .highlight code table pre{margin:0;}.css-1f03b13 .highlight code .c,.css-1f03b13 .highlight code .cd{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cm{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .c1{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cp{color:#75715e;font-weight:bold;}.css-1f03b13 .highlight code .cs{color:#75715e;font-weight:bold;font-style:italic;}.css-1f03b13 .highlight code .err{color:#960050;background-color:#1e0010;}.css-1f03b13 .highlight code .gi{color:#ffffff;background-color:#324932;}.css-1f03b13 .highlight code .gd{color:#ffffff;background-color:#493131;}.css-1f03b13 .highlight code .ge{color:#000000;font-style:italic;}.css-1f03b13 .highlight code .gr{color:#aa0000;}.css-1f03b13 .highlight code .gt{color:#aa0000;}.css-1f03b13 .highlight code .gh{color:#999999;}.css-1f03b13 .highlight code .go{color:#888888;}.css-1f03b13 .highlight code .gp{color:#555555;}.css-1f03b13 .highlight code .gs{font-weight:bold;}.css-1f03b13 .highlight code .gu{color:#aaaaaa;}.css-1f03b13 .highlight code .k,.css-1f03b13 .highlight code .kv{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kc{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kd{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kp{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kr{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kt{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kn{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .ow{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .o{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .mf{color:#ae81ff;}.css-1f03b13 .highlight code .mh{color:#ae81ff;}.css-1f03b13 .highlight code .il{color:#ae81ff;}.css-1f03b13 .highlight code .mi{color:#ae81ff;}.css-1f03b13 .highlight code .mo{color:#ae81ff;}.css-1f03b13 .highlight code .m,.css-1f03b13 .highlight code .mb,.css-1f03b13 .highlight code .mx{color:#ae81ff;}.css-1f03b13 .highlight code .se{color:#ae81ff;}.css-1f03b13 .highlight code .sb{color:#e6db74;}.css-1f03b13 .highlight code .sc{color:#e6db74;}.css-1f03b13 .highlight code .sd{color:#e6db74;}.css-1f03b13 .highlight code .s2{color:#e6db74;}.css-1f03b13 .highlight code .sh{color:#e6db74;}.css-1f03b13 .highlight code .si{color:#e6db74;}.css-1f03b13 .highlight code .sx{color:#e6db74;}.css-1f03b13 .highlight code .sr{color:#e6db74;}.css-1f03b13 .highlight code .s1{color:#e6db74;}.css-1f03b13 .highlight code .ss{color:#e6db74;}.css-1f03b13 .highlight code .s{color:#e6db74;}.css-1f03b13 .highlight code .na{color:#a6e22e;}.css-1f03b13 .highlight code .nc{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nd{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .ne{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nf{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .no{color:#66d9ef;}.css-1f03b13 .highlight code .bp{color:#f8f8f2;}.css-1f03b13 .highlight code .nb{color:#f8f8f2;}.css-1f03b13 .highlight code .ni{color:#f8f8f2;}.css-1f03b13 .highlight code .nn{color:#f8f8f2;}.css-1f03b13 .highlight code .vc{color:#f8f8f2;}.css-1f03b13 .highlight code .vg{color:#f8f8f2;}.css-1f03b13 .highlight code .vi{color:#f8f8f2;}.css-1f03b13 .highlight code .nv{color:#f8f8f2;}.css-1f03b13 .highlight code .w{color:#f8f8f2;}.css-1f03b13 .highlight code .nl{color:#f8f8f2;font-weight:bold;}.css-1f03b13 .highlight code .nt{color:#f92672;}.css-1f03b13 .highlight code{color:#f8f8f2;background-color:#3e4149;}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4,.css-1f03b13 h5,.css-1f03b13 h6{font-weight:700;}.css-1f03b13 .footnotes{margin-top:4.375rem;padding:20px 0;background-color:#efefef;}</style><div class="css-1f03b13 e1a9pvvr0"><a href="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/d19fe4dc-962c-4e58-b8e5-c1787fd566ed.png" target="_blank" rel="noopener noreferrer"><img width="728" alt="thumbnail" src="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/d19fe4dc-962c-4e58-b8e5-c1787fd566ed.png"></a>
+<h1 data-sourcepos="3:1-3:9" id="1-0-0" name="1-0-0">
+<a class="anchor" id="PROBLEM" name="PROBLEM" href="#PROBLEM" data-position="1-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="PROBLEM"> &gt; PROBLEM</span></a>PROBLEM</h1>
+<ul data-sourcepos="4:1-8:0">
+<li data-sourcepos="4:1-8:0">サービスについて
+<ul data-sourcepos="5:5-8:0">
+<li data-sourcepos="5:5-5:75">拡張にともない技術スタックがふえるのを抑えたい</li>
+<li data-sourcepos="6:5-6:66">スケーラビリティのためのコストを抑えたい</li>
+<li data-sourcepos="7:5-8:0">パフォーマンスをあげたい</li>
+</ul>
+</li>
+</ul>
+<h1 data-sourcepos="9:1-9:10" id="2-0-0" name="2-0-0">
+<a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
+<p data-sourcepos="10:1-10:93">というわけで、現在つかっているRailsをPhoenixに変更することにした。</p>
+<ul data-sourcepos="12:1-21:0">
+<li data-sourcepos="12:1-21:0">方針
+<ul data-sourcepos="13:5-21:0">
+<li data-sourcepos="13:5-19:68">Railsから徐々にPhoenixに移行できるように
+<ul data-sourcepos="14:7-19:68">
+<li data-sourcepos="14:7-14:48">いままでとおなじPaaS（Heroku）</li>
+<li data-sourcepos="15:7-17:104">いままでとおなじレポジトリ
+<ul data-sourcepos="16:11-17:104">
+<li data-sourcepos="16:11-16:64">ブランチ戦略は <code>phoenix/base</code> をベースに</li>
+<li data-sourcepos="17:11-17:104">気軽に参照できるようにRails関連ファイルは可能な限りのこしておく</li>
+</ul>
+</li>
+<li data-sourcepos="18:7-19:68">いままでとおなじDB
+<ul data-sourcepos="19:11-19:68">
+<li data-sourcepos="19:11-19:68">移行完了までDBマイグレーションをしない</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-sourcepos="20:5-21:0">Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで</li>
+</ul>
+</li>
+</ul>
+<p data-sourcepos="22:1-22:123">今回はRailsから移行中のPhoenix UmbrellaプロジェクトをHerokuにデプロイする流れをとりあげる。</p>
+<h2 data-sourcepos="24:1-24:39" id="2-1-0" name="2-1-0">
+<a class="anchor" id="Herokuへのデプロイのながれ" name="Heroku%E3%81%B8%E3%81%AE%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%AE%E3%81%AA%E3%81%8C%E3%82%8C" href="#Heroku%E3%81%B8%E3%81%AE%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%AE%E3%81%AA%E3%81%8C%E3%82%8C" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="Herokuへのデプロイのながれ"> &gt; Herokuへのデプロイのながれ</span></a>Herokuへのデプロイのながれ</h2>
+<p data-sourcepos="25:1-25:81">基本的に<a href="https://hexdocs.pm/phoenix/heroku.html" target="_blank" rel="noopener noreferrer">ドキュメント</a>通り。</p>
+<h3 data-sourcepos="27:1-27:44" id="2-1-1" name="2-1-1">
+<a class="anchor" id="Phoenixアプリケーションを作成" name="Phoenix%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%9C%E6%88%90" href="#Phoenix%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%9C%E6%88%90" data-position="2-1-1"><i class="fa fa-link"></i><span class="hidden" data-text="Phoenixアプリケーションを作成"> &gt; Phoenixアプリケーションを作成</span></a>Phoenixアプリケーションを作成</h3>
+<p data-sourcepos="28:1-28:172">まず、こんな感じでPhoenixの骨組みをつくる。Phoenix関連のファイル <code>apps/</code>, <code>deps/</code>, <code>config/config.exs</code>, <code>mix.exs</code>, <code>mix.lock</code> が追加される。</p>
+<div class="code-block" data-sourcepos="29:1-33:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> <span class="nb">cd </span>rails_project
+<span class="o">&gt;</span> mix new <span class="nb">.</span> <span class="nt">--umbrella</span>
+<span class="o">&gt;</span> <span class="o">(</span><span class="nb">cd</span> ./apps <span class="o">&amp;&amp;</span> mix phx.new phoenix_app<span class="o">)</span>
+</code></pre></div>
+</div>
+<p data-sourcepos="35:1-35:344">つぎに、既存のRailsでつくられたスキーマをPhoenixに移植。<a href="http://developersnote.jp/elixir/share-db-between-rails-and-phoenix.html" target="_blank" rel="noopener noreferrer">Ripperをつかうとはかどる</a>。ちなみに手動でスキーマをつくりたい場合は、CLI <code>mix phx.gen.schema --no-migration Blog.Post blog_posts title:string</code> で作成する。</p>
+<div class="code-block" data-sourcepos="36:1-182:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>rb</div>
+<div class="highlight"><pre class="highlight ruby"><code><span class="c1"># lib/tasks/convert_to_phoenix.rake</span>
+<span class="c1"># こちらはスキーマ移植タスクをPhoenix1.3用に改めたもの</span>
+<span class="nb">require</span> <span class="s1">'ripper'</span>
+<span class="nb">require</span> <span class="s1">'erb'</span>
+<span class="nb">require</span> <span class="s1">'fileutils'</span>
+
+<span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
+  <span class="n">namespace</span> <span class="ss">:schema</span> <span class="k">do</span>
+    <span class="n">desc</span> <span class="s1">'Convert schema from Rails to Phoenix'</span>
+    <span class="n">task</span> <span class="ss">convert_to_phoenix: :environment</span> <span class="k">do</span>
+      <span class="no">ConvertSchemaForPhoenixService</span><span class="p">.</span><span class="nf">call</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">ConvertSchemaForPhoenixService</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">call</span>
+      <span class="no">FileUtils</span><span class="p">.</span><span class="nf">mkdir_p</span><span class="p">(</span><span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'tmp'</span><span class="p">,</span> <span class="s1">'models'</span><span class="p">))</span>
+      <span class="n">extract_activerecord_define_block</span><span class="p">(</span>
+        <span class="no">Ripper</span><span class="p">.</span><span class="nf">sexp</span><span class="p">(</span>
+          <span class="no">Rails</span><span class="p">.</span><span class="nf">root</span>
+               <span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'db'</span><span class="p">,</span> <span class="s1">'schema.rb'</span><span class="p">)</span>
+               <span class="p">.</span><span class="nf">read</span>
+        <span class="p">)</span>
+      <span class="p">).</span><span class="nf">select</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:create_table_block?</span><span class="p">))</span>
+       <span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:configuration</span><span class="p">))</span>
+       <span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">conf</span><span class="o">|</span>
+        <span class="n">project_name</span> <span class="o">=</span> <span class="s1">'PhoenixApp'</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="ss">:table_name</span><span class="p">]</span>
+        <span class="n">table_columns</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="ss">:table_columns</span><span class="p">].</span><span class="nf">reject</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">method</span><span class="p">(</span><span class="ss">:reject_condition</span><span class="p">))</span>
+                                            <span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+          <span class="k">case</span> <span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span>
+          <span class="k">when</span> <span class="s1">'text'</span> <span class="k">then</span> <span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span> <span class="o">=</span> <span class="s1">':string'</span>
+          <span class="k">when</span> <span class="s1">'datetime'</span> <span class="k">then</span> <span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span> <span class="o">=</span> <span class="s1">':naive_datetime'</span>
+          <span class="k">when</span> <span class="s1">'inet'</span> <span class="k">then</span> <span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'EctoNetwork.INET'</span>
+          <span class="k">else</span> <span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span> <span class="o">=</span> <span class="s2">":</span><span class="si">#{</span><span class="n">c</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+          <span class="k">end</span>
+          <span class="n">c</span>
+        <span class="k">end</span>
+        <span class="no">File</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span>
+          <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="s1">'tmp'</span><span class="p">,</span> <span class="s1">'models'</span><span class="p">,</span> <span class="s2">"</span><span class="si">#{</span><span class="n">conf</span><span class="p">[</span><span class="ss">:table_name</span><span class="p">].</span><span class="nf">singularize</span><span class="si">}</span><span class="s2">.ex"</span><span class="p">),</span>
+          <span class="n">template</span><span class="p">.</span><span class="nf">result</span><span class="p">(</span><span class="nb">binding</span><span class="p">)</span>
+        <span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">extract_activerecord_define_block</span><span class="p">(</span><span class="n">sexp</span><span class="p">)</span>
+      <span class="n">sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">create_table_block?</span><span class="p">(</span><span class="n">activerecord_define_block_element_sexp</span><span class="p">)</span>
+      <span class="n">activerecord_define_block_element_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'create_table'</span>
+    <span class="k">rescue</span>
+      <span class="kp">false</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_table_name</span><span class="p">(</span><span class="n">create_table_block_sexp</span><span class="p">)</span>
+      <span class="n">create_table_block_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_table_columns</span><span class="p">(</span><span class="n">create_table_block_sexp</span><span class="p">)</span>
+      <span class="n">create_table_block_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_column_type</span><span class="p">(</span><span class="n">table_column_sexp</span><span class="p">)</span>
+      <span class="n">table_column_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_column_name</span><span class="p">(</span><span class="n">table_column_sexp</span><span class="p">)</span>
+      <span class="c1"># Return value of `t.index` is array like ['user_id'].</span>
+      <span class="k">if</span> <span class="n">table_column_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="ss">:array</span>
+        <span class="k">return</span> <span class="n">table_column_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="n">table_column_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_column_option</span><span class="p">(</span><span class="n">table_column_sexp</span><span class="p">)</span>
+      <span class="c1"># If is not `column_option`, then `table_column_sexp.dig(4, 1, 1,</span>
+      <span class="c1"># 1)` method return nil. Set blank array ([]) for avoiding nil.</span>
+      <span class="n">table_column_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="p">[]</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_option_key</span><span class="p">(</span><span class="n">column_option_sexp</span><span class="p">)</span>
+      <span class="c1"># Remove colon for avoiding `null:`.</span>
+      <span class="n">column_option_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/:\z/</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">extract_option_value</span><span class="p">(</span><span class="n">column_option_sexp</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">column_option_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="ss">:array</span>
+        <span class="k">return</span> <span class="no">Array</span><span class="p">(</span><span class="n">column_option_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span> <span class="n">e</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="n">element</span> <span class="o">=</span> <span class="n">column_option_sexp</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">element</span><span class="p">.</span><span class="nf">class</span> <span class="o">!=</span> <span class="no">Array</span>
+        <span class="k">return</span> <span class="n">element</span>
+      <span class="k">end</span>
+      <span class="k">case</span> <span class="n">element</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:kw</span> <span class="k">then</span> <span class="n">element</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:string_content</span> <span class="k">then</span> <span class="n">element</span><span class="p">.</span><span class="nf">dig</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="s1">''</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">template</span>
+      <span class="no">ERB</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="o">&lt;&lt;</span><span class="no">'__EOD__'</span><span class="p">,</span> <span class="kp">nil</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">)</span><span class="sh">
+defmodule &lt;%= project_name %&gt;.&lt;%= table_name.classify %&gt; do
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias &lt;%= project_name %&gt;.&lt;%= table_name.classify %&gt;
+
+  schema "&lt;%= table_name %&gt;" do&lt;% table_columns.each do |c| %&gt;
+    field :&lt;%= c[:column_name] -%&gt;, &lt;%= c[:column_type] -%&gt;
+&lt;% end %&gt;
+    timestamps inserted_at: :created_at
+  end
+
+  @doc false
+  def changeset(%&lt;%= table_name.classify %&gt;{} = &lt;%= table_name.singularize %&gt;, attrs) do
+    &lt;%= table_name.singularize %&gt;
+    |&gt; cast(attrs, [&lt;%= table_columns.map { |c| ":" &lt;&lt; c[:column_name] }.join(", ") -%&gt;])
+    # |&gt; validate_required([&lt;%= table_columns.map { |c| ":" &lt;&lt; c[:column_name] }.join(", ") -%&gt;])
+  end
+end
+</span><span class="no">__EOD__</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">configuration</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+      <span class="p">{</span>
+        <span class="ss">table_name: </span><span class="n">extract_table_name</span><span class="p">(</span><span class="n">table</span><span class="p">),</span>
+        <span class="ss">table_columns: </span><span class="n">extract_table_columns</span><span class="p">(</span><span class="n">table</span><span class="p">).</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+          <span class="p">{</span>
+            <span class="ss">column_name: </span><span class="n">extract_column_name</span><span class="p">(</span><span class="n">c</span><span class="p">),</span>
+            <span class="ss">column_type: </span><span class="n">extract_column_type</span><span class="p">(</span><span class="n">c</span><span class="p">),</span>
+            <span class="ss">column_option: </span><span class="no">Hash</span><span class="p">[</span><span class="n">extract_column_option</span><span class="p">(</span><span class="n">c</span><span class="p">).</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">o</span><span class="o">|</span> <span class="p">[</span><span class="n">extract_option_key</span><span class="p">(</span><span class="n">o</span><span class="p">),</span> <span class="n">extract_option_value</span><span class="p">(</span><span class="n">o</span><span class="p">)]</span> <span class="p">}]</span>
+          <span class="p">}</span>
+        <span class="k">end</span>
+      <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">reject_condition</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+      <span class="n">column</span><span class="p">[</span><span class="ss">:column_name</span><span class="p">]</span> <span class="o">=~</span> <span class="sr">/\A(created|updated)_at\z/</span> <span class="o">||</span> <span class="n">column</span><span class="p">[</span><span class="ss">:column_type</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'index'</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+</div>
+<div class="code-block" data-sourcepos="183:1-185:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> rails db:schema:convert_to_phoenix
+</code></pre></div>
+</div>
+<p data-sourcepos="187:1-187:59">最後に、既存DBへはこんな感じで接続する。</p>
+<div class="code-block" data-sourcepos="188:1-195:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>config</div>
+<div class="highlight"><pre class="highlight plaintext"><code># rails_project/apps/phoenix_app/config/dev.exs
+config :phoenix_app, PhoenixApp.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: 10,
+  ssl: true
+</code></pre></div>
+</div>
+<div class="code-block" data-sourcepos="196:1-200:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> <span class="o">(</span><span class="nb">cd</span> ./apps/phoenix_app/assets <span class="o">&amp;&amp;</span> npm <span class="nb">install</span><span class="o">)</span>
+<span class="o">&gt;</span> mix deps.get
+<span class="o">&gt;</span> mix phx.server
+</code></pre></div>
+</div>
+<h2 data-sourcepos="202:1-202:45" id="2-2-0" name="2-2-0">
+<a class="anchor" id="デプロイのパイプラインを追加" name="%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%AE%E3%83%91%E3%82%A4%E3%83%97%E3%83%A9%E3%82%A4%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0" href="#%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%AE%E3%83%91%E3%82%A4%E3%83%97%E3%83%A9%E3%82%A4%E3%83%B3%E3%82%92%E8%BF%BD%E5%8A%A0" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="デプロイのパイプラインを追加"> &gt; デプロイのパイプラインを追加</span></a>デプロイのパイプラインを追加</h2>
+<p data-sourcepos="203:1-203:196">さて、既存のCI（Wercker）も更新。今回はPhoenix関連ブランチが更新された場合にのみ、関連パイプラインを走らせるように下記のように変更した。</p>
+<p data-sourcepos="205:1-205:10"><strong>BEFORE</strong></p>
+<ul data-sourcepos="206:1-208:0">
+<li data-sourcepos="206:1-208:0">build (all branch)
+<ul data-sourcepos="207:5-208:0">
+<li data-sourcepos="207:5-208:0">deploy.prod (master branch)</li>
+</ul>
+</li>
+</ul>
+<p data-sourcepos="209:1-209:9"><strong>AFTER</strong></p>
+<ul data-sourcepos="210:1-213:0">
+<li data-sourcepos="210:1-213:0">build (all branch)
+<ul data-sourcepos="211:5-213:0">
+<li data-sourcepos="211:5-211:33">deploy.prod (master branch)</li>
+<li data-sourcepos="212:5-213:0">deploy.phoenix.prod (phoenix/base branch)</li>
+</ul>
+</li>
+</ul>
+<div class="code-block" data-sourcepos="214:1-233:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>yaml</div>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># wercker.yml</span>
+<span class="na">deploy-phoenix-prod-heroku</span><span class="pi">:</span>
+  <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">add-ssh-key</span><span class="pi">:</span>
+        <span class="na">host</span><span class="pi">:</span> <span class="s">github.com</span>
+        <span class="na">keyname</span><span class="pi">:</span> <span class="s">GITHUB</span>
+    <span class="pi">-</span> <span class="na">add-to-known_hosts</span><span class="pi">:</span>
+        <span class="na">hostname</span><span class="pi">:</span> <span class="s">github.com</span>
+        <span class="na">fingerprint</span><span class="pi">:</span> <span class="s">16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48</span>
+    <span class="pi">-</span> <span class="na">heroku-deploy</span><span class="pi">:</span>
+        <span class="na">key</span><span class="pi">:</span> <span class="s">$HEROKU_KEY</span>
+        <span class="na">user</span><span class="pi">:</span> <span class="s">$HEROKU_USER</span>
+        <span class="na">app-name</span><span class="pi">:</span> <span class="s">$HEROKU_APP_NAME</span>
+        <span class="na">install-toolbelt</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">after-steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">wantedly/pretty-slack-notify</span><span class="pi">:</span>
+        <span class="na">webhook_url</span><span class="pi">:</span> <span class="s">${SLACK_WEBHOOK_URL}</span>
+        <span class="na">channel</span><span class="pi">:</span> <span class="s">general</span>
+</code></pre></div>
+</div>
+<h3 data-sourcepos="235:1-235:43" id="2-2-1" name="2-2-1">
+<a class="anchor" id="Herokuアプリケーションを作成" name="Heroku%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%9C%E6%88%90" href="#Heroku%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%92%E4%BD%9C%E6%88%90" data-position="2-2-1"><i class="fa fa-link"></i><span class="hidden" data-text="Herokuアプリケーションを作成"> &gt; Herokuアプリケーションを作成</span></a>Herokuアプリケーションを作成</h3>
+<p data-sourcepos="236:1-236:288">基本ドキュメントの説明通り。Phoenix Umbrellaプロジェクトの注意点としては、ディレクトリの差異くらいでそれ以外はおなじ。つまり、これ <code>rails_project/config/prod.exs</code> をこう <code>rails_project/apps/phoenix_app/config/prod.exs</code> する。</p>
+<p data-sourcepos="238:1-238:52"><strong>1. Herokuアプリにビルドパックを適用</strong></p>
+<div class="code-block" data-sourcepos="239:1-242:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> heroku create <span class="nt">--buildpack</span> https://github.com/HashNuke/heroku-buildpack-elixir.git
+<span class="o">&gt;</span> heroku buildpacks:add https://github.com/gjaldon/heroku-buildpack-phoenix-static.git
+</code></pre></div>
+</div>
+<p data-sourcepos="244:1-244:28"><strong>2. 起動設定を準備</strong></p>
+<div class="code-block" data-sourcepos="245:1-255:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>config</div>
+<div class="highlight"><pre class="highlight plaintext"><code># rails_project/elixir_buildpack.config
+erlang_version=19.1
+elixir_version=1.4.2
+always_rebuild=false
+pre_compile="pwd"
+post_compile="pwd"
+runtime_path=/app
+config_vars_to_export=(DATABASE_URL)
+config_vars_to_export=(DATABASE_POOL_SIZE)
+</code></pre></div>
+</div>
+<div class="code-block" data-sourcepos="256:1-259:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>config</div>
+<div class="highlight"><pre class="highlight plaintext"><code># rails_project/phoenix_static_buildpack.config
+phoenix_relative_path=apps/phoenix_app
+</code></pre></div>
+</div>
+<div class="code-block" data-sourcepos="260:1-263:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>config</div>
+<div class="highlight"><pre class="highlight plaintext"><code># rails_project/Procfile
+web: MIX_ENV=prod mix phx.server
+</code></pre></div>
+</div>
+<p data-sourcepos="265:1-265:28"><strong>3. 環境変数を適用</strong></p>
+<p data-sourcepos="267:1-267:27">データベース関連。</p>
+<div class="code-block" data-sourcepos="268:1-275:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>config</div>
+<div class="highlight"><pre class="highlight plaintext"><code># rails_project/apps/phoenix_app/config/prod.exs
+config :phoenix_app, PhoenixApp.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("DATABASE_POOL_SIZE") || 10),
+  ssl: true
+</code></pre></div>
+</div>
+<div class="code-block" data-sourcepos="276:1-279:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code>heroku config:set <span class="nv">DATABASE_URL</span><span class="o">=</span>foo
+heroku config:set <span class="nv">DATABASE_POOL_SIZE</span><span class="o">=</span>bar
+</code></pre></div>
+</div>
+<p data-sourcepos="281:1-281:30">クレデンシャル関連。</p>
+<div class="code-block" data-sourcepos="282:1-285:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>sh</div>
+<div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> heroku config:set <span class="nv">HEROKU_API_KEY</span><span class="o">=</span><span class="si">$(</span>heroku auth:token<span class="si">)</span>
+<span class="o">&gt;</span> heroku config:set <span class="nv">SECRET_KEY_BASE</span><span class="o">=</span><span class="si">$(</span>mix phx.gen.secret<span class="si">)</span>
+</code></pre></div>
+</div>
+</div><style data-emotion-css="k022ln">.css-k022ln > .heading{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-bottom:4.375rem;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.css-k022ln > .heading > .avatar{height:50px;width:50;margin-right:8px;border-radius:21px;}.css-k022ln > .heading > .description > a{color:#58463C;}.css-k022ln > .heading > .description > a:hover{color:#80695F;}</style><div class="css-k022ln ewgr1al0"><div class="heading"><img class="avatar" src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg" alt="nabinno"/><div class="description">Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br/><a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a> / <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a> / <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a> / <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a> / <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a></div></div></div></div><style data-emotion-css="1r17nfx">.css-1r17nfx{box-shadow:none;color:inherit;display:block;-webkit-text-decoration:none;text-decoration:none;}</style><a class="css-1r17nfx" href="/posts/66"><style data-emotion-css="xbv8og">.css-xbv8og{height:100%;background-color:white;border-radius:8px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border-bottom:1px solid #eee;padding:20px 12px;}@media (min-width:624px){.css-xbv8og{padding-left:0;padding-right:0;}}.css-xbv8og:hover .title{color:#80695F;}</style><div class="css-xbv8og"><style data-emotion-css="19idom">.css-19idom{margin-bottom:8px;}</style><div class="css-19idom eff00rj1"><style data-emotion-css="lhqszh">.css-lhqszh{line-height:1.4;background-color:white;font-weight:600;display:inline-block;font-size:12px;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;border-style:solid;border-color:rgb(221,221,221);border-image:initial;margin:0px 8px 4px 0px;padding:4px 6px;border-radius:3px;border-width:0px;}</style><div class="css-lhqszh eff00rj0">blog</div><style data-emotion-css="jsyva2">.css-jsyva2{margin-bottom:1px;font-size:18px;line-height:1.48;color:#1a202c;}</style><h3 class="title css-jsyva2 eff00rj2">On Blahfe</h3><style data-emotion-css="1p4gbp4">.css-1p4gbp4{color:#1a202c;opacity:0.6;font-size:14px;line-height:1.6;word-break:break-all;overflow-y:hidden;max-height:67.2px;}</style><p class="css-1p4gbp4 eff00rj3">txt 
+
+（小学校の感想文より） ぼくは、二年の時、友達と自転車で、じゅくから帰ってくるとちゅう、トラックに足をふまれてしまいました。おほりの近くの道路でトラックが来たから、よけようとした時、ころん</p></div><style data-emotion-css="8xl60i">.css-8xl60i{margin-top:auto;}</style><div class="css-8xl60i eff00rj4"><style data-emotion-css="2qp2g2">.css-2qp2g2{font-size:12px;font-weight:700;color:#666;}.css-2qp2g2:after{content:' ';width:1px;height:100%;background-color:#ddd;display:inline-block;}</style><time class="css-2qp2g2 eff00rj5">2017/01/31</time><style data-emotion-css="om1c75">.css-om1c75{font-size:12px;margin-left:4px;}.css-om1c75:before{content:'#';}</style><span class="css-om1c75 eff00rj6">blahfe</span></div></div></a><a class="css-1r17nfx" href="/posts/61"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/health</div><h3 class="title css-jsyva2 eff00rj2">ElixirとRaspberry PiでPM2.5などの環境データを定点観察し、目・喉の痛みに備える</h3><p class="css-1p4gbp4 eff00rj3">&gt; PROBLEMPROBLEM 
+
+- 以前からオフィスに行くと目や喉が痛くなることがあったので、自分の体調なのか環境なのか原因を切り分けるために汚染計測器「Dienmern DM106A」を購入 </p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2018/12/22</time><span class="css-om1c75 eff00rj6">elixir</span><span class="css-om1c75 eff00rj6">raspberry-pi</span><span class="css-om1c75 eff00rj6">particulates</span><span class="css-om1c75 eff00rj6">physiology</span></div></div></a><a class="css-1r17nfx" href="/posts/65"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">LYSE本を読む</h3><p class="css-1p4gbp4 eff00rj3">&gt; PROBLEMPROBLEM 
+
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想がで</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2017/04/29</time><span class="css-om1c75 eff00rj6">erlang</span><span class="css-om1c75 eff00rj6">elixir</span></div></div></a></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/59";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-c2af0f9bcfb46c63126b.js"],"app":["/app-9871132b88557cd03cda.js"],"component---src-pages-404-tsx":["/component---src-pages-404-tsx-7a73fce44527957a28a5.js"],"component---src-templates-post-tsx":["/component---src-templates-post-tsx-57a3528f2ea549989519.js"],"component---src-templates-posts-tsx":["/component---src-templates-posts-tsx-cebecf5a0176658114a4.js"]};/*]]>*/</script><script src="/polyfill-c2af0f9bcfb46c63126b.js" nomodule=""></script><script src="/component---src-templates-post-tsx-57a3528f2ea549989519.js" async=""></script><script src="/component---src-templates-posts-tsx-cebecf5a0176658114a4.js" async=""></script><script src="/commons-9cdc680d0978a25e3e04.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-9871132b88557cd03cda.js" async=""></script><script src="/framework-dbb498007a7447f28d8e.js" async=""></script><script src="/webpack-runtime-7db1496f8af88a51c8ad.js" async=""></script></body></html>

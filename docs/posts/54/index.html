@@ -1,0 +1,469 @@
+<!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="ie=edge"/><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/><style data-href="/styles.0d86aa92c5843d055886.css" id="gatsby-global-css">/*!
+ * ress.css • v2.0.4
+ * MIT License
+ * github.com/filipelinhares/ress
+ */html{box-sizing:border-box;-webkit-text-size-adjust:100%;word-break:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4}*,:after,:before{background-repeat:no-repeat;box-sizing:inherit}:after,:before{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace,monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}input{border-radius:0}[disabled]{cursor:default}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}[role=button],[type=button],[type=reset],[type=submit],button{cursor:pointer;color:inherit}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button:-moz-focusring{outline:1px dotted ButtonText}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}button,input,select,textarea{background-color:transparent;border-style:none}select{-moz-appearance:none;-webkit-appearance:none}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{-webkit-appearance:button;color:inherit;font:inherit}img{border-style:none}progress{vertical-align:baseline}svg:not([fill]){fill:currentColor}@media screen{[hidden~=screen]{display:inherit}[hidden~=screen]:not(:active):not(:focus):not(:target){position:absolute!important;clip:rect(0 0 0 0)!important}}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled]{cursor:default}</style><meta name="generator" content="Gatsby 2.30.1"/><title data-react-helmet="true">Xamarin開発環境をととのえる - On Blahfe</title><link data-react-helmet="true" rel="canonical" href="https://nabinno.github.io/posts/54"/><meta data-react-helmet="true" name="google-site-verification" content=""/><meta data-react-helmet="true" name="description" content="&gt; PROBLEMPROBLEM 
+
+- Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレー"/><meta data-react-helmet="true" property="og:url" content="https://nabinno.github.io/posts/54"/><meta data-react-helmet="true" property="og:type" content="article"/><meta data-react-helmet="true" property="og:title" content="Xamarin開発環境をととのえる - On Blahfe"/><meta data-react-helmet="true" property="og:description" content="&gt; PROBLEMPROBLEM 
+
+- Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレー"/><meta data-react-helmet="true" property="og:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/e559af9e-af78-4d70-a76f-e41ab5110fd7.png"/><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"/><meta data-react-helmet="true" name="twitter:creator" content="@nabinno"/><meta data-react-helmet="true" name="twitter:title" content="Xamarin開発環境をととのえる - On Blahfe"/><meta data-react-helmet="true" name="twitter:description" content="&gt; PROBLEMPROBLEM 
+
+- Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレー"/><meta data-react-helmet="true" name="twitter:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/e559af9e-af78-4d70-a76f-e41ab5110fd7.png"/><link rel="icon" href="/favicon-32x32.png?v=381a3661ec5793ff376970a2019b6518" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#fff"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link as="script" rel="preload" href="/webpack-runtime-7db1496f8af88a51c8ad.js"/><link as="script" rel="preload" href="/framework-dbb498007a7447f28d8e.js"/><link as="script" rel="preload" href="/app-9871132b88557cd03cda.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-9cdc680d0978a25e3e04.js"/><link as="script" rel="preload" href="/component---src-templates-posts-tsx-cebecf5a0176658114a4.js"/><link as="script" rel="preload" href="/component---src-templates-post-tsx-57a3528f2ea549989519.js"/><link as="fetch" rel="preload" href="/page-data/posts/54/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><style data-emotion-css="ly78bw">.css-ly78bw{font-family:-apple-system-body,'Source Han Mono',BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans Japanese','游ゴシック  Medium','Yu Gothic Medium','メイリオ',meiryo,sans-serif;}@media screen and (-webkit-min-device-pixel-ratio:2),screen and (min-resolution:2dppx){.css-ly78bw{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;}}</style><div class="css-ly78bw e1j2fp1f0"><div><style data-emotion-css="10061d2">.css-10061d2{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}@media (min-width:980px){.css-10061d2{-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;}}</style><div class="css-10061d2 e1rphn8v0"><style data-emotion-css="1ur9eye">.css-1ur9eye{max-width:620px;width:100%;margin:20px auto;}</style><div style="margin-top:32px" class="css-1ur9eye e1rphn8v1"><style data-emotion-css="1igky03">.css-1igky03{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-right:auto;margin-bottom:1.75rem;}</style><h1 class="css-1igky03"><style data-emotion-css="1a6yofc">.css-1a6yofc{color:rgba(26,32,44,0.88);-webkit-text-decoration:none;text-decoration:none;font-family:Montserrat,sans-serif;font-weight:900;font-size:1.4427rem;line-height:1.1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;padding:16px;margin:-16px;}.css-1a6yofc:hover{background-color:rgba(255,255,255,0.1);}</style><a class="css-1a6yofc" href="/">On Blahfe</a></h1><style data-emotion-css="kvk3sk">.css-kvk3sk{padding:0 12px;}@media (min-width:600px){.css-kvk3sk{padding:0;}}</style><div class="css-kvk3sk epep3293"><style data-emotion-css="19sxenz">.css-19sxenz{display:block;margin-bottom:4px;font-weight:600;-webkit-letter-spacing:0.5px;-moz-letter-spacing:0.5px;-ms-letter-spacing:0.5px;letter-spacing:0.5px;opacity:0.6;font-size:15px;}</style><time class="css-19sxenz">2017.03.31</time><style data-emotion-css="1b1c2m5">.css-1b1c2m5{font-size:24px;line-height:1.4;font-weight:700;margin-bottom:4px;color:#1a202c;font-family:-apple-system,'Source Han Mono','BlinkMacSystemFont','Helvetica Neue','Hiragino Sans','游ゴシック Medium','YuGothic','Hiragino Kaku Gothic ProN','メイリオ','Meiryo,sans-serif';}@media (min-width:600px){.css-1b1c2m5{font-size:30px;}}</style><h1 class="css-1b1c2m5 epep3291">Xamarin開発環境をととのえる</h1><style data-emotion-css="3bor06">.css-3bor06{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;margin-bottom:4px;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;}.css-3bor06:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-3bor06:before{content:'#';}.css-3bor06:hover{border-color:inherit;color:white;}.css-3bor06:before{content:'';}</style><a class="css-3bor06 epep3292" href="/categories/blog/frontend">blog/frontend</a><style data-emotion-css="1qp0zyo">.css-1qp0zyo{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;}.css-1qp0zyo:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-1qp0zyo:before{content:'#';}</style><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/xamarin.forms">xamarin.forms</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/prism">prism</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/xamarin">xamarin</a><style data-emotion-css="1f03b13">.css-1f03b13{margin-top:24px;margin-bottom:4.375rem;line-height:1.8;font-size:15px;word-break:break-all;color:rgba(26,32,44,0.88);}.css-1f03b13 .hidden{display:none;}.css-1f03b13 pre{display:block;padding:10.5px;margin:0 0 11px;font-size:13px;line-height:1.6;word-break:break-all;word-wrap:break-word;color:#4a5568;background-color:#3e4149;border:1px solid #ccc;border-radius:4px;}.css-1f03b13 pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0;}.css-1f03b13 h1{font-size:200%;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:10px;margin:30px 0;margin-bottom:10px;}.css-1f03b13 h1 .emoji{width:36px;height:36px;}.css-1f03b13 h1 a{color:#0a9b94;}.css-1f03b13 h1 a:hover{color:#1a202c;}.css-1f03b13 h2{font-size:160%;margin:30px 0 16px;font-weight:900;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:4px;position:relative;}.css-1f03b13 h2:before{position:absolute;content:' ';width:100px;bottom:-3px;height:3px;background-color:#80695F;}.css-1f03b13 h2 .emoji{width:28px;height:28px;}.css-1f03b13 h2 a{color:#0a9b94;}.css-1f03b13 h2 a:hover{color:#1a202c;}.css-1f03b13 h3{margin:24px 0;margin-bottom:10px;font-size:130%;font-weight:900;}.css-1f03b13 h3 .emoji{width:22px;height:22px;}.css-1f03b13 h4{font-size:120%;font-weight:900;}.css-1f03b13 .markdown > ul,.css-1f03b13 .markdown > ol{margin:16px 0;}.css-1f03b13 ul,.css-1f03b13 ol{padding-left:40px;}.css-1f03b13 li{margin:4px 0;}.css-1f03b13 li > p{margin:0;}.css-1f03b13 dt{margin-top:14px;margin-bottom:4px;}.css-1f03b13 dd{padding:0 14px;margin-bottom:4px;}.css-1f03b13 p{margin:16px 0;}.css-1f03b13 p img{margin-bottom:0;}.css-1f03b13 blockquote{font-size:100%;color:rgba(60,74,96,0.7);border-left:5px solid rgba(0,0,0,0.1);margin-bottom:30px;padding:0 20px;}.css-1f03b13 blockquote p{margin:10px 0 !important;}.css-1f03b13 code{color:#3c4a60;white-space:pre-wrap;border-radius:4px;background-color:rgba(0,0,0,0.05);}.css-1f03b13 pre{border:none;}.css-1f03b13 pre code{background:#f6f6f6;}.css-1f03b13 a{color:#58463C;}.css-1f03b13 a:hover{color:#80695F;}.css-1f03b13 .code-block .highlight{border-radius:4px;}.css-1f03b13 .code-block__copy-button{position:absolute;top:0;right:0;display:none;background-color:white;border:1px solid rgba(0,0,0,0.1);padding:2px 7px;font-size:10px;font-family:'Source Han Mono','Lato',Emoji,Arial,'ヒラギノ角ゴPro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;}.css-1f03b13 .code-block__copy-button i{color:rgba(60,74,96,0.3);}.css-1f03b13 .code-block__copy-button:hover{background-color:#f6f6f6;border:1px solid rgba(0,0,0,0.2);}.css-1f03b13 .code-block__copy-label::after{content:'Copy';}.css-1f03b13 .code-block__copy-label.copied::after{content:'Copied';}.css-1f03b13 .code-block .highlight{position:relative;}.css-1f03b13 .code-block:hover .code-block__copy-button{display:block;}.css-1f03b13 table{border:1px solid rgba(0,0,0,0.1);width:100%;border-collapse:collapse;border-spacing:0;margin:20px 0;margin-bottom:30px;}.css-1f03b13 table tr:nth-child(odd) td{background-color:#f9f9f9;}.css-1f03b13 table tr th,.css-1f03b13 table tr td{padding:8px;line-height:1.6;vertical-align:top;border:1px solid rgba(0,0,0,0.1);}.css-1f03b13 strong{font-weight:700;}.css-1f03b13 img{max-width:100%;border:1px solid #eee;border-radius:4px;}.css-1f03b13 .anchor{-webkit-transition-duration:0;transition-duration:0;display:none;margin-left:-20px;width:20px;height:20px;font-size:20px;text-align:right;padding-top:8px;}.css-1f03b13 .anchor i:hover{color:#08837d;}.css-1f03b13 .anchor .fa-pencil{-webkit-transform:rotateY(180deg);-webkit-transform:rotateY(180deg);-ms-transform:rotateY(180deg);transform:rotateY(180deg);}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4{-webkit-font-smoothing:antialiased;}.css-1f03b13 h1:hover .anchor,.css-1f03b13 h2:hover .anchor,.css-1f03b13 h3:hover .anchor{display:inline-block;}.css-1f03b13 h2 .anchor{padding-top:5px;font-size:18px;}.css-1f03b13 h2 .anchor i{top:4px;}.css-1f03b13 h3 .anchor{padding-top:3px;font-size:15px;}.css-1f03b13 h3 .anchor i{top:4px;}.css-1f03b13 .emoji{border:none;height:19px;width:19px;}.css-1f03b13 iframe{max-width:100%;}.css-1f03b13 hr{border-top-color:rgba(33,37,41,0.12);display:block;border-top-width:1px;border-top-style:solid;margin:32px 0;}.css-1f03b13 .code-filename{border-top-left-radius:4px;border-top-right-radius:4px;position:relative;top:auto;right:auto;bottom:auto;left:auto;top:4px;display:inline-block;padding:3px 10px;background-color:#3e4149;color:#fff;font-size:85%;line-height:1.5;margin-bottom:-10px;}.css-1f03b13 .code-filename i{color:rgba(60,74,96,0.3);}@media (max-width:900px){.css-1f03b13 video{width:100%;}}.css-1f03b13 .highlight code table td{padding:5px;}.css-1f03b13 .highlight code table pre{margin:0;}.css-1f03b13 .highlight code .c,.css-1f03b13 .highlight code .cd{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cm{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .c1{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cp{color:#75715e;font-weight:bold;}.css-1f03b13 .highlight code .cs{color:#75715e;font-weight:bold;font-style:italic;}.css-1f03b13 .highlight code .err{color:#960050;background-color:#1e0010;}.css-1f03b13 .highlight code .gi{color:#ffffff;background-color:#324932;}.css-1f03b13 .highlight code .gd{color:#ffffff;background-color:#493131;}.css-1f03b13 .highlight code .ge{color:#000000;font-style:italic;}.css-1f03b13 .highlight code .gr{color:#aa0000;}.css-1f03b13 .highlight code .gt{color:#aa0000;}.css-1f03b13 .highlight code .gh{color:#999999;}.css-1f03b13 .highlight code .go{color:#888888;}.css-1f03b13 .highlight code .gp{color:#555555;}.css-1f03b13 .highlight code .gs{font-weight:bold;}.css-1f03b13 .highlight code .gu{color:#aaaaaa;}.css-1f03b13 .highlight code .k,.css-1f03b13 .highlight code .kv{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kc{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kd{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kp{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kr{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kt{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kn{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .ow{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .o{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .mf{color:#ae81ff;}.css-1f03b13 .highlight code .mh{color:#ae81ff;}.css-1f03b13 .highlight code .il{color:#ae81ff;}.css-1f03b13 .highlight code .mi{color:#ae81ff;}.css-1f03b13 .highlight code .mo{color:#ae81ff;}.css-1f03b13 .highlight code .m,.css-1f03b13 .highlight code .mb,.css-1f03b13 .highlight code .mx{color:#ae81ff;}.css-1f03b13 .highlight code .se{color:#ae81ff;}.css-1f03b13 .highlight code .sb{color:#e6db74;}.css-1f03b13 .highlight code .sc{color:#e6db74;}.css-1f03b13 .highlight code .sd{color:#e6db74;}.css-1f03b13 .highlight code .s2{color:#e6db74;}.css-1f03b13 .highlight code .sh{color:#e6db74;}.css-1f03b13 .highlight code .si{color:#e6db74;}.css-1f03b13 .highlight code .sx{color:#e6db74;}.css-1f03b13 .highlight code .sr{color:#e6db74;}.css-1f03b13 .highlight code .s1{color:#e6db74;}.css-1f03b13 .highlight code .ss{color:#e6db74;}.css-1f03b13 .highlight code .s{color:#e6db74;}.css-1f03b13 .highlight code .na{color:#a6e22e;}.css-1f03b13 .highlight code .nc{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nd{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .ne{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nf{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .no{color:#66d9ef;}.css-1f03b13 .highlight code .bp{color:#f8f8f2;}.css-1f03b13 .highlight code .nb{color:#f8f8f2;}.css-1f03b13 .highlight code .ni{color:#f8f8f2;}.css-1f03b13 .highlight code .nn{color:#f8f8f2;}.css-1f03b13 .highlight code .vc{color:#f8f8f2;}.css-1f03b13 .highlight code .vg{color:#f8f8f2;}.css-1f03b13 .highlight code .vi{color:#f8f8f2;}.css-1f03b13 .highlight code .nv{color:#f8f8f2;}.css-1f03b13 .highlight code .w{color:#f8f8f2;}.css-1f03b13 .highlight code .nl{color:#f8f8f2;font-weight:bold;}.css-1f03b13 .highlight code .nt{color:#f92672;}.css-1f03b13 .highlight code{color:#f8f8f2;background-color:#3e4149;}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4,.css-1f03b13 h5,.css-1f03b13 h6{font-weight:700;}.css-1f03b13 .footnotes{margin-top:4.375rem;padding:20px 0;background-color:#efefef;}</style><div class="css-1f03b13 e1a9pvvr0"><a href="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/e559af9e-af78-4d70-a76f-e41ab5110fd7.png" target="_blank" rel="noopener noreferrer"><img width="484" alt="thumbnail" src="https://img.esa.io/uploads/production/attachments/16651/2021/01/11/97367/e559af9e-af78-4d70-a76f-e41ab5110fd7.png"></a>
+<h1 data-sourcepos="3:1-3:9" id="1-0-0" name="1-0-0">
+<a class="anchor" id="PROBLEM" name="PROBLEM" href="#PROBLEM" data-position="1-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="PROBLEM"> &gt; PROBLEM</span></a>PROBLEM</h1>
+<ul data-sourcepos="4:1-10:0">
+<li data-sourcepos="4:1-10:0">Xamarin開発環境がサーバー側のそれとかい離している
+<ul data-sourcepos="5:3-10:0">
+<li data-sourcepos="5:3-5:68">Visual Studio Community 2015の動作がもっさりしている</li>
+<li data-sourcepos="6:3-6:46">適切な開発フローがわからない</li>
+<li data-sourcepos="7:3-7:76">適切なアプリケーションフレームワークがわからない</li>
+<li data-sourcepos="8:3-8:53">適切なXAMLプレビュワーがわからない</li>
+<li data-sourcepos="9:3-10:0">適切なAndroidエミュレーターがわからない</li>
+</ul>
+</li>
+</ul>
+<h1 data-sourcepos="11:1-11:10" id="2-0-0" name="2-0-0">
+<a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
+<p data-sourcepos="12:1-12:165">というわけで、動作が快適になったといわれるVisual Studio 2017がでたのでそちらを中心に開発環境を暫定で整理する（WIP）。</p>
+<h2 data-sourcepos="14:1-14:18" id="2-1-0" name="2-1-0">
+<a class="anchor" id="開発フロー" name="%E9%96%8B%E7%99%BA%E3%83%95%E3%83%AD%E3%83%BC" href="#%E9%96%8B%E7%99%BA%E3%83%95%E3%83%AD%E3%83%BC" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="開発フロー"> &gt; 開発フロー</span></a>開発フロー</h2>
+<p data-sourcepos="15:1-15:63">まず、想定している開発フローは下記の通り。</p>
+<ul data-sourcepos="17:1-37:0">
+<li data-sourcepos="17:1-26:26">テスト駆動開発
+<ul data-sourcepos="18:3-26:26">
+<li data-sourcepos="18:3-23:46">デバッグ
+<ul data-sourcepos="19:5-23:46">
+<li data-sourcepos="19:5-19:105">エミュレーター画面の動作確認 - ビルドスピード等考慮してUWPでおこなう</li>
+<li data-sourcepos="20:5-20:57">アウトプット - Debug.WriteLineなどの確認</li>
+<li data-sourcepos="21:5-21:45">イミディエイト - 変数の追跡</li>
+<li data-sourcepos="22:5-22:51">C# REPL - C#やパッケージの動作確認</li>
+<li data-sourcepos="23:5-23:46">XAMLのプレビュー - いらない子</li>
+</ul>
+</li>
+<li data-sourcepos="24:3-26:26">テスト
+<ul data-sourcepos="25:5-26:26">
+<li data-sourcepos="25:5-25:29">単体テスト - NUnit</li>
+<li data-sourcepos="26:5-26:26">UIテスト - 保留</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-sourcepos="27:1-37:0">
+<a href="http://qiita.com/tbpgr/items/4ff76ef35c4ff0ec8314" target="_blank" rel="noopener noreferrer">Github Flow</a>にそったデプロイ
+<ul data-sourcepos="28:3-37:0">
+<li data-sourcepos="28:3-28:70">
+<code>feature</code>ブランチをきってプルリクエストをたてる</li>
+<li data-sourcepos="29:3-32:147">当該ブランチに対してCIツールでビルド・テスト・配布を自動化 - ビルド・テスト後にレビュアーにメールにて配布しスマホで確認してもらう流れ。
+<ul data-sourcepos="30:5-32:147">
+<li data-sourcepos="30:5-32:147">CIツール
+<ul data-sourcepos="31:7-32:147">
+<li data-sourcepos="31:7-31:288">
+<a href="https://mobile.azure.com/apps" target="_blank" rel="noopener noreferrer">Visual Studio Mobile Center</a> - HockeyApp（クラッシュレポート）とXamarin Test Cloud（UIテスト）を統合したCIサービス。Xamarin.Formsは2017年3月18日現在iOS対応、Android非対応という状況。UWPは知らない。</li>
+<li data-sourcepos="32:7-32:147">
+<a href="https://app.wercker.com/" target="_blank" rel="noopener noreferrer">Wercker</a> - <code>master</code>マージ後にいらなくなった<code>feature</code>ブランチを消すなどの後片付け役。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-sourcepos="33:3-37:0">Appストアへデプロイ
+<ul data-sourcepos="34:5-37:0">
+<li data-sourcepos="34:5-34:13">Android</li>
+<li data-sourcepos="35:5-35:9">iOS</li>
+<li data-sourcepos="36:5-37:0">UWP</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p data-sourcepos="38:1-38:144">ちなみにWerckerでの<code>feature</code>ブランチなどの後片付けはこんな感じ。<code>master</code>マージのタイミングではしらせる。</p>
+<div class="code-block" data-sourcepos="40:1-63:3">
+<div class="code-filename">
+<i class="fa fa-file-code-o"></i>yaml</div>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">box</span><span class="pi">:</span> <span class="s">ruby:2.4.0</span>
+<span class="na">build</span><span class="pi">:</span>
+  <span class="na">steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">add-ssh-key</span><span class="pi">:</span>
+        <span class="na">host</span><span class="pi">:</span> <span class="s">github.com</span>
+        <span class="na">keyname</span><span class="pi">:</span> <span class="s">GITHUB</span>
+    <span class="pi">-</span> <span class="na">add-to-known_hosts</span><span class="pi">:</span>
+        <span class="na">hostname</span><span class="pi">:</span> <span class="s">github.com</span>
+        <span class="na">fingerprint</span><span class="pi">:</span> <span class="s">16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48</span>
+    <span class="pi">-</span> <span class="na">script</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">Add git-tag</span>
+        <span class="na">code</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">_tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S)</span>
+          <span class="s">git remote add origin git@github.com:nabinno/utagaki.git</span>
+          <span class="s">git config --global user.email 'wercker@blahfe.com'</span>
+          <span class="s">git config --global user.name 'Wercker Bot'</span>
+          <span class="s">git tag -a $_tag master -m 'wercker deploy'</span>
+          <span class="s">git push origin $_tag</span>
+  <span class="na">after-steps</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">wantedly/pretty-slack-notify</span><span class="pi">:</span>
+        <span class="na">webhook_url</span><span class="pi">:</span> <span class="s">${SLACK_WEBHOOK_URL}</span>
+        <span class="na">channel</span><span class="pi">:</span> <span class="s">general</span>
+</code></pre></div>
+</div>
+<h2 data-sourcepos="65:1-65:15" id="2-2-0" name="2-2-0">
+<a class="anchor" id="開発環境" name="%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83" href="#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="開発環境"> &gt; 開発環境</span></a>開発環境</h2>
+<p data-sourcepos="66:1-66:571">その上で開発環境は下記の通りに。Visual Studio 2017版Xamarinは現時点でHypervisorがHyper-Vを考慮していない、Intel HAXMやVirtualBoxなどのホスト型を前提としている。ただ私見としては、VirtualBoxなどのホスト型はWindowsアップデート時に動作検証対象となっておらずクラッシュが起きやすい、Hyper-Vを開発環境とすることをすすめる。いずれにせよ、デバッグはビルドスピード等がHypervisorに左右されるAndroidではなくUWPでおこなうといい。</p>
+<ul data-sourcepos="68:1-112:0">
+<li data-sourcepos="68:1-103:234">IDE
+<ul data-sourcepos="69:3-103:234">
+<li data-sourcepos="69:3-69:33">Visual Studio Community 2017</li>
+<li data-sourcepos="70:5-90:33">Basic extentions
+<ul data-sourcepos="71:7-90:33">
+<li data-sourcepos="71:7-71:77">Microsoft Visual Studio Community 2017 Version 15.0.26228.9 D15RTWSVC</li>
+<li data-sourcepos="72:7-72:50">Microsoft .NET Framework Version 4.6.01586</li>
+<li data-sourcepos="73:7-73:22">Visual C# 2017</li>
+<li data-sourcepos="74:7-74:41">JavaScript Language Service   2.0</li>
+<li data-sourcepos="75:7-75:39">JavaScript Project System   2.0</li>
+<li data-sourcepos="76:7-76:43">JavaScript UWP Project System   2.0</li>
+<li data-sourcepos="77:7-77:28">TypeScript   2.1.5.0</li>
+<li data-sourcepos="78:7-78:48">Microsoft Visual Studio VC Package   1.0</li>
+<li data-sourcepos="79:7-79:37">Xamarin   4.3.0.784 (73f58d6)</li>
+<li data-sourcepos="80:7-80:48">Xamarin.Android SDK   7.1.0.41 (9578cdc)</li>
+<li data-sourcepos="81:7-81:62">Xamarin.iOS and Xamarin.Mac SDK   10.4.0.123 (35d1ccd)</li>
+<li data-sourcepos="82:7-82:47">Visual Studio Tools for Unity   3.0.0.1</li>
+<li data-sourcepos="83:7-83:70">Visual Studio Tools for Universal Windows Apps   15.0.26228.00</li>
+<li data-sourcepos="84:7-84:70">Mono Debugging for Visual Studio   Mono.Debugging.VisualStudio</li>
+<li data-sourcepos="85:7-85:49">ASP.NET and Web Tools 2017   15.0.30223.0</li>
+<li data-sourcepos="86:7-86:37">NuGet Package Manager   4.0.0</li>
+<li data-sourcepos="87:7-87:32">Common Azure Tools   1.9</li>
+<li data-sourcepos="88:7-88:39">NpgsqlVSPackage Extension   1.0</li>
+<li data-sourcepos="89:7-89:37">Merq   1.1.13-alpha (2f64b6d)</li>
+<li data-sourcepos="90:7-90:33">VSPackage Extension   1.2</li>
+</ul>
+</li>
+<li data-sourcepos="91:5-100:39">Other extentions
+<ul data-sourcepos="92:7-100:39">
+<li data-sourcepos="92:7-92:87">JetBrains ReSharper Ultimate 2016.3.2 - なにはともあれ入れておく。</li>
+<li data-sourcepos="93:7-93:70">CodeMaid   10.2.7 - 気軽にコード整形してくれる。</li>
+<li data-sourcepos="94:7-94:24">.ignore   1.2.71</li>
+<li data-sourcepos="95:7-95:34">Markdown Editor   1.11.201</li>
+<li data-sourcepos="96:7-96:29">File Nesting   2.6.67</li>
+<li data-sourcepos="97:7-97:37">GitHub.VisualStudio   2.2.0.8</li>
+<li data-sourcepos="98:7-98:27">VSColorOutput   2.5</li>
+<li data-sourcepos="99:7-99:96">HideMenu   1.0 - MinimaliticViewとの組み合わせでEmacsっぽい画面になる。</li>
+<li data-sourcepos="100:7-100:39">MinimaliticView Extension   1.0</li>
+</ul>
+</li>
+<li data-sourcepos="101:5-103:234">Debug用エミュレーター
+<ul data-sourcepos="102:7-103:234">
+<li data-sourcepos="102:7-102:200">XAML Previewer for Xamarin.Forms - Gorilla PlayerはVS2017未対応の上、Data Bindingを参照できないため機能的にXAML Previewer for Xamarin.Formsとほぼかわらない様子。</li>
+<li data-sourcepos="103:7-103:234">Android Emulator Manager/Android SDK Manager - VS2017ではHyper-VベースのVisual Studio Emulator for Xamarinがなくなり、Intel HAXMベースのAndroid Emulator Manager/Android SDK Manager (Google)のみとなった。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-sourcepos="104:1-112:0">DevStack
+<ul data-sourcepos="105:3-112:0">
+<li data-sourcepos="105:3-112:0">Prism
+<ul data-sourcepos="106:5-112:0">
+<li data-sourcepos="106:5-106:71">Prism template - スキャフォールド、スニペット便利</li>
+<li data-sourcepos="107:5-107:76">Profile78 - Profile259になっているがWindows 8必要ないので</li>
+<li data-sourcepos="108:5-108:21">Newtonsoft.Json</li>
+<li data-sourcepos="109:5-109:46">FubarCoder.RestSharp.Portable.HttpClient</li>
+<li data-sourcepos="110:5-110:11">NUnit</li>
+<li data-sourcepos="111:5-112:0">Moq</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 data-sourcepos="113:1-113:21" id="2-3-0" name="2-3-0">
+<a class="anchor" id="キーバインド" name="%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89" href="#%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="キーバインド"> &gt; キーバインド</span></a>キーバインド</h2>
+<p data-sourcepos="114:1-114:201">おまけのEmacs風キーバインド。Edit.Emacsメソッドは1級市民ではないのでその周辺で代替。Edit.LineCut、Edit.Outline、ReSharpeのいらないキーバインドは削除。</p>
+<table data-sourcepos="116:1-172:68">
+<thead>
+<tr data-sourcepos="116:1-116:68">
+<th data-sourcepos="116:2-116:13">category</th>
+<th data-sourcepos="116:15-116:52">command</th>
+<th data-sourcepos="116:54-116:67">keybind</th>
+</tr>
+</thead>
+<tbody>
+<tr data-sourcepos="118:1-118:68">
+<td data-sourcepos="118:2-118:13">Navigation</td>
+<td data-sourcepos="118:15-118:52">CodeMaid.SwitchFile</td>
+<td data-sourcepos="118:54-118:67"><code>C-c,:</code></td>
+</tr>
+<tr data-sourcepos="119:1-119:68">
+<td data-sourcepos="119:2-119:13">Navigation</td>
+<td data-sourcepos="119:15-119:52">Edit.CharLeft</td>
+<td data-sourcepos="119:54-119:67"><code>C-b</code></td>
+</tr>
+<tr data-sourcepos="120:1-120:68">
+<td data-sourcepos="120:2-120:13">Navigation</td>
+<td data-sourcepos="120:15-120:52">Edit.CharRight</td>
+<td data-sourcepos="120:54-120:67"><code>C-f</code></td>
+</tr>
+<tr data-sourcepos="121:1-121:68">
+<td data-sourcepos="121:2-121:13">Navigation</td>
+<td data-sourcepos="121:15-121:52">Edit.DocumentBottom</td>
+<td data-sourcepos="121:54-121:67"><code>M-&gt;</code></td>
+</tr>
+<tr data-sourcepos="122:1-122:68">
+<td data-sourcepos="122:2-122:13">Navigation</td>
+<td data-sourcepos="122:15-122:52">Edit.DocumentTop</td>
+<td data-sourcepos="122:54-122:67"><code>M-&lt;</code></td>
+</tr>
+<tr data-sourcepos="123:1-123:68">
+<td data-sourcepos="123:2-123:13">Navigation</td>
+<td data-sourcepos="123:15-123:52">Edit.GoTo</td>
+<td data-sourcepos="123:54-123:67"><code>M-g</code></td>
+</tr>
+<tr data-sourcepos="124:1-124:68">
+<td data-sourcepos="124:2-124:13">Navigation</td>
+<td data-sourcepos="124:15-124:52">Edit.IncrementalSearch</td>
+<td data-sourcepos="124:54-124:67"><code>C-s</code></td>
+</tr>
+<tr data-sourcepos="125:1-125:68">
+<td data-sourcepos="125:2-125:13">Navigation</td>
+<td data-sourcepos="125:15-125:52">Edit.LineDown</td>
+<td data-sourcepos="125:54-125:67"><code>C-n</code></td>
+</tr>
+<tr data-sourcepos="126:1-126:68">
+<td data-sourcepos="126:2-126:13">Navigation</td>
+<td data-sourcepos="126:15-126:52">Edit.LineEnd</td>
+<td data-sourcepos="126:54-126:67"><code>C-e</code></td>
+</tr>
+<tr data-sourcepos="127:1-127:68">
+<td data-sourcepos="127:2-127:13">Navigation</td>
+<td data-sourcepos="127:15-127:52">Edit.LineStart</td>
+<td data-sourcepos="127:54-127:67"><code>C-a</code></td>
+</tr>
+<tr data-sourcepos="128:1-128:68">
+<td data-sourcepos="128:2-128:13">Navigation</td>
+<td data-sourcepos="128:15-128:52">Edit.LineUp</td>
+<td data-sourcepos="128:54-128:67"><code>C-p</code></td>
+</tr>
+<tr data-sourcepos="129:1-129:68">
+<td data-sourcepos="129:2-129:13">Navigation</td>
+<td data-sourcepos="129:15-129:52">Edit.NextMethod</td>
+<td data-sourcepos="129:54-129:67"><code>M-}</code></td>
+</tr>
+<tr data-sourcepos="130:1-130:68">
+<td data-sourcepos="130:2-130:13">Navigation</td>
+<td data-sourcepos="130:15-130:52">Edit.PageDown</td>
+<td data-sourcepos="130:54-130:67"><code>C-v</code></td>
+</tr>
+<tr data-sourcepos="131:1-131:68">
+<td data-sourcepos="131:2-131:13">Navigation</td>
+<td data-sourcepos="131:15-131:52">Edit.PageUp</td>
+<td data-sourcepos="131:54-131:67"><code>M-v</code></td>
+</tr>
+<tr data-sourcepos="132:1-132:68">
+<td data-sourcepos="132:2-132:13">Navigation</td>
+<td data-sourcepos="132:15-132:52">Edit.PreviousMethod</td>
+<td data-sourcepos="132:54-132:67"><code>M-{</code></td>
+</tr>
+<tr data-sourcepos="133:1-133:68">
+<td data-sourcepos="133:2-133:13">Navigation</td>
+<td data-sourcepos="133:15-133:52">Edit.ScrollLineCenter</td>
+<td data-sourcepos="133:54-133:67"><code>C-l</code></td>
+</tr>
+<tr data-sourcepos="134:1-134:68">
+<td data-sourcepos="134:2-134:13">Navigation</td>
+<td data-sourcepos="134:15-134:52">Edit.ToggleAllOutling</td>
+<td data-sourcepos="134:54-134:67"><code>C-u,M-c</code></td>
+</tr>
+<tr data-sourcepos="135:1-135:68">
+<td data-sourcepos="135:2-135:13">Navigation</td>
+<td data-sourcepos="135:15-135:52">Edit.ToggleOutlingExpansion</td>
+<td data-sourcepos="135:54-135:67"><code>C-i</code></td>
+</tr>
+<tr data-sourcepos="136:1-136:68">
+<td data-sourcepos="136:2-136:13">Navigation</td>
+<td data-sourcepos="136:15-136:52">Edit.WordNext</td>
+<td data-sourcepos="136:54-136:67"><code>M-f</code></td>
+</tr>
+<tr data-sourcepos="137:1-137:68">
+<td data-sourcepos="137:2-137:13">Navigation</td>
+<td data-sourcepos="137:15-137:52">Edit.WordPrevious</td>
+<td data-sourcepos="137:54-137:67"><code>M-b</code></td>
+</tr>
+<tr data-sourcepos="138:1-138:68">
+<td data-sourcepos="138:2-138:13">Navigation</td>
+<td data-sourcepos="138:15-138:52">ReSharper.ReSharper_GotoRecentFiles</td>
+<td data-sourcepos="138:54-138:67"><code>M-x,b</code></td>
+</tr>
+<tr data-sourcepos="139:1-139:68">
+<td data-sourcepos="139:2-139:13">Navigation</td>
+<td data-sourcepos="139:15-139:52">Team.TeamExplorerSearch</td>
+<td data-sourcepos="139:54-139:67"><code>C-x,g</code></td>
+</tr>
+<tr data-sourcepos="140:1-140:68">
+<td data-sourcepos="140:2-140:13">Navigation</td>
+<td data-sourcepos="140:15-140:52">View.C#Interactive</td>
+<td data-sourcepos="140:54-140:67"><code>C-c,i</code></td>
+</tr>
+<tr data-sourcepos="141:1-141:68">
+<td data-sourcepos="141:2-141:13">Navigation</td>
+<td data-sourcepos="141:15-141:52">Window.NewVerticalTabGroup</td>
+<td data-sourcepos="141:54-141:67"><code>C-x,&amp;#124;</code></td>
+</tr>
+<tr data-sourcepos="142:1-142:68">
+<td data-sourcepos="142:2-142:13">Navigation</td>
+<td data-sourcepos="142:15-142:52">Window.PreviousTabGroup</td>
+<td data-sourcepos="142:54-142:67"><code>C-x,1</code></td>
+</tr>
+<tr data-sourcepos="143:1-143:68">
+<td data-sourcepos="143:2-143:13">Edit</td>
+<td data-sourcepos="143:15-143:52">Build.BuildSolution</td>
+<td data-sourcepos="143:54-143:67"><code>C-c,b</code></td>
+</tr>
+<tr data-sourcepos="144:1-144:68">
+<td data-sourcepos="144:2-144:13">Edit</td>
+<td data-sourcepos="144:15-144:52">Build.RebuildSolution</td>
+<td data-sourcepos="144:54-144:67"><code>C-c,r</code></td>
+</tr>
+<tr data-sourcepos="145:1-145:68">
+<td data-sourcepos="145:2-145:13">Edit</td>
+<td data-sourcepos="145:15-145:52">CodeMaid.JoinLine</td>
+<td data-sourcepos="145:54-145:67"><code>C-c,j</code></td>
+</tr>
+<tr data-sourcepos="146:1-146:68">
+<td data-sourcepos="146:2-146:13">Edit</td>
+<td data-sourcepos="146:15-146:52">CodeMaid.SortLines</td>
+<td data-sourcepos="146:54-146:67"><code>M-x,s</code></td>
+</tr>
+<tr data-sourcepos="147:1-147:68">
+<td data-sourcepos="147:2-147:13">Edit</td>
+<td data-sourcepos="147:15-147:52">Debug.Start</td>
+<td data-sourcepos="147:54-147:67"><code>C-c,d</code></td>
+</tr>
+<tr data-sourcepos="148:1-148:68">
+<td data-sourcepos="148:2-148:13">Edit</td>
+<td data-sourcepos="148:15-148:52">Edit.BackwardDelete</td>
+<td data-sourcepos="148:54-148:67"><code>C-h</code></td>
+</tr>
+<tr data-sourcepos="149:1-149:68">
+<td data-sourcepos="149:2-149:13">Edit</td>
+<td data-sourcepos="149:15-149:52">Edit.BackwardDelete</td>
+<td data-sourcepos="149:54-149:67"><code>M-h</code></td>
+</tr>
+<tr data-sourcepos="150:1-150:68">
+<td data-sourcepos="150:2-150:13">Edit</td>
+<td data-sourcepos="150:15-150:52">Edit.BreakLine</td>
+<td data-sourcepos="150:54-150:67"><code>C-m</code></td>
+</tr>
+<tr data-sourcepos="151:1-151:68">
+<td data-sourcepos="151:2-151:13">Edit</td>
+<td data-sourcepos="151:15-151:52">Edit.Capitalize</td>
+<td data-sourcepos="151:54-151:67"><code>M-c</code></td>
+</tr>
+<tr data-sourcepos="152:1-152:68">
+<td data-sourcepos="152:2-152:13">Edit</td>
+<td data-sourcepos="152:15-152:52">Edit.CommentSelection</td>
+<td data-sourcepos="152:54-152:67"><code>M-;</code></td>
+</tr>
+<tr data-sourcepos="153:1-153:68">
+<td data-sourcepos="153:2-153:13">Edit</td>
+<td data-sourcepos="153:15-153:52">Edit.Delete</td>
+<td data-sourcepos="153:54-153:67"><code>C-d</code></td>
+</tr>
+<tr data-sourcepos="154:1-154:68">
+<td data-sourcepos="154:2-154:13">Edit</td>
+<td data-sourcepos="154:15-154:52">Edit.InsertSnippet</td>
+<td data-sourcepos="154:54-154:67"><code>C-,</code></td>
+</tr>
+<tr data-sourcepos="155:1-155:68">
+<td data-sourcepos="155:2-155:13">Edit</td>
+<td data-sourcepos="155:15-155:52">Edit.LineCut</td>
+<td data-sourcepos="155:54-155:67"><code>C-k</code></td>
+</tr>
+<tr data-sourcepos="156:1-156:68">
+<td data-sourcepos="156:2-156:13">Edit</td>
+<td data-sourcepos="156:15-156:52">Edit.LineDownExtendColumn</td>
+<td data-sourcepos="156:54-156:67"><code>M-.</code></td>
+</tr>
+<tr data-sourcepos="157:1-157:68">
+<td data-sourcepos="157:2-157:13">Edit</td>
+<td data-sourcepos="157:15-157:52">Edit.LineUpExtendColumn</td>
+<td data-sourcepos="157:54-157:67"><code>M-,</code></td>
+</tr>
+<tr data-sourcepos="158:1-158:68">
+<td data-sourcepos="158:2-158:13">Edit</td>
+<td data-sourcepos="158:15-158:52">Edit.MakeLowercase</td>
+<td data-sourcepos="158:54-158:67"><code>M-l</code></td>
+</tr>
+<tr data-sourcepos="159:1-159:68">
+<td data-sourcepos="159:2-159:13">Edit</td>
+<td data-sourcepos="159:15-159:52">Edit.MakeUppercase</td>
+<td data-sourcepos="159:54-159:67"><code>M-u</code></td>
+</tr>
+<tr data-sourcepos="160:1-160:68">
+<td data-sourcepos="160:2-160:13">Edit</td>
+<td data-sourcepos="160:15-160:52">Edit.Paste</td>
+<td data-sourcepos="160:54-160:67"><code>C-y</code></td>
+</tr>
+<tr data-sourcepos="161:1-161:68">
+<td data-sourcepos="161:2-161:13">Edit</td>
+<td data-sourcepos="161:15-161:52">Edit.SelectCurrentWord</td>
+<td data-sourcepos="161:54-161:67"><code>C-SPC</code></td>
+</tr>
+<tr data-sourcepos="162:1-162:68">
+<td data-sourcepos="162:2-162:13">Edit</td>
+<td data-sourcepos="162:15-162:52">Edit.UncommentSelection</td>
+<td data-sourcepos="162:54-162:67"><code>M-:</code></td>
+</tr>
+<tr data-sourcepos="163:1-163:68">
+<td data-sourcepos="163:2-163:13">Edit</td>
+<td data-sourcepos="163:15-163:52">Edit.Undo</td>
+<td data-sourcepos="163:54-163:67"><code>M-/</code></td>
+</tr>
+<tr data-sourcepos="164:1-164:68">
+<td data-sourcepos="164:2-164:13">Edit</td>
+<td data-sourcepos="164:15-164:52">File.Close</td>
+<td data-sourcepos="164:54-164:67"><code>C-x,k</code></td>
+</tr>
+<tr data-sourcepos="165:1-165:68">
+<td data-sourcepos="165:2-165:13">Edit</td>
+<td data-sourcepos="165:15-165:52">File.SaveSelection</td>
+<td data-sourcepos="165:54-165:67"><code>C-x,C-s</code></td>
+</tr>
+<tr data-sourcepos="166:1-166:68">
+<td data-sourcepos="166:2-166:13">Edit</td>
+<td data-sourcepos="166:15-166:52">Project.AddNewItem</td>
+<td data-sourcepos="166:54-166:67"><code>C-c,s</code></td>
+</tr>
+<tr data-sourcepos="167:1-167:68">
+<td data-sourcepos="167:2-167:13">Edit</td>
+<td data-sourcepos="167:15-167:52">ReSharpe._ReSharper_DuplicateText</td>
+<td data-sourcepos="167:54-167:67"><code>C-c,p</code></td>
+</tr>
+<tr data-sourcepos="168:1-168:68">
+<td data-sourcepos="168:2-168:13">Edit</td>
+<td data-sourcepos="168:15-168:52">ReSharper.ReSharper_GotoRelatedFile</td>
+<td data-sourcepos="168:54-168:67"><code>C-c,;</code></td>
+</tr>
+<tr data-sourcepos="169:1-169:68">
+<td data-sourcepos="169:2-169:13">Edit</td>
+<td data-sourcepos="169:15-169:52">ReSharper.ReSharper_GotoText</td>
+<td data-sourcepos="169:54-169:67"><code>C-c,g</code></td>
+</tr>
+<tr data-sourcepos="170:1-170:68">
+<td data-sourcepos="170:2-170:13">Edit</td>
+<td data-sourcepos="170:15-170:52">Tools.ManageNuGetPackagesforSolution</td>
+<td data-sourcepos="170:54-170:67"><code>C-c,n</code></td>
+</tr>
+<tr data-sourcepos="171:1-171:68">
+<td data-sourcepos="171:2-171:13">Edit</td>
+<td data-sourcepos="171:15-171:52">Tools.Options</td>
+<td data-sourcepos="171:54-171:67"><code>M-0</code></td>
+</tr>
+<tr data-sourcepos="172:1-172:68">
+<td data-sourcepos="172:2-172:13">Edit</td>
+<td data-sourcepos="172:15-172:52">View.PackageManagerConsole</td>
+<td data-sourcepos="172:54-172:67"><code>C-q,1</code></td>
+</tr>
+</tbody>
+</table>
+</div><style data-emotion-css="k022ln">.css-k022ln > .heading{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-bottom:4.375rem;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.css-k022ln > .heading > .avatar{height:50px;width:50;margin-right:8px;border-radius:21px;}.css-k022ln > .heading > .description > a{color:#58463C;}.css-k022ln > .heading > .description > a:hover{color:#80695F;}</style><div class="css-k022ln ewgr1al0"><div class="heading"><img class="avatar" src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg" alt="nabinno"/><div class="description">Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br/><a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a> / <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a> / <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a> / <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a> / <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a></div></div></div></div><style data-emotion-css="1r17nfx">.css-1r17nfx{box-shadow:none;color:inherit;display:block;-webkit-text-decoration:none;text-decoration:none;}</style><a class="css-1r17nfx" href="/posts/66"><style data-emotion-css="xbv8og">.css-xbv8og{height:100%;background-color:white;border-radius:8px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border-bottom:1px solid #eee;padding:20px 12px;}@media (min-width:624px){.css-xbv8og{padding-left:0;padding-right:0;}}.css-xbv8og:hover .title{color:#80695F;}</style><div class="css-xbv8og"><style data-emotion-css="19idom">.css-19idom{margin-bottom:8px;}</style><div class="css-19idom eff00rj1"><style data-emotion-css="lhqszh">.css-lhqszh{line-height:1.4;background-color:white;font-weight:600;display:inline-block;font-size:12px;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;border-style:solid;border-color:rgb(221,221,221);border-image:initial;margin:0px 8px 4px 0px;padding:4px 6px;border-radius:3px;border-width:0px;}</style><div class="css-lhqszh eff00rj0">blog</div><style data-emotion-css="jsyva2">.css-jsyva2{margin-bottom:1px;font-size:18px;line-height:1.48;color:#1a202c;}</style><h3 class="title css-jsyva2 eff00rj2">On Blahfe</h3><style data-emotion-css="1p4gbp4">.css-1p4gbp4{color:#1a202c;opacity:0.6;font-size:14px;line-height:1.6;word-break:break-all;overflow-y:hidden;max-height:67.2px;}</style><p class="css-1p4gbp4 eff00rj3">txt 
+
+（小学校の感想文より） ぼくは、二年の時、友達と自転車で、じゅくから帰ってくるとちゅう、トラックに足をふまれてしまいました。おほりの近くの道路でトラックが来たから、よけようとした時、ころん</p></div><style data-emotion-css="8xl60i">.css-8xl60i{margin-top:auto;}</style><div class="css-8xl60i eff00rj4"><style data-emotion-css="2qp2g2">.css-2qp2g2{font-size:12px;font-weight:700;color:#666;}.css-2qp2g2:after{content:' ';width:1px;height:100%;background-color:#ddd;display:inline-block;}</style><time class="css-2qp2g2 eff00rj5">2017/01/31</time><style data-emotion-css="om1c75">.css-om1c75{font-size:12px;margin-left:4px;}.css-om1c75:before{content:'#';}</style><span class="css-om1c75 eff00rj6">blahfe</span></div></div></a><a class="css-1r17nfx" href="/posts/61"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/health</div><h3 class="title css-jsyva2 eff00rj2">ElixirとRaspberry PiでPM2.5などの環境データを定点観察し、目・喉の痛みに備える</h3><p class="css-1p4gbp4 eff00rj3">&gt; PROBLEMPROBLEM 
+
+- 以前からオフィスに行くと目や喉が痛くなることがあったので、自分の体調なのか環境なのか原因を切り分けるために汚染計測器「Dienmern DM106A」を購入 </p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2018/12/22</time><span class="css-om1c75 eff00rj6">elixir</span><span class="css-om1c75 eff00rj6">raspberry-pi</span><span class="css-om1c75 eff00rj6">particulates</span><span class="css-om1c75 eff00rj6">physiology</span></div></div></a><a class="css-1r17nfx" href="/posts/65"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">LYSE本を読む</h3><p class="css-1p4gbp4 eff00rj3">&gt; PROBLEMPROBLEM 
+
+- Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
+- Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想がで</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2017/04/29</time><span class="css-om1c75 eff00rj6">erlang</span><span class="css-om1c75 eff00rj6">elixir</span></div></div></a></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/54";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-c2af0f9bcfb46c63126b.js"],"app":["/app-9871132b88557cd03cda.js"],"component---src-pages-404-tsx":["/component---src-pages-404-tsx-7a73fce44527957a28a5.js"],"component---src-templates-post-tsx":["/component---src-templates-post-tsx-57a3528f2ea549989519.js"],"component---src-templates-posts-tsx":["/component---src-templates-posts-tsx-cebecf5a0176658114a4.js"]};/*]]>*/</script><script src="/polyfill-c2af0f9bcfb46c63126b.js" nomodule=""></script><script src="/component---src-templates-post-tsx-57a3528f2ea549989519.js" async=""></script><script src="/component---src-templates-posts-tsx-cebecf5a0176658114a4.js" async=""></script><script src="/commons-9cdc680d0978a25e3e04.js" async=""></script><script src="/styles-e9d24b1846c7d6eb9685.js" async=""></script><script src="/app-9871132b88557cd03cda.js" async=""></script><script src="/framework-dbb498007a7447f28d8e.js" async=""></script><script src="/webpack-runtime-7db1496f8af88a51c8ad.js" async=""></script></body></html>
