@@ -1,4 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 11 Jan 2021 18:26:59 GMT</lastBuildDate><item><title><![CDATA[ネクイノ開発者ブログ：整理したい私はITILをかぶる、PlantUMLへの愛]]></title><description><![CDATA[入社後8ヶ月、年の瀬ということで振り返り記事を書くことにしました。テーマはPlantUMLです。]]></description><link>https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</link><guid isPermaLink="false">https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</guid><pubDate>Wed, 30 Dec 2020 11:30:00 GMT</pubDate></item><item><title><![CDATA[WSL2時代のDocker開発スタイル]]></title><description><![CDATA[> PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 12 Jan 2021 10:08:39 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CSMという言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+
+- ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションを大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃でesaの操作感に勝てるものはなかった 
+- とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションを大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃でesaの操作感に勝てるものはなかった 
+- さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃でesaの操作感に勝てるものはなかった   > SOLUTIONSOLUTION 
+
+というわけで、esaをHeadless CMSとして使うことにしました。 
+
+やってることは昔のMovableTypeそのもので懐かしかったです。コンテンツを別システムで管理しビルドサーバーに当該コンテンツを流し込みリビルド、最後にホストサーバーにアップロードというワークフロー。今はJAMStackの文脈で語られているようです。 
+
+このHeadless CMSが昔と違うのはコンテンツ作成に集中できること。CI周りが発達したので一度ワークフローを組み立てれば後は自動でコンテンツを生成できます。   > やり方やり方 
+
+- esa.io でゆるふわ情報共有 - Middleman Blog への Export サンプル付き #esa_io - Qiita
+- 技術ブログを支える技術（Gatsby + esaio） - mottox2 blog
+- Next.jsとesaを使った個人サイト構築 | corocn.dev 
+
+それほど時間をかけられなかったので、上記3記事の中で手軽さを考慮しmottox2さんのソースコードを拝借しました。ありがとうございます。 
+
+- 作ったレポジトリ：nabinno/nabinno.github.io: On Blahfe - Nab's Github Pages    > シークエンス図シークエンス図 
+
+私が手を入れたのはコンポーネントを削りGatsby Blog Starterに寄せたのと、デプロイ方法を使い慣れたCircleCIに変えたくらいです。 
+
+GitHub PagesにはVercelのような便利なWebhookがないので、esaで実装されたGitHub Webhook連携を使いそれをトリガーにCircleCIジョブを走らせています。 
+
+   > CircleCIジョブCircleCIジョブ 
+
+また、CircleCIジョブは何の変哲もないもので、NodeJSを叩いてGitプッシュしているくらいです。先ほどのGitHub Webhookと似た感じの泥臭いワークフローは [skip ci] コメントの追加があります。当該コメントを入れないとジョブが再帰的に走り続けるので出口で明示してあります。   yml 
+
+version: 2.1 jobs: build_deploy: docker: - image: circleci/node:12.4 steps: - checkout - run: name: Install NPM command: npm install - run: name: Build command: npm run clean && npm run build - add_ssh_keys: fingerprints: - "{foo}" - deploy: name: Deploy command: | git config --global user.email "nab+circleci@blahfe.com" git config --global user.name "nabinno+circleci" git add . git commit -m "[skip ci]Run npm run clean && npm run build." git push origin master workflows: build_deploy: jobs: - build_deploy: filters: branches: only: master     > WRAPUPWRAPUP 
+
+とまあ大した作業内容ではないのですが、久しぶりに昔懐かしのMovableTypeのリビルドを思い出しつつ、副産物として全く縁遠かったNetlifyとVercelの位置づけを薄らと感じ取れました。]]></description><link>https://nabinno.github.io/posts/67</link><guid isPermaLink="false">67</guid><pubDate>Mon, 18 Jan 2021 00:00:00 GMT</pubDate></item><item><title><![CDATA[ネクイノ開発者ブログ：整理したい私はITILをかぶる、PlantUMLへの愛]]></title><description><![CDATA[入社後8ヶ月、年の瀬ということで振り返り記事を書くことにしました。テーマはPlantUMLです。]]></description><link>https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</link><guid isPermaLink="false">https://nextinnovation-tec.hatenablog.com/entry/plantuml-to-itil</guid><pubDate>Wed, 30 Dec 2020 11:30:00 GMT</pubDate></item><item><title><![CDATA[WSL2時代のDocker開発スタイル]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - あたらしくでたWSL2によって以前書いた記事からだいぶ状況が変わった 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
 - 主な変更点 WSLのアーキテクチャが2種類になり、WSLはその2つのアーキテクチャを管理する機能に変わった WSL1 Windows Subsystem for Linux上のLinux (LXCore/Lxss) WSL2 軽量Hyper-V上のLinux (Linux Kernel) /procや/sysなどの特殊ファイルもふくめた共有プロトコル「9P」が実装された Win32側の9Pクライアント 9prdr.sys WSL側の9Pクライアント /init 
