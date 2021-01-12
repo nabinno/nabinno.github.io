@@ -9,7 +9,6 @@ jobs:
       - run:
           name: Install NPM
           command: npm install
-      - setup_remote_docker
       - run:
           name: Build
           command: npm run clean && npm run build

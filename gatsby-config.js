@@ -28,6 +28,12 @@ module.exports = {
     },
     `gatsby-transformer-yaml`,
     `gatsby-plugin-emotion`,
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: 'UA-314558-24',
+      },
+    },
     `gatsby-plugin-react-helmet`,
     'gatsby-plugin-remove-serviceworker',
     {
