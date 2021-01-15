@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 12:56:45 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 13:12:52 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -123,49 +123,49 @@ $ fwup.exe -a -i _build/rpi0_dev/nerves/images/hello_nerves.fw -t complete -d $(
 
 Win32側のIDEをつかっているユーザーはパフォーマンス上の不満がまだあるかもしれませんが、WSLでDockerをつかったWebアプリケーション開発は十分できる、と言えそうです。つまり、Linux・macOS・WindowsによるWebアプリケーション開発は十分共有できる、と。 
 
-いい時代になりました。]]></description><link>https://nabinno.github.io/posts/64</link><guid isPermaLink="false">64</guid><pubDate>Sat, 06 Jul 2019 00:00:00 GMT</pubDate></item><item><title><![CDATA[イケてるしヤバい言語REBOLの後継Redでクライアントソフトをつくった話]]></title><description><![CDATA[> PROBLEMPROBLEM 
+いい時代になりました。]]></description><link>https://nabinno.github.io/posts/64</link><guid isPermaLink="false">64</guid><pubDate>Sat, 06 Jul 2019 00:00:00 GMT</pubDate></item><item><title><![CDATA[イケてるしヤバい言語REBOLの後継Redでクライアントソフトをつくった話]]></title><description><![CDATA[Redという言語はご存じでしょうか? 一度触ったら癖になる手触りで一目見て虜になりました。新年早々の恋です。   > PROBLEMPROBLEM 
 
 - クロスプラットフォーム用のクライアントソフトをつくるにあたり 重たいフレームワークが多い 汎用的な言語をつかってるものが多く、そのためライブラリー等の依存関係が多くなりやすい 
 - 重たいフレームワークが多い
 - 汎用的な言語をつかってるものが多く、そのためライブラリー等の依存関係が多くなりやすい   > SOLUTIONSOLUTION 
 
-というわけで、年明け見つけたRedがシンプルだったのでつかってみた。題材は以前つくったEmacsライブラリ「esa.el」の移植だ。 
+というわけで、年明け見つけたRedがシンプルだったので使ってみました。題材は以前つくったEmacsライブラリ「esa.el」の移植です。 
 
 https://github.com/nabinno/esa.red   > やったことやったこと   > エディターエディター 
 
-構文がすなおなので特にエディタは関係なさそうだったけど、慣れ親しんでるEmacsに「Skrylar/red.el」を適用した。その際、 red-font-lock-keywords と red-indent-line に足りない箇所があったのでオーバーライドした。   > 糖衣構文の適用糖衣構文の適用 
+構文がすなおなので特にエディタは関係なさそうだったけど、慣れ親しんでるEmacsに「Skrylar/red.el」を適用した。その際、 red-font-lock-keywords と red-indent-line に足りない箇所があったのでオーバーライドしました。   > 糖衣構文の適用糖衣構文の適用 
 
-RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認した。その中でどうしても慣れない表現が2つあったので糖衣構文を実装（nabinno/red-elixir）。 
+RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認しました。その中でどうしても慣れない表現が2つあったので糖衣構文を実装（nabinno/red-elixir）。 
 
 1. compose 
 
-ブロック内の変数を評価しブロックとして返す関数 compose は、VIDのフェイス更新によくつかわれる。HTML/JavaScripでいうところDOM更新にあたるものといえばわかるだろう。頻繁に「 compose [foo (bar)] 」のような表現がつづくとほかの変数や関数とまざり可読性がおちるので、Elixirのシジルを参考に compose 関数を省略した。こんな感じ。 
+ブロック内の変数を評価しブロックとして返す関数 compose は、VIDのフェイス更新によく使われます。HTML/JavaScripでいうところDOM更新にあたるものといえば分かるでしょうか。頻繁に「 compose [foo (bar)] 」のような表現がつづくとほかの変数や関数とまざり可読性がおちるので、Elixirのシジルを参考に compose 関数を省略しました。こんな感じ。 
 
 ;-- before compose [foo (bar)] ;-- after ~c[foo (bar)]  
 
 2. 関数の入れ子 
 
-素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよくつかう。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入した。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼなかった。あってもこのくらい。   red 
+素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよく使います。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入しました。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼありませんでした。あってもこのくらいです。   red 
 
 ;-- before rejoin collect [ foreach d data [ keep rejoin [d " "] ] ] ;-- after data .[ |> Series/map 'd [rejoin [d " "]] |> rejoin ]     > タスクランナーの用意タスクランナーの用意 
 
-今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリをつかっている。ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意した（nabinno/hot、nabinno/mods）。 
+今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリを使っています。ライブラリパッケージはインストールはgit submodulesでいいが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意しました（nabinno/hot、nabinno/mods）。 
 
 タスクランナーインストール後、パッケージのインストールから呼び出しまでの流れ 
 
-RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了する。   sh 
+RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了します。   sh 
 
 > mkdir -p ~/.local/bin > wget https://github.com/nabinno/hot/releases/download/0.0.3/hot-linux -O ~/.local/bin/hot > chmod 744 ~/.local/bin/hot   
 
-パッケージ管理はElixirのmixを参考にタスクランナー管理ファイル内に定義する。   sh 
+パッケージ管理はElixirのmixを参考にタスクランナー管理ファイル内に定義します。   sh 
 
 > hot cmd/install https://raw.githubusercontent.com/nabinno/mods/master/mods.red > cat hots.red Red [] hots: context [ mods: [ red-elixir #(init: %init.red git: https://github.com/nabinno/red-elixir) json #(init: %json.red git: https://github.com/rebolek/red-tools) http-tools #(init: %http-tools.red git: https://github.com/rebolek/red-tools) ] ] > hot mods/get   
 
-ビルド時は #include をつかうのでパッケージ呼び出し機能はつかえないが、コマンドラインREPLで挙動確認している際は do/args %require をつかう。   sh 
+ビルド時は #include をつかうのでパッケージ呼び出し機能は使えないが、コマンドラインREPLで挙動確認している際は do/args %require を使います。   sh 
 
 > red >> do/args %require [red-elixir] >> 1 .. 10 .[ |> Series/map 'i [i * 2] |> Series/map 'i [i + 1] ] == [3 5 7 9 11 13 15 17 19 21]     > WRAPUPWRAPUP 
 
-Redは既存のフレームワークと比べるとまだまだ機能不足感がぬぐえないが、それを補えるだけの表現力をもっていた。]]></description><link>https://nabinno.github.io/posts/63</link><guid isPermaLink="false">63</guid><pubDate>Sun, 31 Mar 2019 00:00:00 GMT</pubDate></item><item><title><![CDATA[Elixirではてなブックマーク]]></title><description><![CDATA[> PROBLEMPROBLEM 
+Redは既存のフレームワークと比べるとまだまだ機能不足感がぬぐえないが、それを補えるだけの表現力をもっていました。やはり手触りが良いです。]]></description><link>https://nabinno.github.io/posts/63</link><guid isPermaLink="false">63</guid><pubDate>Sun, 31 Mar 2019 00:00:00 GMT</pubDate></item><item><title><![CDATA[Elixirではてなブックマーク]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - フィードリーダーで記事を読んだ後にはてなブックマーク（ブクマ）するとフィード消化するのに時間がかかる フィードをそのままブクマしていると下記の問題がでてくる あとで確認することができない 読みたくない記事をブクマしてしまう 適切でないURLでブクマしてしまう 
 - フィードをそのままブクマしていると下記の問題がでてくる あとで確認することができない 読みたくない記事をブクマしてしまう 適切でないURLでブクマしてしまう 
