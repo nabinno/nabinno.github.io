@@ -78,54 +78,58 @@
 </tr>
 </tbody>
 </table>
-<p data-sourcepos="30:1-30:246">次に、基本構成はGrovePiを参考にしました。発行処理はElixirでうまくいかないケースがあったのでまずはPython/ErlPortで行いました。後々Elixirに移行できるようにマクロにしてあります。</p>
+<p data-sourcepos="30:1-30:240">次に、基本構成はGrovePiを参考にしました。発行処理はElixirでうまくいかないケースがあったのでまずはPython/ErlPortで行いました。後々Elixirに移行できるようにマクロにしました。</p>
 <h2 data-sourcepos="32:1-32:73" id="2-3-0" name="2-3-0">
 <a class="anchor" id="5日ほど稼働してわかったこと・見立て、今後の課題" name="5%E6%97%A5%E3%81%BB%E3%81%A9%E7%A8%BC%E5%83%8D%E3%81%97%E3%81%A6%E3%82%8F%E3%81%8B%E3%81%A3%E3%81%9F%E3%81%93%E3%81%A8%E3%83%BB%E8%A6%8B%E7%AB%8B%E3%81%A6%E3%80%81%E4%BB%8A%E5%BE%8C%E3%81%AE%E8%AA%B2%E9%A1%8C" href="#5%E6%97%A5%E3%81%BB%E3%81%A9%E7%A8%BC%E5%83%8D%E3%81%97%E3%81%A6%E3%82%8F%E3%81%8B%E3%81%A3%E3%81%9F%E3%81%93%E3%81%A8%E3%83%BB%E8%A6%8B%E7%AB%8B%E3%81%A6%E3%80%81%E4%BB%8A%E5%BE%8C%E3%81%AE%E8%AA%B2%E9%A1%8C" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="5日ほど稼働してわかったこと・見立て、今後の課題"> &gt; 5日ほど稼働してわかったこと・見立て、今後の課題</span></a>5日ほど稼働してわかったこと・見立て、今後の課題</h2>
 <a href="https://img.esa.io/uploads/production/attachments/16651/2021/01/12/97367/53e18bfb-5979-43a7-8e40-ce8e389eac39.png" target="_blank" rel="noopener noreferrer"><img width="1983" alt="thumbnail" src="https://img.esa.io/uploads/production/attachments/16651/2021/01/12/97367/53e18bfb-5979-43a7-8e40-ce8e389eac39.png"></a>
-<ul data-sourcepos="35:1-46:0">
-<li data-sourcepos="35:1-36:294">オフィスの空気清浄機「Hitachi EP-LVG110」はPMをきちんとフィルターしていた
-<ul data-sourcepos="36:5-36:294">
-<li data-sourcepos="36:5-36:294">ただし、空気清浄機はTVOCには効果がなく、これは<a href="https://www.quantifiedbob.com/understanding-my-indoor-environment-part-1-air-quality/" target="_blank" rel="noopener noreferrer">Troia氏</a>や<a href="https://www.nippon-chem.co.jp/dcms_media/other/cre2000-9.pdf" target="_blank" rel="noopener noreferrer">加藤氏・苅部氏</a>の考察でも言及されている</li>
+<p data-sourcepos="35:1-35:289">最後に、分かったこと、見立てですが、3点あります。2番目に関しては予想通りだったのですが、1番目、3番目に関しては意外であり、疑り深い私としては特に空気清浄機がきちんと機能していたことに驚きました。</p>
+<ol data-sourcepos="37:1-44:0">
+<li data-sourcepos="37:1-38:294">オフィスの空気清浄機「Hitachi EP-LVG110」はPMをきちんとフィルターしていた
+<ul data-sourcepos="38:5-38:294">
+<li data-sourcepos="38:5-38:294">ただし、空気清浄機はTVOCには効果がなく、これは<a href="https://www.quantifiedbob.com/understanding-my-indoor-environment-part-1-air-quality/" target="_blank" rel="noopener noreferrer">Troia氏</a>や<a href="https://www.nippon-chem.co.jp/dcms_media/other/cre2000-9.pdf" target="_blank" rel="noopener noreferrer">加藤氏・苅部氏</a>の考察でも言及されている</li>
 </ul>
 </li>
-<li data-sourcepos="37:1-38:138">人の入りが多い時間帯に空気（TVOCやCO2e）が汚れる
-<ul data-sourcepos="38:5-38:138">
-<li data-sourcepos="38:5-38:138">人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察</li>
+<li data-sourcepos="39:1-40:138">人の入りが多い時間帯に空気（TVOCやCO2e）が汚れる
+<ul data-sourcepos="40:5-40:138">
+<li data-sourcepos="40:5-40:138">人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察</li>
 </ul>
 </li>
-<li data-sourcepos="39:1-41:149">TVOCやCO2eはPMのうごきに連動している（かも）
-<ul data-sourcepos="40:5-41:149">
-<li data-sourcepos="40:5-41:149">チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会の<a href="https://tenki.jp/pm25/" target="_blank" rel="noopener noreferrer">PM2.5分布予測</a>に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた
-<ul data-sourcepos="41:9-41:149">
-<li data-sourcepos="41:9-41:149">
+<li data-sourcepos="41:1-44:0">TVOCやCO2eはPMのうごきに連動している（かも）
+<ul data-sourcepos="42:5-44:0">
+<li data-sourcepos="42:5-44:0">チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会の<a href="https://tenki.jp/pm25/" target="_blank" rel="noopener noreferrer">PM2.5分布予測</a>に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた
+<ul data-sourcepos="43:9-44:0">
+<li data-sourcepos="43:9-44:0">
 <strong>TODO:</strong> PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ</li>
 </ul>
 </li>
 </ul>
 </li>
-<li data-sourcepos="42:1-43:145">TVOCの変動が大きすぎる
-<ul data-sourcepos="43:5-43:145">
-<li data-sourcepos="43:5-43:145">ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均</li>
+</ol>
+<p data-sourcepos="45:1-45:193">課題としてはその性質からして仕方ないのですがTVOCの変動が大きすぎて解読を難しかったです。計測方法等を再度見直す必要がありそうです。</p>
+<ul data-sourcepos="47:1-51:0">
+<li data-sourcepos="47:1-48:145">TVOCの変動が大きすぎる
+<ul data-sourcepos="48:5-48:145">
+<li data-sourcepos="48:5-48:145">ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均</li>
 </ul>
 </li>
-<li data-sourcepos="44:1-46:0">TVOCのスパイクを抑えたい
-<ul data-sourcepos="45:5-46:0">
-<li data-sourcepos="45:5-46:0">
+<li data-sourcepos="49:1-51:0">TVOCのスパイクを抑えたい
+<ul data-sourcepos="50:5-51:0">
+<li data-sourcepos="50:5-51:0">
 <strong>TODO:</strong> <a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%88%E3%83%AC%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A8%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3" target="_blank" rel="noopener noreferrer">ファイトレメディエーション</a>による効果を見ていきたいところ</li>
 </ul>
 </li>
 </ul>
-<h1 data-sourcepos="47:1-47:8" id="3-0-0" name="3-0-0">
+<h1 data-sourcepos="52:1-52:8" id="3-0-0" name="3-0-0">
 <a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
-<p data-sourcepos="48:1-48:45">Elixirは健康管理に向いています。</p>
-<div class="code-block" data-sourcepos="50:1-53:3">
+<p data-sourcepos="53:1-53:207">今回の実験はこれが言いたかっただけという指摘をされるとぐうの音も出ませんが、はっきり言わせてください。そう、Elixirは健康管理に向いています。</p>
+<div class="code-block" data-sourcepos="55:1-58:3">
 <div class="code-filename">
 <i class="fa fa-file-code-o"></i>txt</div>
 <div class="highlight"><pre class="highlight text"><code>「なんか体調がすぐれないなあ...」
 「Elixirちょうだい!」
 </code></pre></div>
 </div>
-<p data-sourcepos="55:1-55:78">という感じです。はい、これが言いたかっただけでした。</p>
+<p data-sourcepos="60:1-60:33">という感じです、はい。</p>
 </div><style data-emotion-css="k022ln">.css-k022ln > .heading{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-bottom:4.375rem;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.css-k022ln > .heading > .avatar{height:50px;width:50;margin-right:8px;border-radius:21px;}.css-k022ln > .heading > .description > a{color:#58463C;}.css-k022ln > .heading > .description > a:hover{color:#80695F;}</style><div class="css-k022ln ewgr1al0"><div class="heading"><img class="avatar" src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg" alt="nabinno"/><div class="description">Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br/><a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a> / <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a> / <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a> / <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a> / <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a></div></div></div></div><style data-emotion-css="1r17nfx">.css-1r17nfx{box-shadow:none;color:inherit;display:block;-webkit-text-decoration:none;text-decoration:none;}</style><a class="css-1r17nfx" href="/posts/63"><style data-emotion-css="xbv8og">.css-xbv8og{height:100%;background-color:white;border-radius:8px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border-bottom:1px solid #eee;padding:20px 12px;}@media (min-width:624px){.css-xbv8og{padding-left:0;padding-right:0;}}.css-xbv8og:hover .title{color:#80695F;}</style><div class="css-xbv8og"><style data-emotion-css="19idom">.css-19idom{margin-bottom:8px;}</style><div class="css-19idom eff00rj1"><style data-emotion-css="lhqszh">.css-lhqszh{line-height:1.4;background-color:white;font-weight:600;display:inline-block;font-size:12px;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;border-style:solid;border-color:rgb(221,221,221);border-image:initial;margin:0px 8px 4px 0px;padding:4px 6px;border-radius:3px;border-width:0px;}</style><div class="css-lhqszh eff00rj0">blog/frontend</div><style data-emotion-css="jsyva2">.css-jsyva2{margin-bottom:1px;font-size:18px;line-height:1.48;color:#1a202c;}</style><h3 class="title css-jsyva2 eff00rj2">イケてるしヤバい言語REBOLの後継Redでクライアントソフトをつくった話</h3><style data-emotion-css="1p4gbp4">.css-1p4gbp4{color:#1a202c;opacity:0.6;font-size:14px;line-height:1.6;word-break:break-all;overflow-y:hidden;max-height:67.2px;}</style><p class="css-1p4gbp4 eff00rj3">Redという言語はご存じでしょうか? 一度触ったら癖になる手触りで一目見て虜になりました。新年早々の恋です。   &gt; PROBLEMPROBLEM 
 
 - クロスプラットフォーム用のクライアントソフト</p></div><style data-emotion-css="8xl60i">.css-8xl60i{margin-top:auto;}</style><div class="css-8xl60i eff00rj4"><style data-emotion-css="2qp2g2">.css-2qp2g2{font-size:12px;font-weight:700;color:#666;}.css-2qp2g2:after{content:' ';width:1px;height:100%;background-color:#ddd;display:inline-block;}</style><time class="css-2qp2g2 eff00rj5">2019/03/31</time><style data-emotion-css="om1c75">.css-om1c75{font-size:12px;margin-left:4px;}.css-om1c75:before{content:'#';}</style><span class="css-om1c75 eff00rj6">red</span><span class="css-om1c75 eff00rj6">esa</span></div></div></a><a class="css-1r17nfx" href="/posts/64"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">WSL2時代のDocker開発スタイル</h3><p class="css-1p4gbp4 eff00rj3">6月13日は狂喜乱舞しました、久しぶりに徹夜するくらい興奮しました。そう、WSL2が出たのですよね。先日やっと私の手元に届いたので早々に検証しました。   &gt; PROBLEMPROBLEM 

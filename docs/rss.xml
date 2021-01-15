@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 13:12:52 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 13:25:28 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -208,25 +208,30 @@ Cachex.keys!(:feed) |> Enum.reject(fn key -> key in [ "excluded_links", "exclude
 
 まず、電子工作は素人ゆえどのセンサーを買えばいいか分からなかったのでDM106Aを分解して各センサーの型番を調べました。DHT011、SDS021はDM106Aとおなじセンサー、HCHOセンサーは信頼性があり手ごろなのがうまく見つけられませんでした。TVOCセンサーはAdafruitが推しているCCS811を採用しました。   > コードの構成コードの構成    item description     AirElixir.Application アプリケーション管理   AirElixir.GoogleSpreadsheets センサーデータ記録   AirElixirSensor.Publisher センサーデータ発行・送信   AirElixirSensor.Subscriber センサーデータ購読・受信    
 
-次に、基本構成はGrovePiを参考にしました。発行処理はElixirでうまくいかないケースがあったのでまずはPython/ErlPortで行いました。後々Elixirに移行できるようにマクロにしてあります。   > 5日ほど稼働してわかったこと・見立て、今後の課題5日ほど稼働してわかったこと・見立て、今後の課題  
+次に、基本構成はGrovePiを参考にしました。発行処理はElixirでうまくいかないケースがあったのでまずはPython/ErlPortで行いました。後々Elixirに移行できるようにマクロにしました。   > 5日ほど稼働してわかったこと・見立て、今後の課題5日ほど稼働してわかったこと・見立て、今後の課題  
 
-- オフィスの空気清浄機「Hitachi EP-LVG110」はPMをきちんとフィルターしていた ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている 
-- ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている
-- 人の入りが多い時間帯に空気（TVOCやCO2e）が汚れる 人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察 
-- 人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察
-- TVOCやCO2eはPMのうごきに連動している（かも） チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
-- チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
-- TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ
+最後に、分かったこと、見立てですが、3点あります。2番目に関しては予想通りだったのですが、1番目、3番目に関しては意外であり、疑り深い私としては特に空気清浄機がきちんと機能していたことに驚きました。 
+
+1. オフィスの空気清浄機「Hitachi EP-LVG110」はPMをきちんとフィルターしていた ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている 
+2. ただし、空気清浄機はTVOCには効果がなく、これはTroia氏や加藤氏・苅部氏の考察でも言及されている
+3. 人の入りが多い時間帯に空気（TVOCやCO2e）が汚れる 人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察 
+4. 人が「出る」時よりも「入る」際に濃度があがるのは、外のVOCが服などに付着しているためと推察
+5. TVOCやCO2eはPMのうごきに連動している（かも） チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
+6. チャート上はEP-LVG110がPM除去しているためわからないが、日本気象協会のPM2.5分布予測に照らしてみるとPM濃度が高い日にTVOC濃度があがっていた TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
+7. TODO: PMがVOCを運んでいる可能性があるので、IQAirなどのAPIから周辺環境のPMデータも取得したいところ 
+
+課題としてはその性質からして仕方ないのですがTVOCの変動が大きすぎて解読を難しかったです。計測方法等を再度見直す必要がありそうです。 
+
 - TVOCの変動が大きすぎる ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均 
 - ポーリング・出力を20分ごとからポーリング3秒ごと・出力20分ごとに変更した、出力データは20分の平均
 - TVOCのスパイクを抑えたい TODO: ファイトレメディエーションによる効果を見ていきたいところ 
 - TODO: ファイトレメディエーションによる効果を見ていきたいところ   > WRAPUPWRAPUP 
 
-Elixirは健康管理に向いています。   txt 
+今回の実験はこれが言いたかっただけという指摘をされるとぐうの音も出ませんが、はっきり言わせてください。そう、Elixirは健康管理に向いています。   txt 
 
 「なんか体調がすぐれないなあ...」 「Elixirちょうだい!」   
 
-という感じです。はい、これが言いたかっただけでした。]]></description><link>https://nabinno.github.io/posts/61</link><guid isPermaLink="false">61</guid><pubDate>Sat, 22 Dec 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 2 認証機能を実装する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+という感じです、はい。]]></description><link>https://nabinno.github.io/posts/61</link><guid isPermaLink="false">61</guid><pubDate>Sat, 22 Dec 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 2 認証機能を実装する]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
 - 拡張にともない技術スタックがふえるのを抑えたい
