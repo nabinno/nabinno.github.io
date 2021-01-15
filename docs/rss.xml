@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 16:14:29 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 16:30:52 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -562,28 +562,27 @@ $ mkdir /home/foo/tmp/app-test-1/front/node_modules $ ln -s /home/foo/tmp/app-te
 5. [すべて削除する] を選択
 6. [ファイルの削除のみ行う] を選択
 7. [初期状態に戻す] を選択
-8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[> PROBLEMPROBLEM 
+8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[先日PyCallの存在を知り、ぜひともベンチマークを取りたいと思った次第です。現状RubyのCSVの読み込みに不満を持っており、そこをどうにか解消したいと考えた次第です。   > PROBLEMPROBLEM 
 
 - 大量のCSVを読み込む際、毎回時間がかかる   > SOLUTIONSOLUTION 
 
-というわけで、Dalibor Nasevicのベンチマーク記事にPyCallのベンチマークをくわえて比較してみることに。記事では CSV.foreach が速いとの結論だった。    kind_of_parse time (real) memory (MB)     1. CSV.read  39.13 866.6   2. CSV.parse  36.16 936.87   3. line by line from String Object 23.39 73.42   4. line by line from IO Object 24.55 0.0   5. CSV.foreach  24.04 0.0      > PyCallのベンチマークPyCallのベンチマーク 
+というわけで、「Dalibor Nasevicのベンチマーク記事」にPyCallのベンチマークをくわえて比較してみることにしました。記事では下記の通り CSV.foreach が速いとの結論でした。    kind_of_parse time (real) memory (MB)     1. CSV.read  39.13 866.6   2. CSV.parse  36.16 936.87   3. line by line from String Object 23.39 73.42   4. line by line from IO Object 24.55 0.0   5. CSV.foreach  24.04 0.0      > PyCallのベンチマークPyCallのベンチマーク 
 
-コードはこんな感じ。   ruby 
+それでは、PyCallのベンチマークを計りましょう。コードは下記のようになります。   ruby 
 
 require_relative './helpers' require 'pycall/import' include PyCall::Import pyimport :pandas, as: :pd print_memory_usage do print_time_spent do csv = pd.read_csv.('data.csv') sum = csv['id'].sum.() puts "Sum: #{sum}" end end   
 
-pyenv との相性が悪いのでSystemインストールしたPythonでたたく。   sh 
+PyCallは pyenv との相性が悪いのでSystemインストールしたPythonでたたきます。   sh 
 
 $ PYTHON=/usr/bin/python3.4 ruby parse_6_pycall.rb Sum: 499999500000 Time: 1.49 Memory: 54.99 MB   
 
 結果    kind_of_parse time (real) memory (MB)     1. CSV.read  39.13 866.6   2. CSV.parse  36.16 936.87   3. line by line from String Object 23.39 73.42   4. line by line from IO Object 24.55 0.0   5. CSV.foreach  24.04 0.0   6. PyCall 1.49 54.99    
 
-16倍の実行速度、 
+はい、結果が出ました。Daliborのベンチマーク記事で一番速かった CSV.foreach より16倍の実行速度となりました。   > WRAPUPWRAPUP 
 
-つかえそう。 
+PyCallのオブジェクトが PyObjectとActiveRecordと相性が悪そうなのと、PythonとRuby双方のメモリー管理が運用を難しくすることから、安易に本番環境のRailsに導入するのは厳しいと思います。 
 
-ただ、PyCallのオブジェクトは PyObject なので、
- Railsだとまだ相性がわるいかなあ。]]></description><link>https://nabinno.github.io/posts/56</link><guid isPermaLink="false">56</guid><pubDate>Mon, 05 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[LYSE本を読む]]></title><description><![CDATA[> PROBLEMPROBLEM 
+ただし、実行回数が限定されたスクリプトなら積極的に使って良いでしょう。]]></description><link>https://nabinno.github.io/posts/56</link><guid isPermaLink="false">56</guid><pubDate>Mon, 05 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[LYSE本を読む]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
 - Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
