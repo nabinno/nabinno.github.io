@@ -28,18 +28,22 @@
 <p data-sourcepos="17:1-17:403">構文がすなおなので特にエディタは関係なさそうでしたが、慣れ親しんでるEmacsに「<a href="https://github.com/Skrylar/red.el" target="_blank" rel="noopener noreferrer">Skrylar/red.el</a>」を適用しました。その際、 <code>red-font-lock-keywords</code> と <code>red-indent-line</code> に足りない箇所があったので<a href="https://github.com/nabinno/dotfiles/blob/master/.emacs.d/lisp/init-red.el" target="_blank" rel="noopener noreferrer">オーバーライドしました</a>。</p>
 <h3 data-sourcepos="19:1-19:25" id="2-1-2" name="2-1-2">
 <a class="anchor" id="糖衣構文の適用" name="%E7%B3%96%E8%A1%A3%E6%A7%8B%E6%96%87%E3%81%AE%E9%81%A9%E7%94%A8" href="#%E7%B3%96%E8%A1%A3%E6%A7%8B%E6%96%87%E3%81%AE%E9%81%A9%E7%94%A8" data-position="2-1-2"><i class="fa fa-link"></i><span class="hidden" data-text="糖衣構文の適用"> &gt; 糖衣構文の適用</span></a>糖衣構文の適用</h3>
-<p data-sourcepos="20:1-20:311">RedはコマンドラインREPLがつかえるので、doc.red-lang.orgとred-by-example.orgをみながらひとつひとつ挙動を確認しました。その中でどうしても慣れない表現が2つあったので糖衣構文を実装（<a href="https://github.com/nabinno/red-elixir" target="_blank" rel="noopener noreferrer">nabinno/red-elixir</a>）。</p>
-<p data-sourcepos="22:1-22:14"><strong>1. compose</strong></p>
-<p data-sourcepos="24:1-24:467">ブロック内の変数を評価しブロックとして返す関数 <code>compose</code> は、VIDのフェイス更新によく使われます。HTML/JavaScripでいうところDOM更新にあたるものといえば分かるでしょうか。頻繁に「 <code>compose [foo (bar)]</code> 」のような表現がつづくとほかの変数や関数とまざり可読性がおちるので、Elixirのシジルを参考に <code>compose</code> 関数を省略しました。こんな感じです。</p>
-<div class="code-block" data-sourcepos="26:1-32:3"><div class="highlight"><pre class="highlight plaintext"><code>;-- before
+<p data-sourcepos="20:1-20:351">RedはコマンドラインREPLがつかえるので、 <a href="https://github.com/red/docs/blob/master/en/SUMMARY.adoc" target="_blank" rel="noopener noreferrer">docs.red-lang.org</a> と<a href="https://www.red-by-example.org/" target="_blank" rel="noopener noreferrer">Red by Example</a>をみながらひとつひとつ挙動を確認しました。その中でどうしても慣れない表現が2つあったので糖衣構文を実装しました。</p>
+<ul data-sourcepos="22:1-23:0">
+<li data-sourcepos="22:1-23:0">実装した糖衣構文 <a href="https://github.com/nabinno/red-elixir" target="_blank" rel="noopener noreferrer">nabinno/red-elixir</a>
+</li>
+</ul>
+<p data-sourcepos="24:1-24:14"><strong>1. compose</strong></p>
+<p data-sourcepos="26:1-26:467">ブロック内の変数を評価しブロックとして返す関数 <code>compose</code> は、VIDのフェイス更新によく使われます。HTML/JavaScripでいうところDOM更新にあたるものといえば分かるでしょうか。頻繁に「 <code>compose [foo (bar)]</code> 」のような表現がつづくとほかの変数や関数とまざり可読性がおちるので、Elixirのシジルを参考に <code>compose</code> 関数を省略しました。こんな感じです。</p>
+<div class="code-block" data-sourcepos="28:1-34:3"><div class="highlight"><pre class="highlight plaintext"><code>;-- before
 compose [foo (bar)]
 
 ;-- after
 ~c[foo (bar)]
 </code></pre></div></div>
-<p data-sourcepos="34:1-34:25"><strong>2. 関数の入れ子</strong></p>
-<p data-sourcepos="36:1-36:444">素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよく使います。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入しました。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼありませんでした。あってもこのくらいです。</p>
-<div class="code-block" data-sourcepos="38:1-51:3">
+<p data-sourcepos="36:1-36:25"><strong>2. 関数の入れ子</strong></p>
+<p data-sourcepos="38:1-38:444">素のRedはイテレーター構文なので、関数の入れ子による可読性低下をおさえるため変数定義をよく使います。個人的には変数は意味のあるものだけ使いたい派なので、パイプを導入しました。といっても、フロントエンドの場合、データ加工はあまりやらないのでつかうケースはほぼありませんでした。あってもこのくらいです。</p>
+<div class="code-block" data-sourcepos="40:1-53:3">
 <div class="code-filename">
 <i class="fa fa-file-code-o"></i>red</div>
 <div class="highlight"><pre class="highlight red"><code>;-- before
@@ -56,12 +60,12 @@ data .[
 ]
 </code></pre></div>
 </div>
-<h3 data-sourcepos="53:1-53:34" id="2-1-3" name="2-1-3">
+<h3 data-sourcepos="55:1-55:34" id="2-1-3" name="2-1-3">
 <a class="anchor" id="タスクランナーの用意" name="%E3%82%BF%E3%82%B9%E3%82%AF%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E3%81%AE%E7%94%A8%E6%84%8F" href="#%E3%82%BF%E3%82%B9%E3%82%AF%E3%83%A9%E3%83%B3%E3%83%8A%E3%83%BC%E3%81%AE%E7%94%A8%E6%84%8F" data-position="2-1-3"><i class="fa fa-link"></i><span class="hidden" data-text="タスクランナーの用意"> &gt; タスクランナーの用意</span></a>タスクランナーの用意</h3>
-<p data-sourcepos="54:1-54:478">今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリを使っています。ライブラリパッケージはインストールはgit submodulesで良いですが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意しました（<a href="https://github.com/nabinno/hot" target="_blank" rel="noopener noreferrer">nabinno/hot</a>、<a href="https://github.com/nabinno/mods" target="_blank" rel="noopener noreferrer">nabinno/mods</a>）。</p>
-<p data-sourcepos="56:1-56:118"><strong>タスクランナーインストール後、パッケージのインストールから呼び出しまでの流れ</strong></p>
-<p data-sourcepos="58:1-58:115">RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了します。</p>
-<div class="code-block" data-sourcepos="60:1-64:3">
+<p data-sourcepos="56:1-56:478">今回は上で実装したライブラリ「red-elixir」のほかにHTTPリクエスト・JSONパーサーライブラリを使っています。ライブラリパッケージはインストールはgit submodulesで良いですが、呼び出しも考えると実装が冗長的になるのでパッケージ管理とタスクランナーをあわせて用意しました（<a href="https://github.com/nabinno/hot" target="_blank" rel="noopener noreferrer">nabinno/hot</a>、<a href="https://github.com/nabinno/mods" target="_blank" rel="noopener noreferrer">nabinno/mods</a>）。</p>
+<p data-sourcepos="58:1-58:118"><strong>タスクランナーインストール後、パッケージのインストールから呼び出しまでの流れ</strong></p>
+<p data-sourcepos="60:1-60:115">RedはGoとおなじくワンバイナリーなので、wgetやcurlだけでインストールが完了します。</p>
+<div class="code-block" data-sourcepos="62:1-66:3">
 <div class="code-filename">
 <i class="fa fa-file-code-o"></i>sh</div>
 <div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> <span class="nb">mkdir</span> <span class="nt">-p</span> ~/.local/bin
@@ -69,8 +73,8 @@ data .[
 <span class="o">&gt;</span> <span class="nb">chmod </span>744 ~/.local/bin/hot
 </code></pre></div>
 </div>
-<p data-sourcepos="66:1-66:111">パッケージ管理はElixirのmixを参考にタスクランナー管理ファイル内に定義します。</p>
-<div class="code-block" data-sourcepos="68:1-81:3">
+<p data-sourcepos="68:1-68:111">パッケージ管理はElixirのmixを参考にタスクランナー管理ファイル内に定義します。</p>
+<div class="code-block" data-sourcepos="70:1-83:3">
 <div class="code-filename">
 <i class="fa fa-file-code-o"></i>sh</div>
 <div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> hot cmd/install https://raw.githubusercontent.com/nabinno/mods/master/mods.red
@@ -87,8 +91,8 @@ hots: context <span class="o">[</span>
 <span class="o">&gt;</span> hot mods/get
 </code></pre></div>
 </div>
-<p data-sourcepos="83:1-83:201">ビルド時は <code>#include</code> をつかうのでパッケージ呼び出し機能は使えないですが、コマンドラインREPLで挙動確認している際は <code>do/args %require</code> を使います。</p>
-<div class="code-block" data-sourcepos="85:1-93:3">
+<p data-sourcepos="85:1-85:201">ビルド時は <code>#include</code> をつかうのでパッケージ呼び出し機能は使えないですが、コマンドラインREPLで挙動確認している際は <code>do/args %require</code> を使います。</p>
+<div class="code-block" data-sourcepos="87:1-95:3">
 <div class="code-filename">
 <i class="fa fa-file-code-o"></i>sh</div>
 <div class="highlight"><pre class="highlight shell"><code><span class="o">&gt;</span> red
@@ -100,9 +104,9 @@ hots: context <span class="o">[</span>
 <span class="o">==</span> <span class="o">[</span>3 5 7 9 11 13 15 17 19 21]
 </code></pre></div>
 </div>
-<h1 data-sourcepos="95:1-95:8" id="3-0-0" name="3-0-0">
+<h1 data-sourcepos="97:1-97:8" id="3-0-0" name="3-0-0">
 <a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
-<p data-sourcepos="96:1-96:292">クライアントソフトを作る中で感じたことは、この1点です。Redは既存のフレームワークと比べるとまだまだ機能不足感が拭えませんが、それを補えるだけの表現力を持っていました。手触りが本当に良い言語でした。</p>
+<p data-sourcepos="98:1-98:292">クライアントソフトを作る中で感じたことは、この1点です。Redは既存のフレームワークと比べるとまだまだ機能不足感が拭えませんが、それを補えるだけの表現力を持っていました。手触りが本当に良い言語でした。</p>
 </div><style data-emotion-css="k022ln">.css-k022ln > .heading{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-bottom:4.375rem;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.css-k022ln > .heading > .avatar{height:50px;width:50;margin-right:8px;border-radius:21px;}.css-k022ln > .heading > .description > a{color:#58463C;}.css-k022ln > .heading > .description > a:hover{color:#80695F;}</style><div class="css-k022ln ewgr1al0"><div class="heading"><img class="avatar" src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg" alt="nabinno"/><div class="description">Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br/><a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a> / <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a> / <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a> / <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a> / <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a></div></div></div></div><style data-emotion-css="1r17nfx">.css-1r17nfx{box-shadow:none;color:inherit;display:block;-webkit-text-decoration:none;text-decoration:none;}</style><a class="css-1r17nfx" href="/posts/53"><style data-emotion-css="xbv8og">.css-xbv8og{height:100%;background-color:white;border-radius:8px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border-bottom:1px solid #eee;padding:20px 12px;}@media (min-width:624px){.css-xbv8og{padding-left:0;padding-right:0;}}.css-xbv8og:hover .title{color:#80695F;}</style><div class="css-xbv8og"><style data-emotion-css="19idom">.css-19idom{margin-bottom:8px;}</style><div class="css-19idom eff00rj1"><style data-emotion-css="lhqszh">.css-lhqszh{line-height:1.4;background-color:white;font-weight:600;display:inline-block;font-size:12px;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;border-style:solid;border-color:rgb(221,221,221);border-image:initial;margin:0px 8px 4px 0px;padding:4px 6px;border-radius:3px;border-width:0px;}</style><div class="css-lhqszh eff00rj0">blog/frontend</div><style data-emotion-css="jsyva2">.css-jsyva2{margin-bottom:1px;font-size:18px;line-height:1.48;color:#1a202c;}</style><h3 class="title css-jsyva2 eff00rj2">Hyper-VモードでLinux OSとAndroid OSを同時使用する</h3><style data-emotion-css="1p4gbp4">.css-1p4gbp4{color:#1a202c;opacity:0.6;font-size:14px;line-height:1.6;word-break:break-all;overflow-y:hidden;max-height:67.2px;}</style><p class="css-1p4gbp4 eff00rj3">Xamarinの開発環境を模索しています。普段はLinux/Hyper-V上でAPIを開発しているのですが、Hyper-VとAndroid Emulatorとの組み合わせがまだ整備されておらず一筋縄で</p></div><style data-emotion-css="8xl60i">.css-8xl60i{margin-top:auto;}</style><div class="css-8xl60i eff00rj4"><style data-emotion-css="2qp2g2">.css-2qp2g2{font-size:12px;font-weight:700;color:#666;}.css-2qp2g2:after{content:' ';width:1px;height:100%;background-color:#ddd;display:inline-block;}</style><time class="css-2qp2g2 eff00rj5">2017/03/09</time><style data-emotion-css="om1c75">.css-om1c75{font-size:12px;margin-left:4px;}.css-om1c75:before{content:'#';}</style><span class="css-om1c75 eff00rj6">android</span><span class="css-om1c75 eff00rj6">smartphone</span><span class="css-om1c75 eff00rj6">visual-studio-emulator-for-android</span><span class="css-om1c75 eff00rj6">surface-book</span><span class="css-om1c75 eff00rj6">android-emulator</span></div></div></a><a class="css-1r17nfx" href="/posts/65"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">LYSE本を読む</h3><p class="css-1p4gbp4 eff00rj3">Elixirの存在を知ったのが2014年7月14日。それからおよそ3年経つというのに一向に理解した気になれないでいます。特にSLAナイン・ナインはなぜその数値なのか腑に落ちないでいました。今回『Lea</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2017/04/29</time><span class="css-om1c75 eff00rj6">erlang</span><span class="css-om1c75 eff00rj6">elixir</span></div></div></a><a class="css-1r17nfx" href="/posts/49"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">HydeをつかってEmacsをJekyllクライアントにする</h3><p class="css-1p4gbp4 eff00rj3">Emacianとしてその殻の中に閉じこもっていたいです。だけど、世間がそれを許さず次々と無理難題を押しつけてくるのです。今回はタスク等から出てきた備忘禄をGitHub Pages（Jekyll）で管理</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2017/02/01</time><span class="css-om1c75 eff00rj6">emacs</span><span class="css-om1c75 eff00rj6">jekyll</span><span class="css-om1c75 eff00rj6">hyde</span><span class="css-om1c75 eff00rj6">github-pages</span></div></div></a></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script>
   
   
