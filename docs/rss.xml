@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 04:21:42 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 05:02:06 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -1759,27 +1759,29 @@ box: ruby:2.4.0 build: steps: - add-ssh-key: host: github.com keyname: GITHUB - 
 - NUnit
 - Moq   > キーバインドキーバインド 
 
-おまけのEmacs風キーバインド。Edit.Emacsメソッドは1級市民ではないのでその周辺で代替。Edit.LineCut、Edit.Outline、ReSharpeのいらないキーバインドは削除。    category command keybind     Navigation CodeMaid.SwitchFile C-c,:   Navigation Edit.CharLeft C-b   Navigation Edit.CharRight C-f   Navigation Edit.DocumentBottom M->   Navigation Edit.DocumentTop M-<   Navigation Edit.GoTo M-g   Navigation Edit.IncrementalSearch C-s   Navigation Edit.LineDown C-n   Navigation Edit.LineEnd C-e   Navigation Edit.LineStart C-a   Navigation Edit.LineUp C-p   Navigation Edit.NextMethod M-}   Navigation Edit.PageDown C-v   Navigation Edit.PageUp M-v   Navigation Edit.PreviousMethod M-{   Navigation Edit.ScrollLineCenter C-l   Navigation Edit.ToggleAllOutling C-u,M-c   Navigation Edit.ToggleOutlingExpansion C-i   Navigation Edit.WordNext M-f   Navigation Edit.WordPrevious M-b   Navigation ReSharper.ReSharper_GotoRecentFiles M-x,b   Navigation Team.TeamExplorerSearch C-x,g   Navigation View.C#Interactive C-c,i   Navigation Window.NewVerticalTabGroup C-x,&#124;   Navigation Window.PreviousTabGroup C-x,1   Edit Build.BuildSolution C-c,b   Edit Build.RebuildSolution C-c,r   Edit CodeMaid.JoinLine C-c,j   Edit CodeMaid.SortLines M-x,s   Edit Debug.Start C-c,d   Edit Edit.BackwardDelete C-h   Edit Edit.BackwardDelete M-h   Edit Edit.BreakLine C-m   Edit Edit.Capitalize M-c   Edit Edit.CommentSelection M-;   Edit Edit.Delete C-d   Edit Edit.InsertSnippet C-,   Edit Edit.LineCut C-k   Edit Edit.LineDownExtendColumn M-.   Edit Edit.LineUpExtendColumn M-,   Edit Edit.MakeLowercase M-l   Edit Edit.MakeUppercase M-u   Edit Edit.Paste C-y   Edit Edit.SelectCurrentWord C-SPC   Edit Edit.UncommentSelection M-:   Edit Edit.Undo M-/   Edit File.Close C-x,k   Edit File.SaveSelection C-x,C-s   Edit Project.AddNewItem C-c,s   Edit ReSharpe._ReSharper_DuplicateText C-c,p   Edit ReSharper.ReSharper_GotoRelatedFile C-c,;   Edit ReSharper.ReSharper_GotoText C-c,g   Edit Tools.ManageNuGetPackagesforSolution C-c,n   Edit Tools.Options M-0   Edit View.PackageManagerConsole C-q,1]]></description><link>https://nabinno.github.io/posts/54</link><guid isPermaLink="false">54</guid><pubDate>Fri, 31 Mar 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Hyper-VモードでLinux OSとAndroid OSを同時使用する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+おまけのEmacs風キーバインド。Edit.Emacsメソッドは1級市民ではないのでその周辺で代替。Edit.LineCut、Edit.Outline、ReSharpeのいらないキーバインドは削除。    category command keybind     Navigation CodeMaid.SwitchFile C-c,:   Navigation Edit.CharLeft C-b   Navigation Edit.CharRight C-f   Navigation Edit.DocumentBottom M->   Navigation Edit.DocumentTop M-<   Navigation Edit.GoTo M-g   Navigation Edit.IncrementalSearch C-s   Navigation Edit.LineDown C-n   Navigation Edit.LineEnd C-e   Navigation Edit.LineStart C-a   Navigation Edit.LineUp C-p   Navigation Edit.NextMethod M-}   Navigation Edit.PageDown C-v   Navigation Edit.PageUp M-v   Navigation Edit.PreviousMethod M-{   Navigation Edit.ScrollLineCenter C-l   Navigation Edit.ToggleAllOutling C-u,M-c   Navigation Edit.ToggleOutlingExpansion C-i   Navigation Edit.WordNext M-f   Navigation Edit.WordPrevious M-b   Navigation ReSharper.ReSharper_GotoRecentFiles M-x,b   Navigation Team.TeamExplorerSearch C-x,g   Navigation View.C#Interactive C-c,i   Navigation Window.NewVerticalTabGroup C-x,&#124;   Navigation Window.PreviousTabGroup C-x,1   Edit Build.BuildSolution C-c,b   Edit Build.RebuildSolution C-c,r   Edit CodeMaid.JoinLine C-c,j   Edit CodeMaid.SortLines M-x,s   Edit Debug.Start C-c,d   Edit Edit.BackwardDelete C-h   Edit Edit.BackwardDelete M-h   Edit Edit.BreakLine C-m   Edit Edit.Capitalize M-c   Edit Edit.CommentSelection M-;   Edit Edit.Delete C-d   Edit Edit.InsertSnippet C-,   Edit Edit.LineCut C-k   Edit Edit.LineDownExtendColumn M-.   Edit Edit.LineUpExtendColumn M-,   Edit Edit.MakeLowercase M-l   Edit Edit.MakeUppercase M-u   Edit Edit.Paste C-y   Edit Edit.SelectCurrentWord C-SPC   Edit Edit.UncommentSelection M-:   Edit Edit.Undo M-/   Edit File.Close C-x,k   Edit File.SaveSelection C-x,C-s   Edit Project.AddNewItem C-c,s   Edit ReSharpe._ReSharper_DuplicateText C-c,p   Edit ReSharper.ReSharper_GotoRelatedFile C-c,;   Edit ReSharper.ReSharper_GotoText C-c,g   Edit Tools.ManageNuGetPackagesforSolution C-c,n   Edit Tools.Options M-0   Edit View.PackageManagerConsole C-q,1]]></description><link>https://nabinno.github.io/posts/54</link><guid isPermaLink="false">54</guid><pubDate>Fri, 31 Mar 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Hyper-VモードでLinux OSとAndroid OSを同時使用する]]></title><description><![CDATA[Xamarinの開発環境を模索しています。普段はLinux/Hyper-V上でAPIを開発しているのですが、Hyper-VとAndroid Emulatorとの組み合わせがまだ整備されておらず一筋縄ではいかなかったのでその備忘となります。   > PROBLEMPROBLEM 
 
-- 普段の開発環境CentOS/Hyper-Vを変更することなく、Xamarinをつかいたい。 CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成。 
-- CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成。
-- Android EmulatorはIntel HAXM＋ホスト型Hypervisor前提のものが多い。 VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい。 なので、APIサーバーはHyper-Vでたてている。 また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。 
-- VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい。 なので、APIサーバーはHyper-Vでたてている。 また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。 
-- なので、APIサーバーはHyper-Vでたてている。
-- また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している。   > SOLUTIONSOLUTION 
+- 普段の開発環境CentOS/Hyper-Vを変更することなく、Xamarinをつかいたい CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成 
+- CentOS/Hyper-V上にAPIサーバーをたてて、XamarinアプリからAPIをたたく構成
+- Android EmulatorはIntel HAXM＋ホスト型Hypervisor前提のものが多い VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい なので、APIサーバーはHyper-Vでたてている また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している 
+- VirtualBoxなどホスト型HypervisorだとVMがよくクラッシュしてつらい なので、APIサーバーはHyper-Vでたてている また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している 
+- なので、APIサーバーはHyper-Vでたてている
+- また、オフィス移動が多いのでネットワーク環境はおもにWi-Fi（無線LAN）を使用している   > SOLUTIONSOLUTION 
 
-というわけで、Hyper-Vでイメージ管理するVisual Studio Emulator for Android（VS Emulator）をつかうことにした。 
+というわけで、Hyper-Vでイメージ管理するVisual Studio Emulator for Android（VS Emulator）を使うことにしました。これで何もせずに解決かというそうではなく、まず前提としてネットワーク上の注意があります。 
 
-注意点 
+1. VS EmulatorはHyper-VのNetwork AdapterをEthernet（有線LAN）しか使用できません。Wi-Fi（無線LAN）は使用できません
+2. VS Emulatorの各デバイス(Android VM）を初回起動させる際に、有線LANと無線LAN双方からネットワークにつなげていると失敗します   > Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法 
 
-- VS EmulatorはHyper-VのNetwork AdapterをEthernet（有線LAN）しか使用できない。Wi-Fi（無線LAN）は使用できない。
-- VS Emulatorの各デバイス(Android VM）を初回起動させる際に、有線LANと無線LAN双方からネットワークにつなげていると失敗する。   > Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法Hyper-VモードでLinux OS（VM）とAndroid OS（VM）を同時使用する方法 
+その上で、同時使用する方法ですが、先ほどネットワークの注意を考慮すると下記のような流れになります。 
 
-1. 現在稼働しているLinux VMを停止する。 Stop-VM CentOS 
-2. 無線LANの接続を停止し、有線LANのみの接続にする。 Disable-NetAdapter Wi-Fi 
-3. VS EmulatorからAndroid VMを初回起動する。そうすると有線LAN用のvEthernetが作成される。
-4. 無線LAN、有線LAN、双方を接続する。 Enable-NetAdapter Wi-Fi 
-5. Linux VMを起動する。 Start-VM CentOS]]></description><link>https://nabinno.github.io/posts/53</link><guid isPermaLink="false">53</guid><pubDate>Thu, 09 Mar 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[HerokuとGAEのCIをDockerとパイプラインから構成されたWerckerで管理する]]></title><description><![CDATA[Continuous Integration (CI) が徐々にDockerに対応し始める機運です。先行してWerckerがDocker対応を始めたので、その流れに乗るべくWerckerをDocker化してみました。   > PROBLEMPROBLEM 
+1. Stop-VM CentOS 現在稼働しているLinux VMを停止します
+2. Disable-NetAdapter Wi-Fi 無線LANの接続を停止し、有線LANのみの接続にします
+3. VS EmulatorからAndroid VMを初回起動します、そうすると有線LAN用のvEthernetが作成されます
+4. Enable-NetAdapter Wi-Fi - 無線LAN、有線LAN、双方を接続します
+5. Start-VM CentOS - Linux VMを起動します   > WRAPUPWRAPUP 
+
+Windows Subsystems for Linux等、Windowsの仮想化環境はまだ発展途上にあります。おそらく今回の対処方法は一時的なものに過ぎず、こうしたネットワーク上の注意を意識することなく解決できると思われます。しばし様子見です。]]></description><link>https://nabinno.github.io/posts/53</link><guid isPermaLink="false">53</guid><pubDate>Thu, 09 Mar 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[HerokuとGAEのCIをDockerとパイプラインから構成されたWerckerで管理する]]></title><description><![CDATA[Continuous Integration (CI) が徐々にDockerに対応し始める機運です。先行してWerckerがDocker対応を始めたので、その流れに乗るべくWerckerをDocker化してみました。   > PROBLEMPROBLEM 
 
 - パフォーマンス改善のための開発環境がいけてない
 - 別PaaSへ移行するための開発環境が汎用化できてない、つらい   > SOLUTIONSOLUTION 
