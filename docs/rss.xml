@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 14:22:57 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 14:38:50 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -240,16 +240,17 @@ Elixirの非同期処理を使うことではてなブックマークの運用�
 
 「なんか体調がすぐれないなあ...」 「Elixirちょうだい!」   
 
-という感じです、はい。]]></description><link>https://nabinno.github.io/posts/61</link><guid isPermaLink="false">61</guid><pubDate>Sat, 22 Dec 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 2 認証機能を実装する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+という感じです、はい。]]></description><link>https://nabinno.github.io/posts/61</link><guid isPermaLink="false">61</guid><pubDate>Sat, 22 Dec 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 2 認証機能を実装する]]></title><description><![CDATA[連載「Rails2Phoenix」になります、前回は「UmbrellaプロジェクトをHerokuにデプロイする 」でした。今回は前回課題としてあがった認証機能の実装を試みたいと思います。   > PROBLEMPROBLEM 
 
 - サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
 - 拡張にともない技術スタックがふえるのを抑えたい
 - スケーラビリティのためのコストを抑えたい
 - パフォーマンスをあげたい   > SOLUTIONSOLUTION 
 
-というわけで、現在つかっているRailsをPhoenixに変更することにした。 
+というわけで、現在つかっているRailsをPhoenixに変更することにしました。方針は以下の通りで、今回はRails/Deviseの認証機能をPhoenixで実装する流れを取り上げます。 
 
-- 方針 Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+方針 
+
 - Railsから徐々にPhoenixに移行できるように いままでとおなじPaaS（Heroku） いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく いままでとおなじDB 移行完了までDBマイグレーションをしない 
 - いままでとおなじPaaS（Heroku）
 - いままでとおなじレポジトリ ブランチ戦略は phoenix/base をベースに 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく 
@@ -257,13 +258,9 @@ Elixirの非同期処理を使うことではてなブックマークの運用�
 - 気軽に参照できるようにRails関連ファイルは可能な限りのこしておく
 - いままでとおなじDB 移行完了までDBマイグレーションをしない 
 - 移行完了までDBマイグレーションをしない
-- Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで 
+- Phoenixは今後の拡張性をかんがえてUmbrellaプロジェクトで   > Guardianを実装するGuardianを実装する 
 
-今回はRails/Deviseの認証機能をPhoenixで実装するながれをとりあげる。   > Guardianを実装するGuardianを実装する 
-
-参考にしたのはBlackodeのguardian_auth  ただ、Guardianのバージョンがふるいので1.0へのマイグレーション記事をもとにアレンジしてある。 
-
-認証に関係しそうな構成は下記のとおり。 
+まず、参考にしたのはBlackodeのguardian_authです。ただ、Guardianのバージョンがふるいので1.0へのマイグレーション記事をもとにアレンジしてあります。認証に関係しそうな構成は下記の通り。 
 
 ロジック 
 
@@ -281,7 +278,7 @@ Elixirの非同期処理を使うことではてなブックマークの運用�
 - MyAppWeb.RegistrationController
 - MyAppWeb.SessionController   > シリアライザとエラーハンドラの設定シリアライザとエラーハンドラの設定 
 
-Guardian1.0から直接ではなくモジュールを介して参照するようになった。下記のように各モジュールを用意してコンフィグに割り当てる。   elixir 
+Guardian1.0から直接ではなくモジュールを介して参照するようになりました。下記のように各モジュールを用意してコンフィグに割り当てます。   elixir 
 
 # apps/my_app/lib/my_app/auth/guardian.ex defmodule MyApp.Auth.Guardian do use Guardian, otp_app: :my_app alias MyApp.Account def subject_for_token(resource, _claims), do: {:ok, to_string(resource.id)} def subject_for_token(_, _), do: {:error, :reason_for_error} def resource_from_claims(claims), do: {:ok, Account.get_user!(claims["sub"])} def resource_from_claims(_claims), do: {:error, :reason_for_error} end     elixir 
 
@@ -289,9 +286,9 @@ Guardian1.0から直接ではなくモジュールを介して参照するよう
 
 # apps/my_app/config/config.exs config :my_app, MyApp.Auth.Guardian, issuer: "MyApp", ttl: {30, :days}, allowed_drift: 2000, # optionals allowed_algos: ["HS512"], verify_module: MyApp.Auth.Guardian.JWT, verify_issuer: true, secret_key: System.get_env("GUARDIAN_SECRET") || "secret_key"     > ルーターの設定ルーターの設定 
 
-認証のパイプラインは、認証中と認証後のものを用意しコンフィグとルーターに割り当てる。 
+認証のパイプラインは、認証中と認証後のものを用意しコンフィグとルーターに割り当てます。 
 
-ルータースコープ内のパイプラインくみあわせについて、ここでは未ログインスコープには認証前・認証中パイプライン、ログイン済スコープには認証前・認証中・認証後パイプラインを適用している。こうすることでどのスコープにも認証リソースをロードすることができ、かつ、認証も担保することができるようになる。具体的にいうと、ルート / などの同一URLで未ログインスコープとログイン済スコープの切り替えができるようになる。   elixir 
+ルータースコープ内のパイプラインくみあわせについて、ここでは未ログインスコープには認証前・認証中パイプライン、ログイン済スコープには認証前・認証中・認証後パイプラインを適用しています。こうすることでどのスコープにも認証リソースをロードすることができ、かつ、認証も担保することができるようになります。具体的にいうと、ルート / などの同一URLで未ログインスコープとログイン済スコープの切り替えができるようになります。   elixir 
 
 # apps/my_app/lib/my_app/auth/pipeline.ex defmodule MyApp.Auth.Pipeline do use Guardian.Plug.Pipeline, otp_app: :my_app plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"}) plug(Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"}) plug(Guardian.Plug.LoadResource, allow_blank: true) end     elixir 
 
@@ -301,9 +298,9 @@ Guardian1.0から直接ではなくモジュールを介して参照するよう
 
 # apps/my_app/config/config.exs config :MyApp, MyApp.Auth.Pipeline, module: MyApp.Auth.Guardian, error_handler: MyApp.Auth.ErrorHandler config :MyApp, MyApp.Auth.AferPipeline, module: MyApp.Auth.Guardian, error_handler: MyApp.Auth.ErrorHandler     > 登録登録 
 
-登録は登録用のロジック（ユーザーモデルと登録サービス）とコントローラを用意する。 
+登録は登録用のロジック（ユーザーモデルと登録サービス）とコントローラを用意します。 
 
-このあたりはDevise/Railsとあまり変わらない。ほかのアクション「新規パスワード発行」「メールアドレス確認」なども同様の構成をとろうと思っている。   elixir 
+このあたりはDevise/Railsとあまり変わりません。他のアクション「新規パスワード発行」「メールアドレス確認」等も同様の構成をとろうと思っています。   elixir 
 
 # apps/my_app/lib/my_app_web/controller/registration_controller.ex def create(conn, user_params) do changeset = User.registration_changeset(%User{}, user_params) case Registration.create(changeset, Repo) do {:ok, user} -> conn |> MyApp.Auth.login(user) |> put_flash(:info, "Your account was created successfully") |> redirect(to: page_path(conn, :home)) {:error, changeset} -> conn |> put_flash(:error, "Unable to create account: Try again") |> render(MyAppWeb.PageView, "home.html", changeset: changeset) end end     elixir 
 
@@ -311,27 +308,27 @@ Guardian1.0から直接ではなくモジュールを介して参照するよう
 
 # apps/my_app/lib/my_app/account/registration.ex def create(changeset, repo) do changeset |> repo.insert() end     > ログイン・ログアウトログイン・ログアウト 
 
-ログイン・ログアウトはセッション用のサービスとコントローラで実装する。   elixir 
+ログイン・ログアウトはセッション用のサービスとコントローラで実装します。   elixir 
 
 # apps/my_app/lib/my_app_web/controller/session_controller.ex @doc "Logged in [POST /login]" def create(conn, %{"email" => email, "password" => password}) do case Session.authenticate_user(email, password) do {:ok, user} -> conn |> Session.login(user) |> put_flash(:info, "Logged in successfully") |> redirect(to: page_path(conn, :home)) {:error, _reason} -> conn |> put_flash(:error, "Wrong username/password") |> render("new.html") end end @doc "Logged out [DELETE /logout]" def delete(conn, _params) do conn |> Session.logout() |> put_flash(:info, "Logged out successfully.") |> redirect(to: "/") end     elixir 
 
 # apps/my_app/lib/my_app/auth/session.ex defmodule MyApp.Auth.Session do import Ecto.Query import Plug.Conn import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0] alias MyApp.Repo alias MyApp.Auth.Guardian alias MyApp.Account.User def login(conn, %User{} = user) do conn |> Guardian.Plug.sign_in(user) |> assign(:current_user, user) end def logout(conn), do: Guardian.Plug.sign_out(conn) def authenticate_user(email, given_password) do query = Ecto.Query.from(u in User, where: u.email == ^email) Repo.one(query) |> check_password(given_password) end def current_user(conn), do: Guardian.Plug.current_resource(conn, []) def logged_in?(conn), do: Guardian.Plug.authenticated?(conn, []) defp check_password(nil, _), do: {:error, "Incorrect username or password"} defp check_password(user, given_password) do case Comeonin.Bcrypt.checkpw(given_password, user.encrypted_password) do true -> {:ok, user} false -> {:error, "Incorrect email or password"} end end end   
 
-Devise/Railsのビューヘルパーはビューマクロで適用する。   elixir 
+Devise/Railsのビューヘルパーはビューマクロで適用します。   elixir 
 
 # apps/my_app/lib/my_app_web.ex def view do quote do # .. import Okuribi.Auth.Session, only: [current_user: 1, logged_in?: 1] end end   
 
-あるいは、put_assigns関数をはやしてコントローラマクロに適用する。   elixir 
+あるいは、put_assigns関数をはやしてコントローラマクロに適用します。   elixir 
 
 # apps/my_app/lib/my_app/auth/session.ex def put_assigns(%{private: %{phoenix_action: action}} = conn, settings) do current_resource = Guardian.Plug.current_resource(conn) settings = if current_resource, do: settings[:sign_in][action] || [], else: settings[:sign_out][action] || [] conn |> assign(:current_user, current_resource) |> assign(:page_title, settings[:page_title]) |> assign(:page_description, settings[:page_description]) end     elixir 
 
 # apps/my_app/lib/my_app_web.ex def controller do quote do # .. import Okuribi.Auth, only: [put_assigns: 2] end end   
 
-assignsひとつでアクセスできるので、下記のようにコントローラでまとめて指定することでRailsのActionView::Helpers::CaptureHelper#provideの代わりに使える。   elixir 
+assignsひとつでアクセスできるので、下記のようにコントローラでまとめて指定することでRailsのActionView::Helpers::CaptureHelper#provideの代わりに使えます。   elixir 
 
 # apps/my_app/lib/my_app_web/controller/*_controller.ex @page %{ sign_in: %{ new: %{ page_title: dgettext("views", "pages.home.signed_in.page_title"), page_description: "" } }, sign_out: %{ new: %{ page_title: dgettext("views", "pages.home.signed_out.page_title"), page_description: "" } } } plug(:put_assigns, @page when action in [:home])     > その他その他 
 
-RailsのビューをPhoenixのテンプレートに移植するには下記の変換を地道におこなっていく。 
+RailsのビューをPhoenixのテンプレートに移植するには下記の変換を地道に行っていきます。 
 
 - Rails ActionView::Helpers::FormHelper#form_for(record, options={}, &block) ActionView::Helpers::FormHelper#text_field(object_name, method, options={}) ActionView::Helpers::FormHelper#file_field(object_name, method, options={}) ActionView::Helpers::FormHelper#hidden_field(object_name, method, options={}) ActionView::Helpers::FormHelper#password_field(object_name, method, options={}) ActionView::Helpers::FormHelper#radio_button(object_name, method, tag_value, options={}) ActionView::Helpers::FormBuilder#submit(value=nil, options={}) ActionView::Helpers::TranslationHelper#t 
 - ActionView::Helpers::FormHelper#form_for(record, options={}, &block)
@@ -350,7 +347,9 @@ RailsのビューをPhoenixのテンプレートに移植するには下記の�
 - Phoenix.HTML.Form.password_input(form, field, opts \\ [])
 - Phoenix.HTML.Form.radio_button(form, field, value, opts \\ [])
 - Phoenix.HTML.Form.submit(opts, opts \\ [])
-- Gettext.dgettext(backend, domain, msgid, bindings \\ %{})]]></description><link>https://nabinno.github.io/posts/60</link><guid isPermaLink="false">60</guid><pubDate>Sun, 20 May 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする]]></title><description><![CDATA[使い慣れたRailsのプロジェクトを拡張したいのですが、その都度技術スタックを増やす必要があり、この点をどうにかクリアしたいと考えています。連載「Rails2Phoenix」になります、今回はフレームワークをElixir製のPhoenix Frameworkへと変更を試みました。   > PROBLEMPROBLEM 
+- Gettext.dgettext(backend, domain, msgid, bindings \\ %{})   > WRAPUPWRAPUP 
+
+前回もそうですが、コードのマイグレーションはまあ地味な作業ですよね。とまれ、認証機能を実装できたので良しとしましょう。]]></description><link>https://nabinno.github.io/posts/60</link><guid isPermaLink="false">60</guid><pubDate>Sun, 20 May 2018 00:00:00 GMT</pubDate></item><item><title><![CDATA[連載 Rails2Phoenix 1 UmbrellaプロジェクトをHerokuにデプロイする]]></title><description><![CDATA[使い慣れたRailsのプロジェクトを拡張したいのですが、その都度技術スタックを増やす必要があり、この点をどうにかクリアしたいと考えています。連載「Rails2Phoenix」になります、今回はフレームワークをElixir製のPhoenix Frameworkへと変更を試みました。   > PROBLEMPROBLEM 
 
 - サービスについて 拡張にともない技術スタックがふえるのを抑えたい スケーラビリティのためのコストを抑えたい パフォーマンスをあげたい 
 - 拡張にともない技術スタックがふえるのを抑えたい
