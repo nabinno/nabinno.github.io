@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 03:18:32 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 04:21:42 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -582,11 +582,11 @@ $ PYTHON=/usr/bin/python3.4 ruby parse_6_pycall.rb Sum: 499999500000 Time: 1.49 
 
 PyCallのオブジェクトが PyObjectとActiveRecordと相性が悪そうなのと、PythonとRuby双方のメモリー管理が運用を難しくすることから、安易に本番環境のRailsに導入するのは厳しいと思います。 
 
-ただし、実行回数が限定されたスクリプトなら積極的に使って良いでしょう。]]></description><link>https://nabinno.github.io/posts/56</link><guid isPermaLink="false">56</guid><pubDate>Mon, 05 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[LYSE本を読む]]></title><description><![CDATA[> PROBLEMPROBLEM 
+ただし、実行回数が限定されたスクリプトなら積極的に使って良いでしょう。]]></description><link>https://nabinno.github.io/posts/56</link><guid isPermaLink="false">56</guid><pubDate>Mon, 05 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[LYSE本を読む]]></title><description><![CDATA[Elixirの存在を知ったのが2014年7月14日。それからおよそ3年経つというのに一向に理解した気になれないでいます。特にSLAナイン・ナインはなぜその数値なのか腑に落ちないでいました。今回『Learn You Some Erlang for Great Good!（通称LYSE本）』を読むことで積年の謎を解明してみようと臨みました。   > PROBLEMPROBLEM 
 
 - Elixirをさわりはじめてしばらく経つけどふかく理解した気になれない
 - Phoenixやほかのフレームワークに頼られないケースが出てきたとき自由な発想ができるようになっておきたい
-- 巷でいわれているSLA 99.9999999% などの実際がどうなのか腹落ちしてない   > TLDRTLDR 
+- 巷でいわれているSLAナイン・ナイン（99.9999999%）などの実際がどうなのか腹落ちしてない   > TLDRTLDR 
 
 - 下記Erlang機能を中心に高いSLAを提供する素地をなしている 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 ライフサイクル、再起動戦略を備えたライブラリ（分散OTP） CPシステムでNoSQLデータベース「Mnesia」 
 - 分散システム Erlang Port Mapper Daemon（EPMD） 他の言語・フレームワークが「分散コンピューティングの落とし穴」「CAP定理」にどのように対応している比較すると、Erlangの特徴がより見えてくる。 EMPDの特徴 耐障害性（スケーリングはやや弱い） マルチプロセス ネットワークの障害監視 
@@ -598,7 +598,7 @@ PyCallのオブジェクトが PyObjectとActiveRecordと相性が悪そうな�
 - ライフサイクル、再起動戦略を備えたライブラリ（分散OTP）
 - CPシステムでNoSQLデータベース「Mnesia」   > SOLUTIONSOLUTION 
 
-というわけで、『Learn You Some Erlang for Great Good!（通称LYSE本）』を読むことにした。Elixirに関係ありそうな箇所を抜粋している。   > 1-3 Erlang概要1-3 Erlang概要   > 1.2 Erlangって何？1.2 Erlangって何？ 
+というわけで、「LYSE本」を読むことにしました。各セクションにはElixirに関係ありそうな箇所を抜粋しています。長い長いメモになるので、TLDRだけで済ませて問題ありません。結論、輪郭は見えてきましたがまだその探求の入り口に来たに過ぎないのだということは理解しました。   > 1-3 Erlang概要1-3 Erlang概要   > 1.2 Erlangって何？1.2 Erlangって何？ 
 
 - 関数型言語 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う 
 - 純粋主義（参照透過性、破壊的データを避けるなど）に従いつつ、実世界で問題が発生した場合はそれを取り払う
