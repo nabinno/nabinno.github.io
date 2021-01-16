@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 03:10:25 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 03:15:17 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -1822,7 +1822,11 @@ deploy-prod-gae: steps: - bundle-install - script: name: Install ImageMagick cod
 
 post-deployパイプラインは本番環境にデプロイした後の後処理用です。参考程度に git tag をつけています。   yaml 
 
-post-deploy: steps: - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Add git-tag code: | _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S) git remote add origin git@github.com:nabinno/utagaki.git git config --global user.email 'wercker@blahfe.com' git config --global user.name 'Wercker Bot' git tag -a $_tag master -m 'wercker deploy' git push origin $_tag after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > WRAPUPWRAPUP]]></description><link>https://nabinno.github.io/posts/52</link><guid isPermaLink="false">52</guid><pubDate>Tue, 07 Feb 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[30代からの胸郭変形（漏斗胸）手術]]></title><description><![CDATA[> PROBLEMPROBLEM 
+post-deploy: steps: - add-ssh-key: host: github.com keyname: GITHUB - add-to-known_hosts: hostname: github.com fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48 - script: name: Add git-tag code: | _tag=$(date -u -d '9 hours' +%Y-%m-%d-%H-%M-%S) git remote add origin git@github.com:nabinno/utagaki.git git config --global user.email 'wercker@blahfe.com' git config --global user.name 'Wercker Bot' git tag -a $_tag master -m 'wercker deploy' git push origin $_tag after-steps: - wantedly/pretty-slack-notify: webhook_url: ${SLACK_WEBHOOK_URL} channel: general     > WRAPUPWRAPUP 
+
+こうしてWerckerの設定ファイルを書いてみるに、どのCI、どの仮想環境も同じ書き味ということが分かります。当処懸念していたDocker化することによる嵌まり事はなく、すんなり移行することができました。 
+
+手軽さ、管理のしやすさから、今後はすべてのCIがDockerに移行するでしょう。]]></description><link>https://nabinno.github.io/posts/52</link><guid isPermaLink="false">52</guid><pubDate>Tue, 07 Feb 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[30代からの胸郭変形（漏斗胸）手術]]></title><description><![CDATA[> PROBLEMPROBLEM 
 
 - 重度の胸郭変形（漏斗胸）をかかえているため内臓への負荷がもとよりある。ヘイラーインデックス（後述）が健常者の3倍。
 - 30代を超えたあたりから肋軟骨が硬化してきたため心臓、肺を圧迫するようになった。   > TLDRTLDR 
