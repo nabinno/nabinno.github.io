@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 15 Jan 2021 16:30:52 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 16 Jan 2021 01:29:41 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -562,7 +562,7 @@ $ mkdir /home/foo/tmp/app-test-1/front/node_modules $ ln -s /home/foo/tmp/app-te
 5. [すべて削除する] を選択
 6. [ファイルの削除のみ行う] を選択
 7. [初期状態に戻す] を選択
-8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[先日PyCallの存在を知り、ぜひともベンチマークを取りたいと思った次第です。現状RubyのCSVの読み込みに不満を持っており、そこをどうにか解消したいと考えた次第です。   > PROBLEMPROBLEM 
+8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[先日RubyからPythonにアクセスできるPyCallというライブラリの存在を知り、ぜひともベンチマークを取りたいと思った次第です。現状RubyのCSVの読み込みに不満を持っており、そこをどうにか解消したいと考えています。   > PROBLEMPROBLEM 
 
 - 大量のCSVを読み込む際、毎回時間がかかる   > SOLUTIONSOLUTION 
 
