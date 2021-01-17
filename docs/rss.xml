@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 08:43:36 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 08:55:15 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -1972,11 +1972,11 @@ nabinno, 05:22 PM October 21, 2016: #MicrosoftBand #HealthVault #MyFitnessPal �
 
 3つの運動 
 
-- 有酸素運動。ウォーキングで循環器系をきたえます。退院後でも起床など胸郭をうごかすのがむずかしい状態なので、まずウォーキングが普通にできるようにのぞみます。慣れてきたら距離をのばして5km、10kmとのばすと良いでしょう。足の負担を気にするようだったらAsics DynaFlyteのような、機能性を追求したランニングシューズの検討をすすます。
+- 有酸素運動。ウォーキングで循環器系をきたえます。退院後でも起床など胸郭をうごかすのがむずかしい状態なので、まずウォーキングが普通にできるようにのぞみます。慣れてきたら距離をのばして5km、10kmとのばすと良いでしょう。足の負担を気にするようだったらAsics DynaFlyteのような、機能性を追求したランニングシューズの検討をすすめます。
 - 無酸素運動。無理のない筋トレで筋骨格をきたえる、皮膚を生成します。退院直後は腹筋、三角筋はバー周囲の皮膚が生成されていないので痛みとともに力を出すことがむずかしいです。従って、僧帽筋、大胸筋あたりから皮膚の生成を促すようにします。また、有酸素運動を無理なく行えるように下腿三頭筋（ふくろはぎ）や大腿四頭筋を積極的に動かします。余裕が出てきたら筋肉とトレーニングマシンの対応表を参考にすると良いでしょう。
 - ストレッチ。ヨガで皮膚の生成を促します。退院直後はヨガをする余裕はないが、軽いウォーキングや筋トレをはじめたあたりで、バウンドエンジェル、チャイルドポーズ、ハッピーベイビーポーズなど軽めなものを混ぜると良いでしょう。参考までにポーズ集があります。 
 
-また、入院時に手術用コンプレッションウェアのタイツを着ていたが、退院後はスポーツ用コンプレッションウェアをシャツ、タイツともに着ると良いでしょう。適度な負荷が皮膚に与えられるとともに、交感神経の活性化につながります。 
+また、入院時に手術用コンプレッションウェアのタイツを着ることになりますが、退院後はスポーツ用コンプレッションウェアをシャツ、タイツともに着ると良いでしょう。手術時もそうですが、退院後も適度な負荷を皮膚に与えることで交感神経の活性化を促します。 
 
 私はできませんでしたが、免疫力向上は準備するのに時間がかかるので入院・手術前から取り組んでおくと良いでしょう。   > 3か月後どうなったか3か月後どうなったか 
 
@@ -1986,7 +1986,7 @@ nabinno, 05:22 PM October 21, 2016: #MicrosoftBand #HealthVault #MyFitnessPal �
 
 3か月目以降はほぼ手術前、あるいはそれ以上の生活の質を担保できるので、バーを抜く最終手術の3年後を見越して無理なくリハビリをつづけると良いでしょう。   > WRAPUPWRAPUP 
 
-当処の予想通り、心臓、肺の圧迫はなくなりました。仕事が出来なくなる期間等含む手術のトータルコストと今後のリスクを考えると実施して良かったと思います。]]></description><link>https://nabinno.github.io/posts/50</link><guid isPermaLink="false">50</guid><pubDate>Mon, 06 Feb 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Brother HL-L2365DWを無線LANで設定する]]></title><description><![CDATA[AmazonでBrother HL-L2365DWを購入したのですが、日本語のセットアップソフトだと無線LANから設定できないことに気づきました。今更プリンター用にUSBや有線LANを準備するのも手間なので調査しました。   > PROBLEMPROBLEM 
+当処の予想通り、心臓、肺の圧迫はなくなりました。仕事が出来なくなる期間等含む手術のトータルコストと今後のリスクを考えると実施して良かったです。3年後に抜去手術が控えているので、それが完了し経過観察が完全に終わった後、改めて感想を記します。]]></description><link>https://nabinno.github.io/posts/50</link><guid isPermaLink="false">50</guid><pubDate>Mon, 06 Feb 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Brother HL-L2365DWを無線LANで設定する]]></title><description><![CDATA[AmazonでBrother HL-L2365DWを購入したのですが、日本語のセットアップソフトだと無線LANから設定できないことに気づきました。今更プリンター用にUSBや有線LANを準備するのも手間なので調査しました。   > PROBLEMPROBLEM 
 
 - Amazonのモノクロレーザープリンター売れ筋1位のBrother HL-L2365DWを購入したが、日本語のセットアップソフトだと設定方法がUSBあるいは有線LANしかない
 - 当該製品にはプリンター用USBは同梱されていない
