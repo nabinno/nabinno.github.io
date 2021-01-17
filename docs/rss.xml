@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 06:57:34 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 07:07:37 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -542,20 +542,25 @@ $ mkdir /home/foo/tmp/app-test-1/front/node_modules $ ln -s /home/foo/tmp/app-te
 
 1. https://github.com/cmderdev/cmder/issues/901 ↩ 
 2. https://github.com/docker/compose/issues/4039#issuecomment-269558432 ↩ 
-3. https://github.com/Microsoft/WSL/issues/2448 ↩]]></description><link>https://nabinno.github.io/posts/58</link><guid isPermaLink="false">58</guid><pubDate>Sun, 10 Dec 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Surface Bookの画面端に黄色いシミがでる]]></title><description><![CDATA[> PROBLEMPROBLEM 
+3. https://github.com/Microsoft/WSL/issues/2448 ↩]]></description><link>https://nabinno.github.io/posts/58</link><guid isPermaLink="false">58</guid><pubDate>Sun, 10 Dec 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Surface Bookの画面端に黄色いシミがでる]]></title><description><![CDATA[2016年に購入したSurface Bookが1年も経たずに画面端に黄色いシミが出るようになりました。調べてみると何例か症状として記事が上がっていたのでMicrosoftサポートに問い合わせました。   > PROBLEMPROBLEM 
 
 - Surface Bookの画面端に黄色いシミがでる 液晶の問題かOSの問題かで対応がかわってくるので確認方法が知りたい 
 - 液晶の問題かOSの問題かで対応がかわってくるので確認方法が知りたい   > SOLUTIONSOLUTION 
 
-- というわけで、Surface BookのUEFI（ファームウェア画面）で黄色いシミがでるか確認する。 もしUEFIでシミがあったら、サポート相談して機器交換 もしUEFIでシミがなかったら、OSを初期化 もしOS初期化してシミがなかったら、問題解決 もしOS初期化してシミがあったら、サポート相談 
+というわけで、Surface BookのUEFI（ファームウェア画面）で黄色いシミがでるか確認し、解決を試みました。下記のような流れでサポートと話を進めました。 
+
 - もしUEFIでシミがあったら、サポート相談して機器交換
 - もしUEFIでシミがなかったら、OSを初期化 もしOS初期化してシミがなかったら、問題解決 もしOS初期化してシミがあったら、サポート相談 
 - もしOS初期化してシミがなかったら、問題解決
-- もしOS初期化してシミがあったら、サポート相談   > UEFI 確認のながれUEFI 確認のながれ 
+- もしOS初期化してシミがあったら、サポート相談   > UEFIでの確認の流れUEFIでの確認の流れ 
+
+まずは、下記の方法でUEFIに黄色いシミが出ているか確認しました。私の場合は黄色いシミが出なかったです。 
 
 1. Surfaceをシャットダウンした状態で、電源ボタンと音量を上げるボタンを同時に長押し
 2. 英語表記の「UEFI画面（背景が白い画面）」が表示される
-3. UEFI画面で黄色いシミがあるか確認する（あったら、サポート相談して機器交換）   > OS初期化のながれOS初期化のながれ 
+3. UEFI画面で黄色いシミがあるか確認する（あったら、サポート相談して機器交換）   > OS初期化の流れOS初期化の流れ 
+
+次に、下記方法でOS初期を試みました。 
 
 1. WindowsキーとIキー（アルファベット）を一緒に押して設定メニューを表示させる
 2. [更新とセキュリティー] を選択
@@ -564,7 +569,9 @@ $ mkdir /home/foo/tmp/app-test-1/front/node_modules $ ln -s /home/foo/tmp/app-te
 5. [すべて削除する] を選択
 6. [ファイルの削除のみ行う] を選択
 7. [初期状態に戻す] を選択
-8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[先日RubyからPythonにアクセスできるPyCallというライブラリの存在を知り、ぜひともベンチマークを取りたいと思った次第です。現状RubyのCSVの読み込みに不満を持っており、そこをどうにか解消したいと考えています。   > PROBLEMPROBLEM 
+8. OS初期化が終わった後、黄色いシミがあるか確認する（あったら、サポート相談）   > WRAPUPWRAPUP 
+
+私の場合はOS初期化で解決できず、PC端末自体を交換と相成りました。ちょうどサポート期間間際だったので不幸中の幸いでした。Surface Bookは販売してすぐ買ったので初期ロットの不良に当たったのでしょう。]]></description><link>https://nabinno.github.io/posts/57</link><guid isPermaLink="false">57</guid><pubDate>Sat, 24 Jun 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[RubyのCSVパースをPyCallで実行する（ベンチマーク）]]></title><description><![CDATA[先日RubyからPythonにアクセスできるPyCallというライブラリの存在を知り、ぜひともベンチマークを取りたいと思った次第です。現状RubyのCSVの読み込みに不満を持っており、そこをどうにか解消したいと考えています。   > PROBLEMPROBLEM 
 
 - 大量のCSVを読み込む際、毎回時間がかかる   > SOLUTIONSOLUTION 
 
