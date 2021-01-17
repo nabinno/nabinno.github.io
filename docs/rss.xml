@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 03:28:23 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Jan 2021 03:52:57 GMT</lastBuildDate><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
@@ -1651,32 +1651,34 @@ Erlangの型
 
 -module(cards). -export([kind/1, main/0]). -type suit() :: spades | clubs | hearts | diamonds. -type value() :: 1..10 | j | q | k. -type card() :: {suit(), value()}. -spec kind(card()) -> 'face' | 'number'. % 注釈をくわえることでdialyzerに警告させる kind({_, A}) when A >= 1, A =< 10 -> number; kind(_) -> face. main() -> number = kind({spades, 7}), face = kind({hearts, k}), number = kind({rubies, 4}), % タプルの中の型が違う  face = kind({clubs, q}).     erlang 
 
--module(convert). -export([main/0]). %% 注釈をつけないとdialyzerは下記のように判定する % -spec convert(list() | tuple()) -> list() | tuple(). -spec convert(tuple()) -> list(); (list()) -> tuple(). main() -> [_, _] = convert({a, b}), {_, _} = convert([a, b]), [_, _] = convert([a, b]), {_, _} = convert({a, b}). %% private convert(Tup) when is_tuple(Tup) -> tuple_to_list(Tup); convert(L=[_|_]) -> list_to_tuple(L).]]></description><link>https://nabinno.github.io/posts/65</link><guid isPermaLink="false">65</guid><pubDate>Sat, 29 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[PositiveSSLをHerokuに適用する]]></title><description><![CDATA[> PROBLEMPROBLEM 
+-module(convert). -export([main/0]). %% 注釈をつけないとdialyzerは下記のように判定する % -spec convert(list() | tuple()) -> list() | tuple(). -spec convert(tuple()) -> list(); (list()) -> tuple(). main() -> [_, _] = convert({a, b}), {_, _} = convert([a, b]), [_, _] = convert([a, b]), {_, _} = convert({a, b}). %% private convert(Tup) when is_tuple(Tup) -> tuple_to_list(Tup); convert(L=[_|_]) -> list_to_tuple(L).]]></description><link>https://nabinno.github.io/posts/65</link><guid isPermaLink="false">65</guid><pubDate>Sat, 29 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[PositiveSSLをHerokuに適用する]]></title><description><![CDATA[年に1回のSSL更新のイベントです。毎年同じことをすれば良いかというとそうでもなく、販社と卸の都合でSSLの購入方法が微妙に変わります。とは言え、毎年一から調べ直すのも手間なので備忘として記しておきます。   > PROBLEMPROBLEM 
 
-- HerokuのSSLの期限がきた。   > SOLUTIONSOLUTION 
+- HerokuのSSLの期限がきた   > SOLUTIONSOLUTION 
 
-- というわけで、いつもつかっているSSL販売代理店「NameCheap社のSSLs.com」でPositiveSSL（運用Comodo社）をHerokuに適用することに。   > HOWTOHOWTO 
+- というわけで、いつも使っているSSL販売代理店SSLs.com（NameCheap社）でPositiveSSL（運用Comodo社）を購入しHerokuに適用します。   > HOWTOHOWTO 
 
-1. 証明書を購入する まあ、SSL販売代理店であればどこでもいいんですが 
-2. まあ、SSL販売代理店であればどこでもいいんですが
+1. 証明書を購入する SSL販売代理店であればどこでもいいのですが、昔から使っているので 
+2. SSL販売代理店であればどこでもいいのですが、昔から使っているので
 3. 秘密鍵と署名リクエストをつくる 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 署名リクエスト openssl req -new -key server.key -out server.csr 
 4. 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 
 5. 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 
 6. 署名リクエスト openssl req -new -key server.key -out server.csr 
-7. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信する 
-8. SSL販売代理店より署名リクエストserver.csrと関連情報を送信する
-9. ドメイン保持の証明をする PositiveSSLの運用会社Comodoにたいしドメイン保持の証明をする 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択 
-10. PositiveSSLの運用会社Comodoにたいしドメイン保持の証明をする
-11. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択
-12. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書がおくられてくる Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
-13. 証明タスクをこなししばらくすると、Comodo社より複数の証明書がおくられてくる
+7. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信します 
+8. SSL販売代理店より署名リクエストserver.csrと関連情報を送信します
+9. ドメイン保持の証明をする PositiveSSLの運用会社Comodoに対しドメイン保持の証明します 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります 
+10. PositiveSSLの運用会社Comodoに対しドメイン保持の証明します
+11. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります
+12. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+13. 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます
 14. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
-15. Herokuに証明書を適用する 新規で適用する場合 heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合 heroku certs:update server.crt server.key 
-16. 新規で適用する場合 heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
+15. Herokuに証明書を適用する 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
+16. 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
 17. heroku addons:add ssl:endpoint
 18. heroku certs:add server.crt server.key
-19. 更新する場合 heroku certs:update server.crt server.key 
-20. heroku certs:update server.crt server.key]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sun, 23 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[Xamarinに手を出し始めたのは良いのですが、その開発環境がどうにも手になじまず試行錯誤しています。今回の記事で解決できるかというと微妙ではありますが、やれるだけのことはやってみようと思います。   > PROBLEMPROBLEM 
+19. 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
+20. heroku certs:update server.crt server.key   > WRAPUPWRAPUP 
+
+このあたりが自動化されれば良いと思いつつ、自動化されたらこのあたりを調べるモチベーションがなくなるので年に一回のリハビリイベントとして位置づけておきます、はい。]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sun, 23 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[Xamarinに手を出し始めたのは良いのですが、その開発環境がどうにも手になじまず試行錯誤しています。今回の記事で解決できるかというと微妙ではありますが、やれるだけのことはやってみようと思います。   > PROBLEMPROBLEM 
 
 - Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレームワークがわからない 適切なXAMLプレビュワーがわからない 適切なAndroidエミュレーターがわからない 
 - Visual Studio Community 2015の動作がもっさりしている
