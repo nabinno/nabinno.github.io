@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 29 Jan 2021 03:44:11 GMT</lastBuildDate><item><title><![CDATA[飲み会に参加するための機材]]></title><description><![CDATA[以前チーム内でリモート懇親会を画策したのですが、食材の調達や経費精算など手間が多すぎて断念しました。ただ、その言い訳は実は本質的ではなく、実際に後ろ向きにさせていたのは「しゃべりながら食べるのがつらい」ということにありました。今回はそれを解決した機材を紹介します。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 29 Jan 2021 03:46:04 GMT</lastBuildDate><item><title><![CDATA[飲み会に参加するための機材]]></title><description><![CDATA[以前チーム内でリモート懇親会を画策したのですが、食材の調達や経費精算など手間が多すぎて断念しました。ただ、その言い訳は実は本質的ではなく、実際に後ろ向きにさせていたのは「しゃべりながら食べるのがつらい」ということにありました。今回はそれを解決した機材を紹介します。   > PROBLEMPROBLEM 
 
 - リモート飲みがつらい 何がつらいって、ヘッドホンをしながら飯を食べるのがつらい 有線ヘッドホンだとPCの前に張り付きになりつらい 無線ヘッドホンだと音声が悪すぎて相手のメッセージが聞き取りづらい というか、有線だろうが無線だろうが直接PCにつなげると少量のノイズが乗る場合がありつらい 音声が悪すぎて相手にメッセージが伝わらない 「えっ、今なんて言ったの?」という会話を何度も繰り返す様がいたたまれない 自分の顔を相手に見せつけるのが気持ち的にいたたまれない アバターはPCリソースを消費する上、アバターに気を使うのは飲み会の意義から少しずれている 最初は楽しいがすぐ飽きる 
 - 何がつらいって、ヘッドホンをしながら飯を食べるのがつらい 有線ヘッドホンだとPCの前に張り付きになりつらい 無線ヘッドホンだと音声が悪すぎて相手のメッセージが聞き取りづらい というか、有線だろうが無線だろうが直接PCにつなげると少量のノイズが乗る場合がありつらい 
@@ -54,9 +54,9 @@
 
 今回紹介した機材に出会うまで紆余曲折ありましたが、揃えてみて満足しています。 
 
-というわけで、飲み会でなくても良いですが、機材を揃えた方でいろいろ試してみたい方は一緒に雑談してみませんか。30分雑談会というのを開催しています。いつでもお気軽に覗いてみてください。お目にかかれるのを楽しみにしています。 
+飲み会でなくても良いですが、機材を揃えた方でいろいろ試してみたい方は一緒に雑談してみませんか。30分雑談会というのを開催しているので、いつでもお気軽にお声がけください。お目にかかれるのを楽しみにしています。 
 
-- 30分雑談会]]></description><link>https://nabinno.github.io/posts/68</link><guid isPermaLink="false">68</guid><pubDate>Fri, 29 Jan 2021 03:42:50 GMT</pubDate></item><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
+- 30分雑談会]]></description><link>https://nabinno.github.io/posts/68</link><guid isPermaLink="false">68</guid><pubDate>Fri, 29 Jan 2021 03:44:17 GMT</pubDate></item><item><title><![CDATA[esaをHeadless CMSとして使う]]></title><description><![CDATA[最近仕事の同僚からHeadless CMS という言葉を聞いていて「自分には関係ないな」と距離を取っていたのですが、なぜか回り回って自分からHeadless CMSを作ることになりました。世の中何が起きるか分からないですね。   > PROBLEMPROBLEM 
 
 - ブログを普段書かない人なのだが、よそ向けに情報発信する必要が出てきた とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
 - とは言っても、今までMarkdownをJekyllで管理していたので画像を貼り付けるのが手間でモチベーションが大きく下がっていた さらにPlantUMLを出力するのも手間、試行錯誤した末にいずれも付け焼き刃で、esaの操作感に勝てるものはなかった 
