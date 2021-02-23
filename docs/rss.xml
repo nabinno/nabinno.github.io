@@ -1,4 +1,76 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 30 Jan 2021 03:03:54 GMT</lastBuildDate><item><title><![CDATA[飲み会に参加するための機材]]></title><description><![CDATA[以前チーム内でリモート懇親会を画策したのですが、食材の調達や経費精算など手間が多すぎて断念しました。ただ、その言い訳は実は本質的ではなく、実際に後ろ向きにさせていたのは「しゃべりながら食べるのがつらい」ということにありました。今回はそれを解決した機材を紹介します。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 23 Feb 2021 09:11:30 GMT</lastBuildDate><item><title><![CDATA[CDKで管理する今どきのJenkins]]></title><description><![CDATA[先日のAWS障害で管理していたECSに多少の影響が出たので、そのタイミングで敷設していたJenkinsの構成を改めて整理しました。今回は課題解決というより、既に稼働していたシステム構成の振り返りを行いました。   > PROBLEMPROBLEM 
+
+- インフラ系タスクがコード管理されていないので属人化しやすい 可能なら当該タスクはインフラ担当から手離れして欲しい 当該タスクは通常のCIワークフローとは異なるので管理する場所がない そういう意味でJenkinsの出番だけどこれはこれで管理が手間 ヘルスチェックエラーにひっかかったら自動で再起動してほしい 
+- 可能なら当該タスクはインフラ担当から手離れして欲しい
+- 当該タスクは通常のCIワークフローとは異なるので管理する場所がない そういう意味でJenkinsの出番だけどこれはこれで管理が手間 ヘルスチェックエラーにひっかかったら自動で再起動してほしい 
+- そういう意味でJenkinsの出番だけどこれはこれで管理が手間 ヘルスチェックエラーにひっかかったら自動で再起動してほしい 
+- ヘルスチェックエラーにひっかかったら自動で再起動してほしい   > SOLUTIONSOLUTION 
+
+というわけで、モダンなJenkins2系をAWS CDKで敷設してみました。   > 1. 構成1. 構成 
+
+大方の構成は「nabinno/jenkins-cdk-on-ec2」のシステム構成図をご覧下さい。元ネタはaws-sampleになりますが、今回はAWS FargateではなくAmazon ECSを採用し、CDKはTypeScriptで実装しています。 
+
+使用技術スタック 
+
+- Jenkins
+- Amazon ECS（Amazon EC2）
+- Application Load Balancer
+- Amazon EFS    > 2. CDKによるJenkinsの敷設2. CDKによるJenkinsの敷設 
+
+CDKによるJenkinsの敷設はGitHubレポジトリーを見ていただくとして、ここではCDKのコード上の注意点を2点ほど共有しておきます。   > 2-a. CDKの注意点：リソース名を明示する2-a. CDKの注意点：リソース名を明示する 
+
+CDKで各リソース名を明示しないとCloudFormation（CFn）独特の命名規則でリソースが敷設されます。インフラ担当が自分一人の場合は良いですが、インフラ担当を増員する際は、他のIaCツールの運用方針とバッティングする等、後で足かせになるので命名規則にのっとりリソース名を付けていくようにしましょう。 
+
+命名規則は「クラスメソッドさんの記事」を参考に決めるのが定番のようです。下記例になります。    AWSリソース 命名規則     ELB {sysname}-{env}-alb/clb   TargetGroup {sysname}-{env}-tg   EC2 {sysname}-{env}-{type}   SecurityGroup {sysname}-{env}-{type}-sg    
+
+CDKでリソース名を明示するには次のいずれかの方法で対応します。 
+
+- 各クラスのコンストラクトプロパティにある名前を記述する
+- 暗黙的生成されるリソースを明示的に作成する 
+
+下記コードでは暗黙的に生成されていたSecurity Groupを明示的に作成している様子等が見て取れます。   ts 
+
+// ECS: Service const serviceSecGrp = new ec2.SecurityGroup(this, "JenkinsMasterServiceSecGrp", { securityGroupName: "jenkins-master-production-sg", vpc: network.vpc, allowAllOutbound: true, }); serviceSecGrp.addIngressRule(worker.workerSecurityGroup, ec2.Port.tcp(50000), "from JenkinsWorkerSecurityGroup 50000"); serviceSecGrp.addIngressRule(worker.workerSecurityGroup, ec2.Port.tcp(8080), "from JenkinsWorkerSecurityGroup 8080"); const jenkinsMasterService = new ecs.Ec2Service(this, "EC2MasterService", { serviceName: 'jenkins-master-production-svc', taskDefinition: jenkinsMasterTask, cloudMapOptions: { name: "master", dnsRecordType: sd.DnsRecordType.A }, desiredCount: 1, minHealthyPercent: 0, maxHealthyPercent: 100, enableECSManagedTags: true, cluster: ecsCluster.cluster, securityGroups: [serviceSecGrp] });   
+
+なお、リソース名の明示化について、もちろんCDKのクラスによっては暗黙的なリソースを含んでおり当該リソースに名前を付けることが出来ないケースはあります。今回のケースで言うと、例えば、ECSクラスター（EC2）のIAM RoleやSecurity Group。その場合は、インフラのCDK運用方針としてドキュメントに残しておく等しておくと良いでしょう。   > 2-b. CDKの注意点：cdk.RemovablePolicy.RETAINをつける2-b. CDKの注意点：cdk.RemovablePolicy.RETAINをつける 
+
+ネットワーク、ストレージ関連のリソースを扱う場合、削除されるとリソース構成が破綻する可能性があるのでcdk.RemovablePolicy.RETAIN、CFnの言うところの "DeletionPolicy": "Retain" をつけましょう。今回はEFSがその対象になります。   ts 
+
+const efsFilesystem = new efs.CfnFileSystem(this, "EFSBackend"); efsFilesystem.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);   
+
+個人的にはRETAINをつけるとcdk destroy cdk deployを気軽に行えなくなるので、RETAINをつけるならCDK/CFnからはARNで参照する程度に抑えた方が良いと思っています。   > 3. Jenkinsの設定を行う3. Jenkinsの設定を行う 
+
+CDKでJenkinsを敷設した終わったらJenkinsの設定を行いましょう。   > 3-a. Jenkinsでつかっているプラグイン3-a. Jenkinsでつかっているプラグイン 
+
+昔と違って今のJenkinsは下記プラグインがあれば十分運用できます。 
+
+- github-oauth
+- role-strategy
+- configuration-as-code
+- blueocean 
+
+ざっと説明するとgithub-oauthでGitHub認証させ、role-strategyでロールごとの権限付与を行い、configuration-as-codeでそれらの管理設定をコード化します。configuration-as-codeは素晴らしく設定情報をコード化することでdockerイメージに当該設定情報を反映させることが出来ます。また、blueoceanはモダンなインターフェイスでジョブ実行します。こちらは次のセクションで詳細を説明します。 
+
+なお、プラグイン管理はIaC化でき下記のようにdockerイメージに反映できます。   sh 
+
+$ cat plugins.txt role-strategy:3.1 github-oauth:0.33 thinBackup:1.10 git:4.6.0 authorize-project:1.3.0 configuration-as-code:1.47 blueocean:1.24.4 $ cat Dockerfile [...] COPY plugins.txt /usr/share/jenkins/ref/plugins.txt RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt [...]     > 3-b. JenkinsジョブをGitHubで管理する3-b. JenkinsジョブをGitHubで管理する 
+
+いよいよJenkinsでジョブの管理設定を行います。具体的には下記手順で実施します。手順が完了すると作ったブランチ分だけJenkinsにジョブが追加されます、とても簡単です。 
+
+1. ジョブを管理させたいGitHubレポジトリでジョブ管理用のブランチを作成し、Jenkinsfile を配置
+2. 「Jenkins - Blue Ocean - New Pipeline」にて下記設定をおこなう Where do you store your code? - GitHub Which organization does the repository belong to? - 任意のuserあるいはorganization Choose a repository - 任意のレポジトリ（1で作成したレポジトリ） 
+3. Where do you store your code? - GitHub
+4. Which organization does the repository belong to? - 任意のuserあるいはorganization
+5. Choose a repository - 任意のレポジトリ（1で作成したレポジトリ） 
+
+Jenkinsfile の作成方法は「ユーザーハンドブック」にありますが、下記例のように直感的に記述することが出来ます。環境変数は「Jenkins - {{レポジトリ}} - 認証情報 - Stores scoped to {{レポジトリ}} - global - Add credential」から追加します。   Jenkinsfile 
+
+ pipeline { agent any stages { stage('Show env') { steps { sh '''mysql --version ls -al bin env | sort''' } } stage('Run script') { steps { git(url: 'https://github.com/nabinno/jenkins-jobs', branch: 'master', credentialsId: 'github') sh '''git diff sync-db-from-staging-to-integration | patch -p1 -R -f bin/sync_db_from_staging_to_integration''' } } } environment { STAG_DB_DATABASE = credentials('STAG_DB_DATABASE') STAG_DB_HOSTNAME = credentials('STAG_DB_HOSTNAME') STAG_DB_PASSWORD = credentials('STAG_DB_PASSWORD') STAG_DB_USERNAME = credentials('STAG_DB_USERNAME') INTEG_DB_HOSTNAME = credentials('INTEG_DB_HOSTNAME') INTEG_DB_PASSWORD = credentials('INTEG_DB_PASSWORD') INTEG_DB_USERNAME = credentials('INTEG_DB_USERNAME') INTEG_DB_DATABASE = credentials('INTEG_DB_USERNAME') } }     > WRAPUPWRAPUP 
+
+今回の振り返りで、2点気づきを得られました。CDKのリソース名の扱いに困っていたのですが、どうにか制御できそうなのでまたしばらくは付き合っていくことになりそうです。 
+
+1. CDKは意外とかゆいところに手が届く。ただ、暗黙的に生成され、CDK側で制御できないリソース名があるので、そういう前提で運用ポリシーを作ると各IaC使いの平穏に繋がる。
+2. Jenkins2は思った以上に手離れが良い。CDK、ECS、EFS、configuration-as-code、Jenkinsfileの組み合わせは保守性、可用性に大きな貢献をしている。]]></description><link>https://nabinno.github.io/posts/75</link><guid isPermaLink="false">75</guid><pubDate>Tue, 23 Feb 2021 09:09:19 GMT</pubDate></item><item><title><![CDATA[飲み会に参加するための機材]]></title><description><![CDATA[以前チーム内でリモート懇親会を画策したのですが、食材の調達や経費精算など手間が多すぎて断念しました。ただ、その言い訳は実は本質的ではなく、実際に後ろ向きにさせていたのは「しゃべりながら食べるのがつらい」ということにありました。今回はそれを解決した機材を紹介します。   > PROBLEMPROBLEM 
 
 - リモート飲みがつらい 何がつらいって、ヘッドホンをしながら飯を食べるのがつらい 有線ヘッドホンだとPCの前に張り付きになりつらい 無線ヘッドホンだと音声が悪すぎて相手のメッセージが聞き取りづらい というか、有線だろうが無線だろうが直接PCにつなげると少量のノイズが乗る場合がありつらい 音声が悪すぎて相手にメッセージが伝わらない 「えっ、今なんて言ったの?」という会話を何度も繰り返す様がいたたまれない 自分の顔を相手に見せつけるのが気持ち的にいたたまれない アバターはPCリソースを消費する上、アバターに気を使うのは飲み会の意義から少しずれている 最初は楽しいがすぐ飽きる 
 - 何がつらいって、ヘッドホンをしながら飯を食べるのがつらい 有線ヘッドホンだとPCの前に張り付きになりつらい 無線ヘッドホンだと音声が悪すぎて相手のメッセージが聞き取りづらい というか、有線だろうが無線だろうが直接PCにつなげると少量のノイズが乗る場合がありつらい 
