@@ -18,7 +18,6 @@ const Profile = () => {
           <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;/&nbsp;
           <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a>&nbsp;/&nbsp;
           <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a>&nbsp;/&nbsp;
-          <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a>
         </div>
       </div>
     </Base>
