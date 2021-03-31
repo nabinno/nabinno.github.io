@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 31 Mar 2021 14:25:41 GMT</lastBuildDate><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスクの指示はすんなり出来ても、「よしなにやって」、つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言うことは一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 31 Mar 2021 22:39:07 GMT</lastBuildDate><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもできなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスク指示はすんなり出来ても、「よしなにやって」つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言う指示は一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
 
 - チームメンバーにマネジメントを理解して欲しい けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい 一方、一言では言い表せないが、一目でなら表せるものが自分の中に出来上がっている 昔手にした書籍をヒントにマネジメントの枠組みというのを自分の頭に構築していた ただ、そのことについて書かれた書籍を見たことがない 
 - けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい
@@ -43,7 +43,7 @@
 - 各パブリッククラウドのIAM設定・運用の方針
 - AWS Control Tower   > WRAPUPWRAPUP 
 
-最低限の部分をまとめてみました。まずはメンバーからのフィードバックをもらいつつ今後も気になるところを追加していく予定です。]]></description><link>https://nabinno.github.io/posts/47</link><guid isPermaLink="false">47</guid><pubDate>Wed, 31 Mar 2021 14:24:09 GMT</pubDate></item><item><title><![CDATA[CDKで管理する今どきのJenkins]]></title><description><![CDATA[先日のAWS障害で管理していたECSに多少の影響が出たので、そのタイミングで敷設していたJenkinsの構成を改めて整理しました。今回は課題解決というより、既に稼働していたシステム構成の振り返りを行いました。   > PROBLEMPROBLEM 
+最低限の部分をまとめてみました。まずはメンバーからのフィードバックをもらいつつ今後も気になるところを追加していく予定です。]]></description><link>https://nabinno.github.io/posts/47</link><guid isPermaLink="false">47</guid><pubDate>Wed, 31 Mar 2021 22:37:41 GMT</pubDate></item><item><title><![CDATA[CDKで管理する今どきのJenkins]]></title><description><![CDATA[先日のAWS障害で管理していたECSに多少の影響が出たので、そのタイミングで敷設していたJenkinsの構成を改めて整理しました。今回は課題解決というより、既に稼働していたシステム構成の振り返りを行いました。   > PROBLEMPROBLEM 
 
 - インフラ系タスクがコード管理されていないので属人化しやすい 可能なら当該タスクはインフラ担当から手離れして欲しい 当該タスクは通常のCIワークフローとは異なるので管理する場所がない そういう意味でJenkinsの出番だけどこれはこれで管理が手間 ヘルスチェックエラーにひっかかったら自動で再起動してほしい 
 - 可能なら当該タスクはインフラ担当から手離れして欲しい
