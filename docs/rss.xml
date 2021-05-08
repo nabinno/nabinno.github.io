@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 31 Mar 2021 22:41:17 GMT</lastBuildDate><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもできなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスク指示はすんなり出来ても、「よしなにやって」つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言う指示は一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 08 May 2021 04:34:32 GMT</lastBuildDate><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもできなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスク指示はすんなり出来ても、「よしなにやって」つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言う指示は一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
 
 - チームメンバーにマネジメントを理解して欲しい けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい 一方、一言では言い表せないが、一目でなら表せるものが自分の中に出来上がっている 昔手にした書籍をヒントにマネジメントの枠組みというのを自分の頭に構築していた ただ、そのことについて書かれた書籍を見たことがない 
 - けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい
@@ -1839,24 +1839,25 @@ Erlangの型
 
 1. 証明書を購入する SSL販売代理店であればどこでもいいのですが、昔から使っているので 
 2. SSL販売代理店であればどこでもいいのですが、昔から使っているので
-3. 秘密鍵と署名リクエストをつくる 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 署名リクエスト openssl req -new -key server.key -out server.csr 
+3. 秘密鍵と署名リクエストをつくる 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 署名リクエスト openssl req -new -key server.key -out server.csr ※ 最近このあたりの署名情報は、SSL販売代理店側で生成しているケースが増えてきました 
 4. 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 
 5. 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 
 6. 署名リクエスト openssl req -new -key server.key -out server.csr 
-7. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信します 
-8. SSL販売代理店より署名リクエストserver.csrと関連情報を送信します
-9. ドメイン保持の証明をする PositiveSSLの運用会社Comodoに対しドメイン保持の証明します 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります 
-10. PositiveSSLの運用会社Comodoに対しドメイン保持の証明します
-11. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります
-12. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
-13. 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます
-14. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
-15. Herokuに証明書を適用する 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
-16. 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
-17. heroku addons:add ssl:endpoint
-18. heroku certs:add server.crt server.key
-19. 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
-20. heroku certs:update server.crt server.key   > WRAPUPWRAPUP 
+7. ※ 最近このあたりの署名情報は、SSL販売代理店側で生成しているケースが増えてきました
+8. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信します 
+9. SSL販売代理店より署名リクエストserver.csrと関連情報を送信します
+10. ドメイン保持の証明をする PositiveSSLの運用会社Comodoに対しドメイン保持の証明します 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります 
+11. PositiveSSLの運用会社Comodoに対しドメイン保持の証明します
+12. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります
+13. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+14. 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます
+15. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+16. Herokuに証明書を適用する 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
+17. 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
+18. heroku addons:add ssl:endpoint
+19. heroku certs:add server.crt server.key
+20. 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
+21. heroku certs:update server.crt server.key   > WRAPUPWRAPUP 
 
 このあたりが自動化されれば良いと思いつつ、自動化されたらこのあたりを調べるモチベーションがなくなるので年に一回のリハビリイベントとして位置づけておきます、はい。]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sun, 23 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[Xamarinに手を出し始めたのは良いのですが、その開発環境がどうにも手になじまず試行錯誤しています。今回の記事で解決できるかというと微妙ではありますが、やれるだけのことはやってみようと思います。   > PROBLEMPROBLEM 
 
