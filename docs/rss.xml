@@ -1,4 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 08 May 2021 04:34:32 GMT</lastBuildDate><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもできなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスク指示はすんなり出来ても、「よしなにやって」つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言う指示は一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 09 May 2021 10:01:29 GMT</lastBuildDate><item><title><![CDATA[AWS Organizationsを別のAWSアカウントに移行する]]></title><description><![CDATA[最近のAWSはCDKの発表に代表されるようにインフラ以外の開発者が触りやすい環境が整ってきています。ただ、こうした機能やリソースを存分に享受するにはIAM管理だけでは不足しており、AWSアカウントの管理方針を大枠で整理する必要が出てきました。今回は深く考えずに使っていたOrganizationsを整理する際にはまったポイントを記していきます。    > PROBLEMPROBLEM 
+
+- 初期の頃につくったAWSアカウントにコンソリ請求の便利さからとりあえずOrganizations機能をつけてみた その後、当該アカウントに異なるワークロードのリソースを加えすぎてスケールしづらい構成になってきた 例えば 開発環境をAWSアカウント単位で分けられないためIAMや開発サイクルが複雑になり開発スピードに支障が出てきた セキュリティ上望ましくないシステム構成について改修のハードルが上がってきた 
+- その後、当該アカウントに異なるワークロードのリソースを加えすぎてスケールしづらい構成になってきた 例えば 開発環境をAWSアカウント単位で分けられないためIAMや開発サイクルが複雑になり開発スピードに支障が出てきた セキュリティ上望ましくないシステム構成について改修のハードルが上がってきた 
+- 例えば 開発環境をAWSアカウント単位で分けられないためIAMや開発サイクルが複雑になり開発スピードに支障が出てきた セキュリティ上望ましくないシステム構成について改修のハードルが上がってきた 
+- 開発環境をAWSアカウント単位で分けられないためIAMや開発サイクルが複雑になり開発スピードに支障が出てきた
+- セキュリティ上望ましくないシステム構成について改修のハードルが上がってきた   > SOLUTIONSOLUTION 
+
+というわけで、一旦Organizations機能を解除して新しく作成したAWS管理アカウントに移行していくことにしました。一つ一つの作業は単純なのですが意外と時間がかかることが分かったので備忘として残しておきます。 
+
+OrganizationsのOU構成はサムネイル画像のBEFORE/AFTERの通りです。 
+
+BEFORE：Organization Unitの構成は全然考えずとりあえず追加していました。 
+
+- Foo - AWS Organizationsのオーナーアカウントであり、異なるワークロードや環境が混在しているアカウント
+- Bar - お試し用アカウント1
+- Buzz - お試し用アカウント2 
+
+AFTER：こちらの記事「Best Practices for Organizational Units with AWS Organizations | AWS Management & Governance Blog」を参考に構成しました。 
+
+- Foundation Management - AWS Organizationsのオーナーアカウント Security Infrastructure 
+- Management - AWS Organizationsのオーナーアカウント
+- Security
+- Infrastructure
+- Workload Prod Foo Stg FooStg Integ FooInteg 
+- Prod Foo 
+- Foo
+- Stg FooStg 
+- FooStg
+- Integ FooInteg 
+- FooInteg
+- Sandbox BarSandbox BuzzSandbox 
+- BarSandbox
+- BuzzSandbox   > Organizationsを別アカウントに移行する方法Organizationsを別アカウントに移行する方法 
+
+やったことはこちらの記事「2 つの AWS Organizations 間でアカウントを移動する」の通りですが、いくつかはまるポイントが書かれていないのでそちらも合わせて記します。まず注意点として3つあります。 
+
+一つ目は、Organizationsの移行期間中は請求の種類が3種類になる可能性があります。具体的には「古いOrganizationsによるコンソリ請求」「スタンドアロンのAWSアカウントによる請求」「新しいOrganizationsによるコンソリ請求」です。会社組織としてAWSを利用している場合は経理側との連携が必要になってくるでしょう。 
+
+二つ目は、古いOrganizationsから追加作成されたメンバーアカウントには請求情報の追加と電話番号の認証を行う必要があります。前者の請求情報の追加はそれほど手間ではないのですが、後者の電話番号の認証はAWSサポートを介すため1アカウントごとに3日から1週間ほど時間がかかります。詳細の対応方法はこちらの記事「組織からのメンバーアカウントのリンク解除のエラーを解決する」を参照下さい。 
+
+三つ目は、新しいOrganizationsでは先に制限緩和を行っておきましょう。新しいOrganizationsを作成する際はおそらく古いOrganizationsの時よりもにメンバーアカウントが増えることと思います。特にベストプラクティスのOrganization Unitでアカウントを分けていくとあっという間にデフォルト制限の10を超える可能性が高いです。 
+
+次に移行手順ですが、上記の注意点をクリアしたらほぼ単純作業になります。 
+
+1. 古いOrganizationからメンバーアカウントを削除
+2. 新しいOrganizationからメンバーアカウントに招待を送信
+3. メンバーアカウントで新しいOrganizationへの招待を受け入れる
+4. （全てのメンバーアカウントを削除し終わった後に）古いOrganizationsを削除
+5. 古いOrganizationsの管理アカウントをメンバーアカウントとして新しい Organization に招待   > WRAPUPWRAPUP 
+
+昨今のAWSの動きを見ると、インフラ以外の開発者にもAWSを気軽に使えるようになってきており、Organizations機能を使うこと前提にサービスが展開されているようです。なのでこうした恩恵をうけるためにもOrganizationsのベストプラクティスに則ったアカウント構成にする必要があります。 
+
+一応の注意点としては、Organizationsが便利だからといってOrganizationsからメンバーシップアカウントを追加することは止めた方がいいです。Organizations移行の注意点から分かる通り、Organizationsから追加されたメンバーシップアカウントには請求情報追加も電話番号認証も行われません。いざ別のOrganizationsに移行する際に想定外の手間と時間をかけないよう、常にスタンドアロンでAWSアカウントを作成するようにしましょう。 
+
+さて、Organizationsの勘所が見えてきたら次はAWS SSOという便利な機能が待っています。AWSを楽しみましょう。]]></description><link>https://nabinno.github.io/posts/80</link><guid isPermaLink="false">80</guid><pubDate>Sun, 09 May 2021 09:59:57 GMT</pubDate></item><item><title><![CDATA[マネジメントとは何か]]></title><description><![CDATA[組織が大きくなってくると自然と自らの手ではどうしようもできなくなり、マネジメント業務を各メンバーに委譲する必要が出てきます。そうは言っても個別のタスク指示はすんなり出来ても、「よしなにやって」つまり「周辺の整理（マネジメント）も含めて上手くタスクを回せるように調整して」と言う指示は一言では伝えきれません。マネジメント職同士のやりとりなら問題ないのですが、これからマネジメント領域に入っていって欲しいメンバーの場合はどう連携すれば良いのでしょうか。未完ではありますが、今回はマネジメントそのものについて整理しました。   > PROBLEMPROBLEM 
 
 - チームメンバーにマネジメントを理解して欲しい けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい 一方、一言では言い表せないが、一目でなら表せるものが自分の中に出来上がっている 昔手にした書籍をヒントにマネジメントの枠組みというのを自分の頭に構築していた ただ、そのことについて書かれた書籍を見たことがない 
 - けれど、マネジメントに関する書籍が多く、一言でこれを読めと伝えるのが難しい
