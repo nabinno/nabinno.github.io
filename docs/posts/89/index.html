@@ -2,25 +2,25 @@
  * ress.css • v2.0.4
  * MIT License
  * github.com/filipelinhares/ress
- */html{box-sizing:border-box;-webkit-text-size-adjust:100%;word-break:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4}*,:after,:before{background-repeat:no-repeat;box-sizing:inherit}:after,:before{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace,monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}input{border-radius:0}[disabled]{cursor:default}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}[role=button],[type=button],[type=reset],[type=submit],button{cursor:pointer;color:inherit}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button:-moz-focusring{outline:1px dotted ButtonText}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}button,input,select,textarea{background-color:transparent;border-style:none}select{-moz-appearance:none;-webkit-appearance:none}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{-webkit-appearance:button;color:inherit;font:inherit}img{border-style:none}progress{vertical-align:baseline}svg:not([fill]){fill:currentColor}@media screen{[hidden~=screen]{display:inherit}[hidden~=screen]:not(:active):not(:focus):not(:target){position:absolute!important;clip:rect(0 0 0 0)!important}}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled]{cursor:default}</style><meta name="generator" content="Gatsby 2.30.1"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><title data-react-helmet="true">imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe</title><link data-react-helmet="true" rel="canonical" href="https://nabinno.github.io/posts/89"/><meta data-react-helmet="true" name="google-site-verification" content=""/><meta data-react-helmet="true" name="description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" property="og:url" content="https://nabinno.github.io/posts/89"/><meta data-react-helmet="true" property="og:type" content="article"/><meta data-react-helmet="true" property="og:title" content="imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe"/><meta data-react-helmet="true" property="og:description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" property="og:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"/><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"/><meta data-react-helmet="true" name="twitter:creator" content="@nabinno"/><meta data-react-helmet="true" name="twitter:title" content="imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe"/><meta data-react-helmet="true" name="twitter:description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" name="twitter:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"/><link rel="icon" href="/favicon-32x32.png?v=381a3661ec5793ff376970a2019b6518" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#fff"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link as="script" rel="preload" href="/webpack-runtime-7a7e64c679eaacb6bc0d.js"/><link as="script" rel="preload" href="/framework-dbb498007a7447f28d8e.js"/><link as="script" rel="preload" href="/app-1609d7d465ccd6a5a330.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-d1e204551af284801370.js"/><link as="script" rel="preload" href="/component---src-templates-posts-tsx-01adf45b9f8003118fcd.js"/><link as="script" rel="preload" href="/component---src-templates-post-tsx-557e62df0f80429a7567.js"/><link as="fetch" rel="preload" href="/page-data/posts/89/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><style data-emotion-css="ly78bw">.css-ly78bw{font-family:-apple-system-body,'Source Han Mono',BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans Japanese','游ゴシック  Medium','Yu Gothic Medium','メイリオ',meiryo,sans-serif;}@media screen and (-webkit-min-device-pixel-ratio:2),screen and (min-resolution:2dppx){.css-ly78bw{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;}}</style><div class="css-ly78bw e1j2fp1f0"><div><style data-emotion-css="10061d2">.css-10061d2{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}@media (min-width:980px){.css-10061d2{-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;}}</style><div class="css-10061d2 e1rphn8v0"><style data-emotion-css="1ur9eye">.css-1ur9eye{max-width:620px;width:100%;margin:20px auto;}</style><div style="margin-top:32px" class="css-1ur9eye e1rphn8v1"><style data-emotion-css="1igky03">.css-1igky03{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-right:auto;margin-bottom:1.75rem;}</style><h1 class="css-1igky03"><style data-emotion-css="1a6yofc">.css-1a6yofc{color:rgba(26,32,44,0.88);-webkit-text-decoration:none;text-decoration:none;font-family:Montserrat,sans-serif;font-weight:900;font-size:1.4427rem;line-height:1.1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;padding:16px;margin:-16px;}.css-1a6yofc:hover{background-color:rgba(255,255,255,0.1);}</style><a class="css-1a6yofc" href="/">On Blahfe</a></h1><style data-emotion-css="kvk3sk">.css-kvk3sk{padding:0 12px;}@media (min-width:600px){.css-kvk3sk{padding:0;}}</style><div class="css-kvk3sk epep3293"><style data-emotion-css="19sxenz">.css-19sxenz{display:block;margin-bottom:4px;font-weight:600;-webkit-letter-spacing:0.5px;-moz-letter-spacing:0.5px;-ms-letter-spacing:0.5px;letter-spacing:0.5px;opacity:0.6;font-size:15px;}</style><time class="css-19sxenz">2021.07.23</time><style data-emotion-css="1b1c2m5">.css-1b1c2m5{font-size:24px;line-height:1.4;font-weight:700;margin-bottom:4px;color:#1a202c;font-family:-apple-system,'Source Han Mono','BlinkMacSystemFont','Helvetica Neue','Hiragino Sans','游ゴシック Medium','YuGothic','Hiragino Kaku Gothic ProN','メイリオ','Meiryo,sans-serif';}@media (min-width:600px){.css-1b1c2m5{font-size:30px;}}</style><h1 class="css-1b1c2m5 epep3291">imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか</h1><style data-emotion-css="3bor06">.css-3bor06{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;margin-bottom:4px;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;}.css-3bor06:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-3bor06:before{content:'#';}.css-3bor06:hover{border-color:inherit;color:white;}.css-3bor06:before{content:'';}</style><a class="css-3bor06 epep3292" href="/categories/blog/backend">blog/backend</a><style data-emotion-css="1qp0zyo">.css-1qp0zyo{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;}.css-1qp0zyo:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-1qp0zyo:before{content:'#';}</style><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/imi-enrichment-address">imi-enrichment-address</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/mlit-isj">mlit-isj</a><style data-emotion-css="1f03b13">.css-1f03b13{margin-top:24px;margin-bottom:4.375rem;line-height:1.8;font-size:15px;word-break:break-all;color:rgba(26,32,44,0.88);}.css-1f03b13 .hidden{display:none;}.css-1f03b13 pre{display:block;padding:10.5px;margin:0 0 11px;font-size:13px;line-height:1.6;word-break:break-all;word-wrap:break-word;color:#4a5568;background-color:#3e4149;border:1px solid #ccc;border-radius:4px;}.css-1f03b13 pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0;}.css-1f03b13 h1{font-size:200%;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:10px;margin:30px 0;margin-bottom:10px;}.css-1f03b13 h1 .emoji{width:36px;height:36px;}.css-1f03b13 h1 a{color:#0a9b94;}.css-1f03b13 h1 a:hover{color:#1a202c;}.css-1f03b13 h2{font-size:160%;margin:30px 0 16px;font-weight:900;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:4px;position:relative;}.css-1f03b13 h2:before{position:absolute;content:' ';width:100px;bottom:-3px;height:3px;background-color:#80695F;}.css-1f03b13 h2 .emoji{width:28px;height:28px;}.css-1f03b13 h2 a{color:#0a9b94;}.css-1f03b13 h2 a:hover{color:#1a202c;}.css-1f03b13 h3{margin:24px 0;margin-bottom:10px;font-size:130%;font-weight:900;}.css-1f03b13 h3 .emoji{width:22px;height:22px;}.css-1f03b13 h4{font-size:120%;font-weight:900;}.css-1f03b13 .markdown > ul,.css-1f03b13 .markdown > ol{margin:16px 0;}.css-1f03b13 ul,.css-1f03b13 ol{padding-left:40px;}.css-1f03b13 li{margin:4px 0;}.css-1f03b13 li > p{margin:0;}.css-1f03b13 dt{margin-top:14px;margin-bottom:4px;}.css-1f03b13 dd{padding:0 14px;margin-bottom:4px;}.css-1f03b13 p{margin:16px 0;}.css-1f03b13 p img{margin-bottom:0;}.css-1f03b13 blockquote{font-size:100%;color:rgba(60,74,96,0.7);border-left:5px solid rgba(0,0,0,0.1);margin-bottom:30px;padding:0 20px;}.css-1f03b13 blockquote p{margin:10px 0 !important;}.css-1f03b13 code{color:#3c4a60;white-space:pre-wrap;border-radius:4px;background-color:rgba(0,0,0,0.05);}.css-1f03b13 pre{border:none;}.css-1f03b13 pre code{background:#f6f6f6;}.css-1f03b13 a{color:#58463C;}.css-1f03b13 a:hover{color:#80695F;}.css-1f03b13 .code-block .highlight{border-radius:4px;}.css-1f03b13 .code-block__copy-button{position:absolute;top:0;right:0;display:none;background-color:white;border:1px solid rgba(0,0,0,0.1);padding:2px 7px;font-size:10px;font-family:'Source Han Mono','Lato',Emoji,Arial,'ヒラギノ角ゴPro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;}.css-1f03b13 .code-block__copy-button i{color:rgba(60,74,96,0.3);}.css-1f03b13 .code-block__copy-button:hover{background-color:#f6f6f6;border:1px solid rgba(0,0,0,0.2);}.css-1f03b13 .code-block__copy-label::after{content:'Copy';}.css-1f03b13 .code-block__copy-label.copied::after{content:'Copied';}.css-1f03b13 .code-block .highlight{position:relative;}.css-1f03b13 .code-block:hover .code-block__copy-button{display:block;}.css-1f03b13 table{border:1px solid rgba(0,0,0,0.1);width:100%;border-collapse:collapse;border-spacing:0;margin:20px 0;margin-bottom:30px;}.css-1f03b13 table tr:nth-child(odd) td{background-color:#f9f9f9;}.css-1f03b13 table tr th,.css-1f03b13 table tr td{padding:8px;line-height:1.6;vertical-align:top;border:1px solid rgba(0,0,0,0.1);}.css-1f03b13 strong{font-weight:700;}.css-1f03b13 img{max-width:100%;border:1px solid #eee;border-radius:4px;}.css-1f03b13 .anchor{-webkit-transition-duration:0;transition-duration:0;display:none;margin-left:-20px;width:20px;height:20px;font-size:20px;text-align:right;padding-top:8px;}.css-1f03b13 .anchor i:hover{color:#08837d;}.css-1f03b13 .anchor .fa-pencil{-webkit-transform:rotateY(180deg);-webkit-transform:rotateY(180deg);-ms-transform:rotateY(180deg);transform:rotateY(180deg);}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4{-webkit-font-smoothing:antialiased;}.css-1f03b13 h1:hover .anchor,.css-1f03b13 h2:hover .anchor,.css-1f03b13 h3:hover .anchor{display:inline-block;}.css-1f03b13 h2 .anchor{padding-top:5px;font-size:18px;}.css-1f03b13 h2 .anchor i{top:4px;}.css-1f03b13 h3 .anchor{padding-top:3px;font-size:15px;}.css-1f03b13 h3 .anchor i{top:4px;}.css-1f03b13 .emoji{border:none;height:19px;width:19px;}.css-1f03b13 iframe{max-width:100%;}.css-1f03b13 hr{border-top-color:rgba(33,37,41,0.12);display:block;border-top-width:1px;border-top-style:solid;margin:32px 0;}.css-1f03b13 .code-filename{border-top-left-radius:4px;border-top-right-radius:4px;position:relative;top:auto;right:auto;bottom:auto;left:auto;top:4px;display:inline-block;padding:3px 10px;background-color:#3e4149;color:#fff;font-size:85%;line-height:1.5;margin-bottom:-10px;}.css-1f03b13 .code-filename i{color:rgba(60,74,96,0.3);}@media (max-width:900px){.css-1f03b13 video{width:100%;}}.css-1f03b13 .highlight code table td{padding:5px;}.css-1f03b13 .highlight code table pre{margin:0;}.css-1f03b13 .highlight code .c,.css-1f03b13 .highlight code .cd{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cm{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .c1{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cp{color:#75715e;font-weight:bold;}.css-1f03b13 .highlight code .cs{color:#75715e;font-weight:bold;font-style:italic;}.css-1f03b13 .highlight code .err{color:#960050;background-color:#1e0010;}.css-1f03b13 .highlight code .gi{color:#ffffff;background-color:#324932;}.css-1f03b13 .highlight code .gd{color:#ffffff;background-color:#493131;}.css-1f03b13 .highlight code .ge{color:#000000;font-style:italic;}.css-1f03b13 .highlight code .gr{color:#aa0000;}.css-1f03b13 .highlight code .gt{color:#aa0000;}.css-1f03b13 .highlight code .gh{color:#999999;}.css-1f03b13 .highlight code .go{color:#888888;}.css-1f03b13 .highlight code .gp{color:#555555;}.css-1f03b13 .highlight code .gs{font-weight:bold;}.css-1f03b13 .highlight code .gu{color:#aaaaaa;}.css-1f03b13 .highlight code .k,.css-1f03b13 .highlight code .kv{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kc{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kd{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kp{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kr{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kt{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kn{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .ow{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .o{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .mf{color:#ae81ff;}.css-1f03b13 .highlight code .mh{color:#ae81ff;}.css-1f03b13 .highlight code .il{color:#ae81ff;}.css-1f03b13 .highlight code .mi{color:#ae81ff;}.css-1f03b13 .highlight code .mo{color:#ae81ff;}.css-1f03b13 .highlight code .m,.css-1f03b13 .highlight code .mb,.css-1f03b13 .highlight code .mx{color:#ae81ff;}.css-1f03b13 .highlight code .se{color:#ae81ff;}.css-1f03b13 .highlight code .sb{color:#e6db74;}.css-1f03b13 .highlight code .sc{color:#e6db74;}.css-1f03b13 .highlight code .sd{color:#e6db74;}.css-1f03b13 .highlight code .s2{color:#e6db74;}.css-1f03b13 .highlight code .sh{color:#e6db74;}.css-1f03b13 .highlight code .si{color:#e6db74;}.css-1f03b13 .highlight code .sx{color:#e6db74;}.css-1f03b13 .highlight code .sr{color:#e6db74;}.css-1f03b13 .highlight code .s1{color:#e6db74;}.css-1f03b13 .highlight code .ss{color:#e6db74;}.css-1f03b13 .highlight code .s{color:#e6db74;}.css-1f03b13 .highlight code .na{color:#a6e22e;}.css-1f03b13 .highlight code .nc{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nd{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .ne{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nf{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .no{color:#66d9ef;}.css-1f03b13 .highlight code .bp{color:#f8f8f2;}.css-1f03b13 .highlight code .nb{color:#f8f8f2;}.css-1f03b13 .highlight code .ni{color:#f8f8f2;}.css-1f03b13 .highlight code .nn{color:#f8f8f2;}.css-1f03b13 .highlight code .vc{color:#f8f8f2;}.css-1f03b13 .highlight code .vg{color:#f8f8f2;}.css-1f03b13 .highlight code .vi{color:#f8f8f2;}.css-1f03b13 .highlight code .nv{color:#f8f8f2;}.css-1f03b13 .highlight code .w{color:#f8f8f2;}.css-1f03b13 .highlight code .nl{color:#f8f8f2;font-weight:bold;}.css-1f03b13 .highlight code .nt{color:#f92672;}.css-1f03b13 .highlight code{color:#f8f8f2;background-color:#3e4149;}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4,.css-1f03b13 h5,.css-1f03b13 h6{font-weight:700;}.css-1f03b13 .footnotes{margin-top:4.375rem;padding:20px 0;background-color:#efefef;}</style><div class="css-1f03b13 e1a9pvvr0"><p data-sourcepos="1:1-2:153">コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-addressが住所のバリデーションチェックでどの程度使えるか検証してみました。<br>
-<a href="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png" target="_blank" rel="noopener noreferrer"><img width="504" alt="thumbnail" src="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"></a></p>
-<h1 data-sourcepos="4:1-4:9" id="1-0-0" name="1-0-0"><a class="anchor" id="PROBLEM" name="PROBLEM" href="#PROBLEM" data-position="1-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="PROBLEM"> &gt; PROBLEM</span></a>PROBLEM</h1>
-<ul data-sourcepos="5:1-9:0">
-<li data-sourcepos="5:1-9:0">住所の不備が至るところで起きている
-<ul data-sourcepos="6:5-9:0">
-<li data-sourcepos="6:5-6:93">特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい</li>
-<li data-sourcepos="7:5-9:0">可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい
-<ul data-sourcepos="8:9-9:0">
-<li data-sourcepos="8:9-9:0">まずはOSSのライブラリをで検証したい</li>
+ */html{box-sizing:border-box;-webkit-text-size-adjust:100%;word-break:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4}*,:after,:before{background-repeat:no-repeat;box-sizing:inherit}:after,:before{text-decoration:inherit;vertical-align:inherit}*{padding:0;margin:0}hr{overflow:visible;height:0}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none}abbr[title]{border-bottom:none;text-decoration:underline;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{background-color:transparent}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace,monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}input{border-radius:0}[disabled]{cursor:default}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}textarea{overflow:auto;resize:vertical}button,input,optgroup,select,textarea{font:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}[role=button],[type=button],[type=reset],[type=submit],button{cursor:pointer;color:inherit}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button:-moz-focusring{outline:1px dotted ButtonText}[type=reset],[type=submit],button,html [type=button]{-webkit-appearance:button}button,input,select,textarea{background-color:transparent;border-style:none}select{-moz-appearance:none;-webkit-appearance:none}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{border:0;color:inherit;display:table;white-space:normal;max-width:100%}::-webkit-file-upload-button{-webkit-appearance:button;color:inherit;font:inherit}img{border-style:none}progress{vertical-align:baseline}svg:not([fill]){fill:currentColor}@media screen{[hidden~=screen]{display:inherit}[hidden~=screen]:not(:active):not(:focus):not(:target){position:absolute!important;clip:rect(0 0 0 0)!important}}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled]{cursor:default}</style><meta name="generator" content="Gatsby 2.30.1"/><link rel="preconnect" href="https://www.google-analytics.com"/><link rel="dns-prefetch" href="https://www.google-analytics.com"/><title data-react-helmet="true">imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe</title><link data-react-helmet="true" rel="canonical" href="https://nabinno.github.io/posts/89"/><meta data-react-helmet="true" name="google-site-verification" content=""/><meta data-react-helmet="true" name="description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" property="og:url" content="https://nabinno.github.io/posts/89"/><meta data-react-helmet="true" property="og:type" content="article"/><meta data-react-helmet="true" property="og:title" content="imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe"/><meta data-react-helmet="true" property="og:description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" property="og:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"/><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"/><meta data-react-helmet="true" name="twitter:creator" content="@nabinno"/><meta data-react-helmet="true" name="twitter:title" content="imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか - On Blahfe"/><meta data-react-helmet="true" name="twitter:description" content="コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-add"/><meta data-react-helmet="true" name="twitter:image" content="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"/><link rel="icon" href="/favicon-32x32.png?v=381a3661ec5793ff376970a2019b6518" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#fff"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=381a3661ec5793ff376970a2019b6518"/><link rel="alternate" type="application/rss+xml" href="/rss.xml"/><link as="script" rel="preload" href="/webpack-runtime-7a7e64c679eaacb6bc0d.js"/><link as="script" rel="preload" href="/framework-dbb498007a7447f28d8e.js"/><link as="script" rel="preload" href="/app-1609d7d465ccd6a5a330.js"/><link as="script" rel="preload" href="/styles-e9d24b1846c7d6eb9685.js"/><link as="script" rel="preload" href="/commons-d1e204551af284801370.js"/><link as="script" rel="preload" href="/component---src-templates-posts-tsx-01adf45b9f8003118fcd.js"/><link as="script" rel="preload" href="/component---src-templates-post-tsx-557e62df0f80429a7567.js"/><link as="fetch" rel="preload" href="/page-data/posts/89/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><style data-emotion-css="ly78bw">.css-ly78bw{font-family:-apple-system-body,'Source Han Mono',BlinkMacSystemFont,'Helvetica Neue','Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans Japanese','游ゴシック  Medium','Yu Gothic Medium','メイリオ',meiryo,sans-serif;}@media screen and (-webkit-min-device-pixel-ratio:2),screen and (min-resolution:2dppx){.css-ly78bw{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;}}</style><div class="css-ly78bw e1j2fp1f0"><div><style data-emotion-css="10061d2">.css-10061d2{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;}@media (min-width:980px){.css-10061d2{-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;}}</style><div class="css-10061d2 e1rphn8v0"><style data-emotion-css="1ur9eye">.css-1ur9eye{max-width:620px;width:100%;margin:20px auto;}</style><div style="margin-top:32px" class="css-1ur9eye e1rphn8v1"><style data-emotion-css="1igky03">.css-1igky03{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-right:auto;margin-bottom:1.75rem;}</style><h1 class="css-1igky03"><style data-emotion-css="1a6yofc">.css-1a6yofc{color:rgba(26,32,44,0.88);-webkit-text-decoration:none;text-decoration:none;font-family:Montserrat,sans-serif;font-weight:900;font-size:1.4427rem;line-height:1.1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;padding:16px;margin:-16px;}.css-1a6yofc:hover{background-color:rgba(255,255,255,0.1);}</style><a class="css-1a6yofc" href="/">On Blahfe</a></h1><style data-emotion-css="kvk3sk">.css-kvk3sk{padding:0 12px;}@media (min-width:600px){.css-kvk3sk{padding:0;}}</style><div class="css-kvk3sk epep3293"><style data-emotion-css="19sxenz">.css-19sxenz{display:block;margin-bottom:4px;font-weight:600;-webkit-letter-spacing:0.5px;-moz-letter-spacing:0.5px;-ms-letter-spacing:0.5px;letter-spacing:0.5px;opacity:0.6;font-size:15px;}</style><time class="css-19sxenz">2021.07.24</time><style data-emotion-css="1b1c2m5">.css-1b1c2m5{font-size:24px;line-height:1.4;font-weight:700;margin-bottom:4px;color:#1a202c;font-family:-apple-system,'Source Han Mono','BlinkMacSystemFont','Helvetica Neue','Hiragino Sans','游ゴシック Medium','YuGothic','Hiragino Kaku Gothic ProN','メイリオ','Meiryo,sans-serif';}@media (min-width:600px){.css-1b1c2m5{font-size:30px;}}</style><h1 class="css-1b1c2m5 epep3291">imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか</h1><style data-emotion-css="3bor06">.css-3bor06{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;margin-bottom:4px;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;}.css-3bor06:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-3bor06:before{content:'#';}.css-3bor06:hover{border-color:inherit;color:white;}.css-3bor06:before{content:'';}</style><a class="css-3bor06 epep3292" href="/categories/blog/backend">blog/backend</a><style data-emotion-css="1qp0zyo">.css-1qp0zyo{display:inline-block;background-color:white;border:1px solid #eee;color:rgba(0,0,0,0.6);padding:6px 12px;margin-right:8px;font-weight:bold;font-size:12px;border-radius:4px;-webkit-text-decoration:none;text-decoration:none;}.css-1qp0zyo:hover{border-color:#ccc;color:rgba(0,0,0,0.8);}.css-1qp0zyo:before{content:'#';}</style><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/imi-enrichment-address">imi-enrichment-address</a><a style="margin-top:4px;margin-bottom:8px" class="css-1qp0zyo evhx4tm0" href="/tags/mlit-isj">mlit-isj</a><style data-emotion-css="1f03b13">.css-1f03b13{margin-top:24px;margin-bottom:4.375rem;line-height:1.8;font-size:15px;word-break:break-all;color:rgba(26,32,44,0.88);}.css-1f03b13 .hidden{display:none;}.css-1f03b13 pre{display:block;padding:10.5px;margin:0 0 11px;font-size:13px;line-height:1.6;word-break:break-all;word-wrap:break-word;color:#4a5568;background-color:#3e4149;border:1px solid #ccc;border-radius:4px;}.css-1f03b13 pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0;}.css-1f03b13 h1{font-size:200%;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:10px;margin:30px 0;margin-bottom:10px;}.css-1f03b13 h1 .emoji{width:36px;height:36px;}.css-1f03b13 h1 a{color:#0a9b94;}.css-1f03b13 h1 a:hover{color:#1a202c;}.css-1f03b13 h2{font-size:160%;margin:30px 0 16px;font-weight:900;border-bottom:3px solid rgba(0,0,0,0.1);padding-bottom:4px;position:relative;}.css-1f03b13 h2:before{position:absolute;content:' ';width:100px;bottom:-3px;height:3px;background-color:#80695F;}.css-1f03b13 h2 .emoji{width:28px;height:28px;}.css-1f03b13 h2 a{color:#0a9b94;}.css-1f03b13 h2 a:hover{color:#1a202c;}.css-1f03b13 h3{margin:24px 0;margin-bottom:10px;font-size:130%;font-weight:900;}.css-1f03b13 h3 .emoji{width:22px;height:22px;}.css-1f03b13 h4{font-size:120%;font-weight:900;}.css-1f03b13 .markdown > ul,.css-1f03b13 .markdown > ol{margin:16px 0;}.css-1f03b13 ul,.css-1f03b13 ol{padding-left:40px;}.css-1f03b13 li{margin:4px 0;}.css-1f03b13 li > p{margin:0;}.css-1f03b13 dt{margin-top:14px;margin-bottom:4px;}.css-1f03b13 dd{padding:0 14px;margin-bottom:4px;}.css-1f03b13 p{margin:16px 0;}.css-1f03b13 p img{margin-bottom:0;}.css-1f03b13 blockquote{font-size:100%;color:rgba(60,74,96,0.7);border-left:5px solid rgba(0,0,0,0.1);margin-bottom:30px;padding:0 20px;}.css-1f03b13 blockquote p{margin:10px 0 !important;}.css-1f03b13 code{color:#3c4a60;white-space:pre-wrap;border-radius:4px;background-color:rgba(0,0,0,0.05);}.css-1f03b13 pre{border:none;}.css-1f03b13 pre code{background:#f6f6f6;}.css-1f03b13 a{color:#58463C;}.css-1f03b13 a:hover{color:#80695F;}.css-1f03b13 .code-block .highlight{border-radius:4px;}.css-1f03b13 .code-block__copy-button{position:absolute;top:0;right:0;display:none;background-color:white;border:1px solid rgba(0,0,0,0.1);padding:2px 7px;font-size:10px;font-family:'Source Han Mono','Lato',Emoji,Arial,'ヒラギノ角ゴPro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;}.css-1f03b13 .code-block__copy-button i{color:rgba(60,74,96,0.3);}.css-1f03b13 .code-block__copy-button:hover{background-color:#f6f6f6;border:1px solid rgba(0,0,0,0.2);}.css-1f03b13 .code-block__copy-label::after{content:'Copy';}.css-1f03b13 .code-block__copy-label.copied::after{content:'Copied';}.css-1f03b13 .code-block .highlight{position:relative;}.css-1f03b13 .code-block:hover .code-block__copy-button{display:block;}.css-1f03b13 table{border:1px solid rgba(0,0,0,0.1);width:100%;border-collapse:collapse;border-spacing:0;margin:20px 0;margin-bottom:30px;}.css-1f03b13 table tr:nth-child(odd) td{background-color:#f9f9f9;}.css-1f03b13 table tr th,.css-1f03b13 table tr td{padding:8px;line-height:1.6;vertical-align:top;border:1px solid rgba(0,0,0,0.1);}.css-1f03b13 strong{font-weight:700;}.css-1f03b13 img{max-width:100%;border:1px solid #eee;border-radius:4px;}.css-1f03b13 .anchor{-webkit-transition-duration:0;transition-duration:0;display:none;margin-left:-20px;width:20px;height:20px;font-size:20px;text-align:right;padding-top:8px;}.css-1f03b13 .anchor i:hover{color:#08837d;}.css-1f03b13 .anchor .fa-pencil{-webkit-transform:rotateY(180deg);-webkit-transform:rotateY(180deg);-ms-transform:rotateY(180deg);transform:rotateY(180deg);}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4{-webkit-font-smoothing:antialiased;}.css-1f03b13 h1:hover .anchor,.css-1f03b13 h2:hover .anchor,.css-1f03b13 h3:hover .anchor{display:inline-block;}.css-1f03b13 h2 .anchor{padding-top:5px;font-size:18px;}.css-1f03b13 h2 .anchor i{top:4px;}.css-1f03b13 h3 .anchor{padding-top:3px;font-size:15px;}.css-1f03b13 h3 .anchor i{top:4px;}.css-1f03b13 .emoji{border:none;height:19px;width:19px;}.css-1f03b13 iframe{max-width:100%;}.css-1f03b13 hr{border-top-color:rgba(33,37,41,0.12);display:block;border-top-width:1px;border-top-style:solid;margin:32px 0;}.css-1f03b13 .code-filename{border-top-left-radius:4px;border-top-right-radius:4px;position:relative;top:auto;right:auto;bottom:auto;left:auto;top:4px;display:inline-block;padding:3px 10px;background-color:#3e4149;color:#fff;font-size:85%;line-height:1.5;margin-bottom:-10px;}.css-1f03b13 .code-filename i{color:rgba(60,74,96,0.3);}@media (max-width:900px){.css-1f03b13 video{width:100%;}}.css-1f03b13 .highlight code table td{padding:5px;}.css-1f03b13 .highlight code table pre{margin:0;}.css-1f03b13 .highlight code .c,.css-1f03b13 .highlight code .cd{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cm{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .c1{color:#75715e;font-style:italic;}.css-1f03b13 .highlight code .cp{color:#75715e;font-weight:bold;}.css-1f03b13 .highlight code .cs{color:#75715e;font-weight:bold;font-style:italic;}.css-1f03b13 .highlight code .err{color:#960050;background-color:#1e0010;}.css-1f03b13 .highlight code .gi{color:#ffffff;background-color:#324932;}.css-1f03b13 .highlight code .gd{color:#ffffff;background-color:#493131;}.css-1f03b13 .highlight code .ge{color:#000000;font-style:italic;}.css-1f03b13 .highlight code .gr{color:#aa0000;}.css-1f03b13 .highlight code .gt{color:#aa0000;}.css-1f03b13 .highlight code .gh{color:#999999;}.css-1f03b13 .highlight code .go{color:#888888;}.css-1f03b13 .highlight code .gp{color:#555555;}.css-1f03b13 .highlight code .gs{font-weight:bold;}.css-1f03b13 .highlight code .gu{color:#aaaaaa;}.css-1f03b13 .highlight code .k,.css-1f03b13 .highlight code .kv{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kc{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kd{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kp{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kr{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kt{color:#66d9ef;font-weight:bold;}.css-1f03b13 .highlight code .kn{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .ow{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .o{color:#f92672;font-weight:bold;}.css-1f03b13 .highlight code .mf{color:#ae81ff;}.css-1f03b13 .highlight code .mh{color:#ae81ff;}.css-1f03b13 .highlight code .il{color:#ae81ff;}.css-1f03b13 .highlight code .mi{color:#ae81ff;}.css-1f03b13 .highlight code .mo{color:#ae81ff;}.css-1f03b13 .highlight code .m,.css-1f03b13 .highlight code .mb,.css-1f03b13 .highlight code .mx{color:#ae81ff;}.css-1f03b13 .highlight code .se{color:#ae81ff;}.css-1f03b13 .highlight code .sb{color:#e6db74;}.css-1f03b13 .highlight code .sc{color:#e6db74;}.css-1f03b13 .highlight code .sd{color:#e6db74;}.css-1f03b13 .highlight code .s2{color:#e6db74;}.css-1f03b13 .highlight code .sh{color:#e6db74;}.css-1f03b13 .highlight code .si{color:#e6db74;}.css-1f03b13 .highlight code .sx{color:#e6db74;}.css-1f03b13 .highlight code .sr{color:#e6db74;}.css-1f03b13 .highlight code .s1{color:#e6db74;}.css-1f03b13 .highlight code .ss{color:#e6db74;}.css-1f03b13 .highlight code .s{color:#e6db74;}.css-1f03b13 .highlight code .na{color:#a6e22e;}.css-1f03b13 .highlight code .nc{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nd{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .ne{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .nf{color:#a6e22e;font-weight:bold;}.css-1f03b13 .highlight code .no{color:#66d9ef;}.css-1f03b13 .highlight code .bp{color:#f8f8f2;}.css-1f03b13 .highlight code .nb{color:#f8f8f2;}.css-1f03b13 .highlight code .ni{color:#f8f8f2;}.css-1f03b13 .highlight code .nn{color:#f8f8f2;}.css-1f03b13 .highlight code .vc{color:#f8f8f2;}.css-1f03b13 .highlight code .vg{color:#f8f8f2;}.css-1f03b13 .highlight code .vi{color:#f8f8f2;}.css-1f03b13 .highlight code .nv{color:#f8f8f2;}.css-1f03b13 .highlight code .w{color:#f8f8f2;}.css-1f03b13 .highlight code .nl{color:#f8f8f2;font-weight:bold;}.css-1f03b13 .highlight code .nt{color:#f92672;}.css-1f03b13 .highlight code{color:#f8f8f2;background-color:#3e4149;}.css-1f03b13 h1,.css-1f03b13 h2,.css-1f03b13 h3,.css-1f03b13 h4,.css-1f03b13 h5,.css-1f03b13 h6{font-weight:700;}.css-1f03b13 .footnotes{margin-top:4.375rem;padding:20px 0;background-color:#efefef;}</style><div class="css-1f03b13 e1a9pvvr0"><p data-sourcepos="1:1-1:421">コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-addressが住所のバリデーションチェックでどの程度使えるか検証してみました。</p>
+<a href="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png" target="_blank" rel="noopener noreferrer"><img width="504" alt="thumbnail" src="https://img.esa.io/uploads/production/attachments/16651/2021/07/24/97367/91efce8c-c115-47a1-9798-921c4de37309.png"></a>
+<h1 data-sourcepos="5:1-5:9" id="1-0-0" name="1-0-0"><a class="anchor" id="PROBLEM" name="PROBLEM" href="#PROBLEM" data-position="1-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="PROBLEM"> &gt; PROBLEM</span></a>PROBLEM</h1>
+<ul data-sourcepos="6:1-10:0">
+<li data-sourcepos="6:1-10:0">住所の不備が至るところで起きている
+<ul data-sourcepos="7:5-10:0">
+<li data-sourcepos="7:5-7:93">特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい</li>
+<li data-sourcepos="8:5-10:0">可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい
+<ul data-sourcepos="9:9-10:0">
+<li data-sourcepos="9:9-10:0">まずはOSSのライブラリをで検証したい</li>
 </ul></li>
 </ul></li>
 </ul>
-<h1 data-sourcepos="10:1-10:10" id="2-0-0" name="2-0-0"><a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
-<p data-sourcepos="11:1-11:318">というわけで、昨年（2020年）経産省IMI（情報共有基盤）から公開された住所変換コンポーネント「<a href="https://github.com/IMI-Tool-Project/imi-enrichment-address" target="_blank" rel="noopener noreferrer">IMI-Tool-Project/imi-enrichment-address</a>」がバリデーションチェックでどの程度使えるか検証します。</p>
-<h2 data-sourcepos="13:1-13:31" id="2-1-0" name="2-1-0"><a class="anchor" id="imi-enrichment-addressとは" name="imi-enrichment-addressとは" href="#imi-enrichment-addressとは" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="imi-enrichment-addressとは"> &gt; imi-enrichment-addressとは</span></a>imi-enrichment-addressとは</h2>
-<p data-sourcepos="14:1-14:186">経産省IMIツールプロジェクトで公開された住所変換コンポーネントです。CLIとサーバーが用意されていますが、今回はCLIを見ていきます。</p>
-<p data-sourcepos="16:1-16:102">ヘルプを見ると住所を引数として渡すことで処理されることが分かります。</p>
-<div class="code-block" data-sourcepos="18:1-38:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>npm <span class="nb">install</span> <span class="nt">-g</span> https://info.gbiz.go.jp/tools/imi_tools/resource/imi-enrichment-address/imi-enrichment-address-2.0.0.tgz
+<h1 data-sourcepos="11:1-11:10" id="2-0-0" name="2-0-0"><a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
+<p data-sourcepos="12:1-12:318">というわけで、昨年（2020年）経産省IMI（情報共有基盤）から公開された住所変換コンポーネント「<a href="https://github.com/IMI-Tool-Project/imi-enrichment-address" target="_blank" rel="noopener noreferrer">IMI-Tool-Project/imi-enrichment-address</a>」がバリデーションチェックでどの程度使えるか検証します。</p>
+<h2 data-sourcepos="14:1-14:31" id="2-1-0" name="2-1-0"><a class="anchor" id="imi-enrichment-addressとは" name="imi-enrichment-addressとは" href="#imi-enrichment-addressとは" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="imi-enrichment-addressとは"> &gt; imi-enrichment-addressとは</span></a>imi-enrichment-addressとは</h2>
+<p data-sourcepos="15:1-15:186">経産省IMIツールプロジェクトで公開された住所変換コンポーネントです。CLIとサーバーが用意されていますが、今回はCLIを見ていきます。</p>
+<p data-sourcepos="17:1-17:102">ヘルプを見ると住所を引数として渡すことで処理されることが分かります。</p>
+<div class="code-block" data-sourcepos="19:1-39:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>npm <span class="nb">install</span> <span class="nt">-g</span> https://info.gbiz.go.jp/tools/imi_tools/resource/imi-enrichment-address/imi-enrichment-address-2.0.0.tgz
 <span class="nv">$ </span>imi-enrichment-address <span class="nt">--help</span>
 imi-enrichment-address
 
@@ -40,8 +40,8 @@ imi-enrichment-address
   ファイルの処理   <span class="nv">$ </span>imi-enrichment-address input.json
   標準入力の処理   <span class="nv">$ </span><span class="nb">cat </span>input.json | imi-enrichment-address
 </code></pre></div></div>
-<p data-sourcepos="40:1-40:252">実行すると正確な住所を渡したときと不正確な住所を渡したときで異なった結果を返すことが分かります。今回はこの正確・不正確の異なった結果を利用して検証していこうと思います。</p>
-<div class="code-block" data-sourcepos="42:1-80:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>imi-enrichment-address <span class="nt">-s</span> 長野県長野市大字長野旭町1108
+<p data-sourcepos="41:1-41:252">実行すると正確な住所を渡したときと不正確な住所を渡したときで異なった結果を返すことが分かります。今回はこの正確・不正確の異なった結果を利用して検証していこうと思います。</p>
+<div class="code-block" data-sourcepos="43:1-81:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>imi-enrichment-address <span class="nt">-s</span> 長野県長野市大字長野旭町1108
 <span class="o">{</span>
   <span class="s2">"@context"</span>: <span class="s2">"https://imi.go.jp/ns/core/context.jsonld"</span>,
   <span class="s2">"@type"</span>: <span class="s2">"場所型"</span>,
@@ -79,14 +79,14 @@ imi-enrichment-address
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p data-sourcepos="82:1-82:433">なお、<a href="https://github.com/IMI-Tool-Project/imi-enrichment-address/blob/master/tools/download.sh" target="_blank" rel="noopener noreferrer">GitHubコード</a>を見るとimi-enrichment-addressは<a href="https://nlftp.mlit.go.jp/isj/" target="_blank" rel="noopener noreferrer">街区レベル位置参照情報</a>を利用して実装しています。このことを考えるとバリデーションチェックで積極的につかうのは難しく、ユースケースとしては下記2点に落ち着くと考えます。</p>
-<ul data-sourcepos="83:1-85:0">
-<li data-sourcepos="83:1-83:44">ユーザーに住所の再確認を促す</li>
-<li data-sourcepos="84:1-85:0">入力後の住所不備について人が目検で確認する前段階で利用</li>
+<p data-sourcepos="83:1-83:433">なお、<a href="https://github.com/IMI-Tool-Project/imi-enrichment-address/blob/master/tools/download.sh" target="_blank" rel="noopener noreferrer">GitHubコード</a>を見るとimi-enrichment-addressは<a href="https://nlftp.mlit.go.jp/isj/" target="_blank" rel="noopener noreferrer">街区レベル位置参照情報</a>を利用して実装しています。このことを考えるとバリデーションチェックで積極的につかうのは難しく、ユースケースとしては下記2点に落ち着くと考えます。</p>
+<ul data-sourcepos="84:1-86:0">
+<li data-sourcepos="84:1-84:44">ユーザーに住所の再確認を促す</li>
+<li data-sourcepos="85:1-86:0">入力後の住所不備について人が目検で確認する前段階で利用</li>
 </ul>
-<h2 data-sourcepos="86:1-86:21" id="2-2-0" name="2-2-0"><a class="anchor" id="検証用データ" name="検証用データ" href="#検証用データ" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="検証用データ"> &gt; 検証用データ</span></a>検証用データ</h2>
-<p data-sourcepos="87:1-87:347">さて、検証に進みましょう。imi-enrichment-addressで検証するデータは簡易に使える<a href="http://jusyo.jp/" target="_blank" rel="noopener noreferrer">住所.jp</a>、その中の事業所住所22402件を使います。他にも検証データはありますが、コストもそれほどかけられないのでコマンドだけで完結するものを選んでいます。</p>
-<div class="code-block" data-sourcepos="89:1-97:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>curl http://jusyo.jp/downloads/new/csv/csv_zenkoku.zip csv_zenkoku.zip
+<h2 data-sourcepos="87:1-87:21" id="2-2-0" name="2-2-0"><a class="anchor" id="検証用データ" name="検証用データ" href="#検証用データ" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="検証用データ"> &gt; 検証用データ</span></a>検証用データ</h2>
+<p data-sourcepos="88:1-88:347">さて、検証に進みましょう。imi-enrichment-addressで検証するデータは簡易に使える<a href="http://jusyo.jp/" target="_blank" rel="noopener noreferrer">住所.jp</a>、その中の事業所住所22402件を使います。他にも検証データはありますが、コストもそれほどかけられないのでコマンドだけで完結するものを選んでいます。</p>
+<div class="code-block" data-sourcepos="90:1-98:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>curl <span class="nt">-sSL</span> http://jusyo.jp/downloads/new/csv/csv_zenkoku.zip <span class="nt">-o</span> csv_zenkoku.zip
 <span class="nv">$ </span>unzip csv_zenkoku.zip
 
 <span class="nv">$ </span>go get github.com/mithrandie/csvq
@@ -94,9 +94,9 @@ imi-enrichment-address
 COUNT<span class="o">(</span><span class="k">*</span><span class="o">)</span>
 22402
 </code></pre></div></div>
-<h2 data-sourcepos="99:1-99:61" id="2-3-0" name="2-3-0"><a class="anchor" id="imi-enrichment-addressで検証用データを確認する" name="imi-enrichment-addressで検証用データを確認する" href="#imi-enrichment-addressで検証用データを確認する" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="imi-enrichment-addressで検証用データを確認する"> &gt; imi-enrichment-addressで検証用データを確認する</span></a>imi-enrichment-addressで検証用データを確認する</h2>
-<p data-sourcepos="100:1-100:120">今回実行したCLIはNodeJSであることと数時間で処理できるという点で逐次で済ませました。</p>
-<div class="code-block" data-sourcepos="102:1-124:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in</span> <span class="si">$(</span>
+<h2 data-sourcepos="100:1-100:61" id="2-3-0" name="2-3-0"><a class="anchor" id="imi-enrichment-addressで検証用データを確認する" name="imi-enrichment-addressで検証用データを確認する" href="#imi-enrichment-addressで検証用データを確認する" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="imi-enrichment-addressで検証用データを確認する"> &gt; imi-enrichment-addressで検証用データを確認する</span></a>imi-enrichment-addressで検証用データを確認する</h2>
+<p data-sourcepos="101:1-101:120">今回実行したCLIはNodeJSであることと数時間で処理できるという点で逐次で済ませました。</p>
+<div class="code-block" data-sourcepos="103:1-125:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="k">for </span>i <span class="k">in</span> <span class="si">$(</span>
   csvq <span class="nt">-f</span> CSV <span class="s2">"SELECT 都道府県,市区町村,事業所住所 FROM zenkoku WHERE 事業所住所 IS NOT NULL"</span> <span class="se">\</span>
   | <span class="nb">sed</span> <span class="s1">'s/,//g'</span> <span class="se">\</span>
   | <span class="nb">tail</span> +2 <span class="se">\</span>
@@ -118,276 +118,276 @@ COUNT<span class="o">(</span><span class="k">*</span><span class="o">)</span>
   '</span> <span class="o">&gt;&gt;</span>output.csv<span class="p">;</span>
 <span class="k">done</span> &amp;
 </code></pre></div></div>
-<h2 data-sourcepos="126:1-126:60" id="2-4-0" name="2-4-0"><a class="anchor" id="バリデーションチェックの結果を確認する" name="バリデーションチェックの結果を確認する" href="#バリデーションチェックの結果を確認する" data-position="2-4-0"><i class="fa fa-link"></i><span class="hidden" data-text="バリデーションチェックの結果を確認する"> &gt; バリデーションチェックの結果を確認する</span></a>バリデーションチェックの結果を確認する</h2>
-<p data-sourcepos="127:1-127:363">imi-enrichment-addressの出力結果を確認したところ全国で9.25%が無効、下記の通り町名番地の表記揺れに弱いことが分かりました。特に町字（まちあざ）省略によるバリデーションエラーの比率が高く、青森、長野、沖縄等複数の県の住所が実用に耐えない結果となりました。</p>
-<p data-sourcepos="129:1-129:52"><strong>バリデーションエラーになった原因</strong></p>
-<ul data-sourcepos="130:1-135:0">
-<li data-sourcepos="130:1-130:35">各地方の字・大字の省略</li>
-<li data-sourcepos="131:1-131:41">京都の通り上る・下るの表記</li>
-<li data-sourcepos="132:1-132:38">北海道の条、線の表記揺れ</li>
-<li data-sourcepos="133:1-133:35">茨城、岐阜等の町名省略</li>
-<li data-sourcepos="134:1-135:0">茨城、神奈川、岐阜、石川等の区画整理地</li>
+<h2 data-sourcepos="127:1-127:60" id="2-4-0" name="2-4-0"><a class="anchor" id="バリデーションチェックの結果を確認する" name="バリデーションチェックの結果を確認する" href="#バリデーションチェックの結果を確認する" data-position="2-4-0"><i class="fa fa-link"></i><span class="hidden" data-text="バリデーションチェックの結果を確認する"> &gt; バリデーションチェックの結果を確認する</span></a>バリデーションチェックの結果を確認する</h2>
+<p data-sourcepos="128:1-128:363">imi-enrichment-addressの出力結果を確認したところ全国で9.25%が無効、下記の通り町名番地の表記揺れに弱いことが分かりました。特に町字（まちあざ）省略によるバリデーションエラーの比率が高く、青森、長野、沖縄等複数の県の住所が実用に耐えない結果となりました。</p>
+<p data-sourcepos="130:1-130:52"><strong>バリデーションエラーになった原因</strong></p>
+<ul data-sourcepos="131:1-136:0">
+<li data-sourcepos="131:1-131:35">各地方の字・大字の省略</li>
+<li data-sourcepos="132:1-132:41">京都の通り上る・下るの表記</li>
+<li data-sourcepos="133:1-133:38">北海道の条、線の表記揺れ</li>
+<li data-sourcepos="134:1-134:35">茨城、岐阜等の町名省略</li>
+<li data-sourcepos="135:1-136:0">茨城、神奈川、岐阜、石川等の区画整理地</li>
 </ul>
-<table data-sourcepos="136:1-185:20">
+<table data-sourcepos="137:1-186:20">
 <thead>
-<tr data-sourcepos="136:1-136:47">
-<th data-sourcepos="136:2-136:15">都道府県</th>
-<th data-sourcepos="136:17-136:37">無効割合（%）</th>
-<th data-sourcepos="136:39-136:46">備考</th>
+<tr data-sourcepos="137:1-137:47">
+<th data-sourcepos="137:2-137:15">都道府県</th>
+<th data-sourcepos="137:17-137:37">無効割合（%）</th>
+<th data-sourcepos="137:39-137:46">備考</th>
 </tr>
 </thead>
 <tbody>
-<tr data-sourcepos="138:1-138:48">
-<td data-sourcepos="138:2-138:12">青森県</td>
-<td data-sourcepos="138:14-138:20">54.42</td>
-<td data-sourcepos="138:22-138:47">字省略により無効</td>
-</tr>
 <tr data-sourcepos="139:1-139:48">
-<td data-sourcepos="139:2-139:12">長野県</td>
-<td data-sourcepos="139:14-139:20">44.28</td>
+<td data-sourcepos="139:2-139:12">青森県</td>
+<td data-sourcepos="139:14-139:20">54.42</td>
 <td data-sourcepos="139:22-139:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="140:1-140:48">
-<td data-sourcepos="140:2-140:12">沖縄県</td>
-<td data-sourcepos="140:14-140:20">43.55</td>
+<td data-sourcepos="140:2-140:12">長野県</td>
+<td data-sourcepos="140:14-140:20">44.28</td>
 <td data-sourcepos="140:22-140:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="141:1-141:48">
-<td data-sourcepos="141:2-141:12">大分県</td>
-<td data-sourcepos="141:14-141:20">38.96</td>
+<td data-sourcepos="141:2-141:12">沖縄県</td>
+<td data-sourcepos="141:14-141:20">43.55</td>
 <td data-sourcepos="141:22-141:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="142:1-142:57">
-<td data-sourcepos="142:2-142:12">京都府</td>
-<td data-sourcepos="142:14-142:20">36.86</td>
-<td data-sourcepos="142:22-142:56">字省略、通りにより無効</td>
+<tr data-sourcepos="142:1-142:48">
+<td data-sourcepos="142:2-142:12">大分県</td>
+<td data-sourcepos="142:14-142:20">38.96</td>
+<td data-sourcepos="142:22-142:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="143:1-143:48">
-<td data-sourcepos="143:2-143:12">佐賀県</td>
-<td data-sourcepos="143:14-143:20">33.33</td>
-<td data-sourcepos="143:22-143:47">字省略により無効</td>
+<tr data-sourcepos="143:1-143:57">
+<td data-sourcepos="143:2-143:12">京都府</td>
+<td data-sourcepos="143:14-143:20">36.86</td>
+<td data-sourcepos="143:22-143:56">字省略、通りにより無効</td>
 </tr>
 <tr data-sourcepos="144:1-144:48">
-<td data-sourcepos="144:2-144:12">奈良県</td>
-<td data-sourcepos="144:14-144:20">29.94</td>
+<td data-sourcepos="144:2-144:12">佐賀県</td>
+<td data-sourcepos="144:14-144:20">33.33</td>
 <td data-sourcepos="144:22-144:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="145:1-145:48">
-<td data-sourcepos="145:2-145:12">福島県</td>
-<td data-sourcepos="145:14-145:20">29.18</td>
+<td data-sourcepos="145:2-145:12">奈良県</td>
+<td data-sourcepos="145:14-145:20">29.94</td>
 <td data-sourcepos="145:22-145:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="146:1-146:48">
-<td data-sourcepos="146:2-146:12">宮崎県</td>
-<td data-sourcepos="146:14-146:20">27.71</td>
+<td data-sourcepos="146:2-146:12">福島県</td>
+<td data-sourcepos="146:14-146:20">29.18</td>
 <td data-sourcepos="146:22-146:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="147:1-147:48">
-<td data-sourcepos="147:2-147:12">埼玉県</td>
-<td data-sourcepos="147:14-147:20">23.08</td>
+<td data-sourcepos="147:2-147:12">宮崎県</td>
+<td data-sourcepos="147:14-147:20">27.71</td>
 <td data-sourcepos="147:22-147:47">字省略により無効</td>
 </tr>
 <tr data-sourcepos="148:1-148:48">
-<td data-sourcepos="148:2-148:12">山口県</td>
-<td data-sourcepos="148:14-148:20">22.65</td>
+<td data-sourcepos="148:2-148:12">埼玉県</td>
+<td data-sourcepos="148:14-148:20">23.08</td>
 <td data-sourcepos="148:22-148:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="149:1-149:51">
-<td data-sourcepos="149:2-149:15">和歌山県</td>
-<td data-sourcepos="149:17-149:23">17.78</td>
-<td data-sourcepos="149:25-149:50">字省略により無効</td>
+<tr data-sourcepos="149:1-149:48">
+<td data-sourcepos="149:2-149:12">山口県</td>
+<td data-sourcepos="149:14-149:20">22.65</td>
+<td data-sourcepos="149:22-149:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="150:1-150:57">
-<td data-sourcepos="150:2-150:12">群馬県</td>
-<td data-sourcepos="150:14-150:20">17.08</td>
-<td data-sourcepos="150:22-150:56">字省略、ノ町により無効</td>
+<tr data-sourcepos="150:1-150:51">
+<td data-sourcepos="150:2-150:15">和歌山県</td>
+<td data-sourcepos="150:17-150:23">17.78</td>
+<td data-sourcepos="150:25-150:50">字省略により無効</td>
 </tr>
-<tr data-sourcepos="151:1-151:78">
-<td data-sourcepos="151:2-151:12">茨城県</td>
-<td data-sourcepos="151:14-151:20">15.51</td>
-<td data-sourcepos="151:22-151:77">字省略、町名省略、区画整理により無効</td>
+<tr data-sourcepos="151:1-151:57">
+<td data-sourcepos="151:2-151:12">群馬県</td>
+<td data-sourcepos="151:14-151:20">17.08</td>
+<td data-sourcepos="151:22-151:56">字省略、ノ町により無効</td>
 </tr>
-<tr data-sourcepos="152:1-152:48">
-<td data-sourcepos="152:2-152:12">熊本県</td>
-<td data-sourcepos="152:14-152:20">14.89</td>
-<td data-sourcepos="152:22-152:47">字省略により無効</td>
+<tr data-sourcepos="152:1-152:78">
+<td data-sourcepos="152:2-152:12">茨城県</td>
+<td data-sourcepos="152:14-152:20">15.51</td>
+<td data-sourcepos="152:22-152:77">字省略、町名省略、区画整理により無効</td>
 </tr>
 <tr data-sourcepos="153:1-153:48">
-<td data-sourcepos="153:2-153:12">山形県</td>
-<td data-sourcepos="153:14-153:20">14.38</td>
+<td data-sourcepos="153:2-153:12">熊本県</td>
+<td data-sourcepos="153:14-153:20">14.89</td>
 <td data-sourcepos="153:22-153:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="154:1-154:60">
-<td data-sourcepos="154:2-154:12">北海道</td>
-<td data-sourcepos="154:14-154:20">13.76</td>
-<td data-sourcepos="154:22-154:59">字省略、条、線により無効</td>
+<tr data-sourcepos="154:1-154:48">
+<td data-sourcepos="154:2-154:12">山形県</td>
+<td data-sourcepos="154:14-154:20">14.38</td>
+<td data-sourcepos="154:22-154:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="155:1-155:47">
-<td data-sourcepos="155:2-155:12">栃木県</td>
-<td data-sourcepos="155:14-155:19">13.6</td>
-<td data-sourcepos="155:21-155:46">字省略により無効</td>
+<tr data-sourcepos="155:1-155:60">
+<td data-sourcepos="155:2-155:12">北海道</td>
+<td data-sourcepos="155:14-155:20">13.76</td>
+<td data-sourcepos="155:22-155:59">字省略、条、線により無効</td>
 </tr>
-<tr data-sourcepos="156:1-156:48">
-<td data-sourcepos="156:2-156:12">新潟県</td>
-<td data-sourcepos="156:14-156:20">13.19</td>
-<td data-sourcepos="156:22-156:47">字省略により無効</td>
+<tr data-sourcepos="156:1-156:47">
+<td data-sourcepos="156:2-156:12">栃木県</td>
+<td data-sourcepos="156:14-156:19">13.6</td>
+<td data-sourcepos="156:21-156:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="157:1-157:47">
-<td data-sourcepos="157:2-157:12">鳥取県</td>
-<td data-sourcepos="157:14-157:19">9.57</td>
-<td data-sourcepos="157:21-157:46">字省略により無効</td>
+<tr data-sourcepos="157:1-157:48">
+<td data-sourcepos="157:2-157:12">新潟県</td>
+<td data-sourcepos="157:14-157:20">13.19</td>
+<td data-sourcepos="157:22-157:47">字省略により無効</td>
 </tr>
-<tr data-sourcepos="158:1-158:19">
-<td data-sourcepos="158:2-158:9">全国</td>
-<td data-sourcepos="158:11-158:16">9.25</td>
-<td data-sourcepos="158:18-158:18"></td>
+<tr data-sourcepos="158:1-158:47">
+<td data-sourcepos="158:2-158:12">鳥取県</td>
+<td data-sourcepos="158:14-158:19">9.57</td>
+<td data-sourcepos="158:21-158:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="159:1-159:44">
-<td data-sourcepos="159:2-159:12">福岡県</td>
-<td data-sourcepos="159:14-159:16">9</td>
-<td data-sourcepos="159:18-159:43">字省略により無効</td>
+<tr data-sourcepos="159:1-159:19">
+<td data-sourcepos="159:2-159:9">全国</td>
+<td data-sourcepos="159:11-159:16">9.25</td>
+<td data-sourcepos="159:18-159:18"></td>
 </tr>
-<tr data-sourcepos="160:1-160:47">
-<td data-sourcepos="160:2-160:12">三重県</td>
-<td data-sourcepos="160:14-160:19">7.74</td>
-<td data-sourcepos="160:21-160:46">字省略により無効</td>
+<tr data-sourcepos="160:1-160:44">
+<td data-sourcepos="160:2-160:12">福岡県</td>
+<td data-sourcepos="160:14-160:16">9</td>
+<td data-sourcepos="160:18-160:43">字省略により無効</td>
 </tr>
-<tr data-sourcepos="161:1-161:46">
-<td data-sourcepos="161:2-161:12">愛知県</td>
-<td data-sourcepos="161:14-161:18">7.4</td>
-<td data-sourcepos="161:20-161:45">字省略により無効</td>
+<tr data-sourcepos="161:1-161:47">
+<td data-sourcepos="161:2-161:12">三重県</td>
+<td data-sourcepos="161:14-161:19">7.74</td>
+<td data-sourcepos="161:21-161:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="162:1-162:50">
-<td data-sourcepos="162:2-162:15">鹿児島県</td>
-<td data-sourcepos="162:17-162:22">7.09</td>
-<td data-sourcepos="162:24-162:49">字省略により無効</td>
+<tr data-sourcepos="162:1-162:46">
+<td data-sourcepos="162:2-162:12">愛知県</td>
+<td data-sourcepos="162:14-162:18">7.4</td>
+<td data-sourcepos="162:20-162:45">字省略により無効</td>
 </tr>
-<tr data-sourcepos="163:1-163:46">
-<td data-sourcepos="163:2-163:12">山梨県</td>
-<td data-sourcepos="163:14-163:18">6.8</td>
-<td data-sourcepos="163:20-163:45">字省略により無効</td>
+<tr data-sourcepos="163:1-163:50">
+<td data-sourcepos="163:2-163:15">鹿児島県</td>
+<td data-sourcepos="163:17-163:22">7.09</td>
+<td data-sourcepos="163:24-163:49">字省略により無効</td>
 </tr>
-<tr data-sourcepos="164:1-164:47">
-<td data-sourcepos="164:2-164:12">宮城県</td>
-<td data-sourcepos="164:14-164:19">6.37</td>
-<td data-sourcepos="164:21-164:46">字省略により無効</td>
+<tr data-sourcepos="164:1-164:46">
+<td data-sourcepos="164:2-164:12">山梨県</td>
+<td data-sourcepos="164:14-164:18">6.8</td>
+<td data-sourcepos="164:20-164:45">字省略により無効</td>
 </tr>
 <tr data-sourcepos="165:1-165:47">
-<td data-sourcepos="165:2-165:12">岩手県</td>
-<td data-sourcepos="165:14-165:19">6.28</td>
+<td data-sourcepos="165:2-165:12">宮城県</td>
+<td data-sourcepos="165:14-165:19">6.37</td>
 <td data-sourcepos="165:21-165:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="166:1-166:77">
-<td data-sourcepos="166:2-166:12">岐阜県</td>
-<td data-sourcepos="166:14-166:19">5.67</td>
-<td data-sourcepos="166:21-166:76">字省略、町名省略、区画整理により無効</td>
+<tr data-sourcepos="166:1-166:47">
+<td data-sourcepos="166:2-166:12">岩手県</td>
+<td data-sourcepos="166:14-166:19">6.28</td>
+<td data-sourcepos="166:21-166:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="167:1-167:47">
-<td data-sourcepos="167:2-167:12">香川県</td>
-<td data-sourcepos="167:14-167:19">4.71</td>
-<td data-sourcepos="167:21-167:46">字省略により無効</td>
+<tr data-sourcepos="167:1-167:77">
+<td data-sourcepos="167:2-167:12">岐阜県</td>
+<td data-sourcepos="167:14-167:19">5.67</td>
+<td data-sourcepos="167:21-167:76">字省略、町名省略、区画整理により無効</td>
 </tr>
-<tr data-sourcepos="168:1-168:61">
-<td data-sourcepos="168:2-168:12">石川県</td>
-<td data-sourcepos="168:14-168:18">4.7</td>
-<td data-sourcepos="168:20-168:60">字省略、区画整理により無効</td>
+<tr data-sourcepos="168:1-168:47">
+<td data-sourcepos="168:2-168:12">香川県</td>
+<td data-sourcepos="168:14-168:19">4.71</td>
+<td data-sourcepos="168:21-168:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="169:1-169:47">
-<td data-sourcepos="169:2-169:12">愛媛県</td>
-<td data-sourcepos="169:14-169:19">4.39</td>
-<td data-sourcepos="169:21-169:46">字省略により無効</td>
+<tr data-sourcepos="169:1-169:61">
+<td data-sourcepos="169:2-169:12">石川県</td>
+<td data-sourcepos="169:14-169:18">4.7</td>
+<td data-sourcepos="169:20-169:60">字省略、区画整理により無効</td>
 </tr>
 <tr data-sourcepos="170:1-170:47">
-<td data-sourcepos="170:2-170:12">秋田県</td>
-<td data-sourcepos="170:14-170:19">4.17</td>
+<td data-sourcepos="170:2-170:12">愛媛県</td>
+<td data-sourcepos="170:14-170:19">4.39</td>
 <td data-sourcepos="170:21-170:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="171:1-171:47">
-<td data-sourcepos="171:2-171:12">滋賀県</td>
-<td data-sourcepos="171:14-171:19">3.76</td>
+<td data-sourcepos="171:2-171:12">秋田県</td>
+<td data-sourcepos="171:14-171:19">4.17</td>
 <td data-sourcepos="171:21-171:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="172:1-172:47">
-<td data-sourcepos="172:2-172:12">広島県</td>
-<td data-sourcepos="172:14-172:19">3.74</td>
+<td data-sourcepos="172:2-172:12">滋賀県</td>
+<td data-sourcepos="172:14-172:19">3.76</td>
 <td data-sourcepos="172:21-172:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="173:1-173:47">
-<td data-sourcepos="173:2-173:12">高知県</td>
-<td data-sourcepos="173:14-173:19">3.38</td>
+<td data-sourcepos="173:2-173:12">広島県</td>
+<td data-sourcepos="173:14-173:19">3.74</td>
 <td data-sourcepos="173:21-173:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="174:1-174:47">
-<td data-sourcepos="174:2-174:12">大阪府</td>
-<td data-sourcepos="174:14-174:19">3.28</td>
+<td data-sourcepos="174:2-174:12">高知県</td>
+<td data-sourcepos="174:14-174:19">3.38</td>
 <td data-sourcepos="174:21-174:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="175:1-175:47">
-<td data-sourcepos="175:2-175:12">兵庫県</td>
-<td data-sourcepos="175:14-175:19">2.71</td>
+<td data-sourcepos="175:2-175:12">大阪府</td>
+<td data-sourcepos="175:14-175:19">3.28</td>
 <td data-sourcepos="175:21-175:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="176:1-176:47">
-<td data-sourcepos="176:2-176:12">島根県</td>
-<td data-sourcepos="176:14-176:19">2.04</td>
+<td data-sourcepos="176:2-176:12">兵庫県</td>
+<td data-sourcepos="176:14-176:19">2.71</td>
 <td data-sourcepos="176:21-176:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="177:1-177:47">
-<td data-sourcepos="177:2-177:12">岡山県</td>
-<td data-sourcepos="177:14-177:19">1.81</td>
+<td data-sourcepos="177:2-177:12">島根県</td>
+<td data-sourcepos="177:14-177:19">2.04</td>
 <td data-sourcepos="177:21-177:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="178:1-178:65">
-<td data-sourcepos="178:2-178:15">神奈川県</td>
-<td data-sourcepos="178:17-178:22">1.72</td>
-<td data-sourcepos="178:24-178:64">字省略、区画整理により無効</td>
+<tr data-sourcepos="178:1-178:47">
+<td data-sourcepos="178:2-178:12">岡山県</td>
+<td data-sourcepos="178:14-178:19">1.81</td>
+<td data-sourcepos="178:21-178:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="179:1-179:47">
-<td data-sourcepos="179:2-179:12">徳島県</td>
-<td data-sourcepos="179:14-179:19">1.64</td>
-<td data-sourcepos="179:21-179:46">字省略により無効</td>
+<tr data-sourcepos="179:1-179:65">
+<td data-sourcepos="179:2-179:15">神奈川県</td>
+<td data-sourcepos="179:17-179:22">1.72</td>
+<td data-sourcepos="179:24-179:64">字省略、区画整理により無効</td>
 </tr>
 <tr data-sourcepos="180:1-180:47">
-<td data-sourcepos="180:2-180:12">富山県</td>
-<td data-sourcepos="180:14-180:19">1.14</td>
+<td data-sourcepos="180:2-180:12">徳島県</td>
+<td data-sourcepos="180:14-180:19">1.64</td>
 <td data-sourcepos="180:21-180:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="181:1-181:77">
-<td data-sourcepos="181:2-181:12">静岡県</td>
-<td data-sourcepos="181:14-181:19">1.06</td>
-<td data-sourcepos="181:21-181:76">字省略、町名省略、区画整理により無効</td>
+<tr data-sourcepos="181:1-181:47">
+<td data-sourcepos="181:2-181:12">富山県</td>
+<td data-sourcepos="181:14-181:19">1.14</td>
+<td data-sourcepos="181:21-181:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="182:1-182:47">
-<td data-sourcepos="182:2-182:12">東京都</td>
-<td data-sourcepos="182:14-182:19">0.89</td>
-<td data-sourcepos="182:21-182:46">字省略により無効</td>
+<tr data-sourcepos="182:1-182:77">
+<td data-sourcepos="182:2-182:12">静岡県</td>
+<td data-sourcepos="182:14-182:19">1.06</td>
+<td data-sourcepos="182:21-182:76">字省略、町名省略、区画整理により無効</td>
 </tr>
 <tr data-sourcepos="183:1-183:47">
-<td data-sourcepos="183:2-183:12">福井県</td>
-<td data-sourcepos="183:14-183:19">0.71</td>
+<td data-sourcepos="183:2-183:12">東京都</td>
+<td data-sourcepos="183:14-183:19">0.89</td>
 <td data-sourcepos="183:21-183:46">字省略により無効</td>
 </tr>
 <tr data-sourcepos="184:1-184:47">
-<td data-sourcepos="184:2-184:12">千葉県</td>
-<td data-sourcepos="184:14-184:19">0.64</td>
+<td data-sourcepos="184:2-184:12">福井県</td>
+<td data-sourcepos="184:14-184:19">0.71</td>
 <td data-sourcepos="184:21-184:46">字省略により無効</td>
 </tr>
-<tr data-sourcepos="185:1-185:20">
-<td data-sourcepos="185:2-185:12">長崎県</td>
-<td data-sourcepos="185:14-185:16">0</td>
-<td data-sourcepos="185:18-185:19"></td>
+<tr data-sourcepos="185:1-185:47">
+<td data-sourcepos="185:2-185:12">千葉県</td>
+<td data-sourcepos="185:14-185:19">0.64</td>
+<td data-sourcepos="185:21-185:46">字省略により無効</td>
+</tr>
+<tr data-sourcepos="186:1-186:20">
+<td data-sourcepos="186:2-186:12">長崎県</td>
+<td data-sourcepos="186:14-186:16">0</td>
+<td data-sourcepos="186:18-186:19"></td>
 </tr>
 </tbody>
 </table>
-<h1 data-sourcepos="188:1-188:8" id="3-0-0" name="3-0-0"><a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
-<p data-sourcepos="189:1-189:190">imi-enrichment-addressは町名番地の判定に素の街区レベル位置参照情報を使用しているため、町字（まちあざ）の省略に弱いことが分かりました。</p>
-<ul data-sourcepos="191:1-193:0">
-<li data-sourcepos="191:1-191:44">ユーザーに住所の再確認を促す</li>
-<li data-sourcepos="192:1-193:0">入力後の住所不備について人が目検で確認する前段階で利用</li>
+<h1 data-sourcepos="189:1-189:8" id="3-0-0" name="3-0-0"><a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
+<p data-sourcepos="190:1-190:190">imi-enrichment-addressは町名番地の判定に素の街区レベル位置参照情報を使用しているため、町字（まちあざ）の省略に弱いことが分かりました。</p>
+<ul data-sourcepos="192:1-194:0">
+<li data-sourcepos="192:1-192:44">ユーザーに住所の再確認を促す</li>
+<li data-sourcepos="193:1-194:0">入力後の住所不備について人が目検で確認する前段階で利用</li>
 </ul>
-<p data-sourcepos="194:1-194:698">まず、想定したユースケースの内1つ「ユーザーに住所の再確認を促す」については、配送で使う住所の場合「<a href="https://www.post.japanpost.jp/question/35.html" target="_blank" rel="noopener noreferrer">町字の省略は影響ない</a>」ので機能として適切ではありません。ユーザーが東京に集中している場合は関係ないですが、「<a href="https://ja.wikipedia.org/wiki/%E5%A4%A7%E5%AD%97" target="_blank" rel="noopener noreferrer">町字が存在するさいたま市、川崎市、名古屋市、広島市、北九州市、福岡市、熊本市等の政令指定都市</a>」や長野市のように住所が町字の組み合わせで2つ以上存在する都市の場合、使い勝手の悪い機能となります。</p>
-<p data-sourcepos="196:1-196:243">次に「入力後の住所不備について人が目検で確認する前段階で利用」については多少は有効に機能するでしょう。ただし、町字が多い地域では上記同様に使い勝手が悪くなります。</p>
-<p data-sourcepos="198:1-198:394">今回の検証の結果、現状の仕様ではimi-enrichment-addressを使うケースは限定せざるを得ず、一旦使用を見送りとします。とは言え、街区レベル位置参照情報にある町名番地から町字を除けば活用範囲が広がる可能性も確認できました。幸いなことにライブラリはMITライセンスで公開されています。</p>
+<p data-sourcepos="195:1-195:698">まず、想定したユースケースの内1つ「ユーザーに住所の再確認を促す」については、配送で使う住所の場合「<a href="https://www.post.japanpost.jp/question/35.html" target="_blank" rel="noopener noreferrer">町字の省略は影響ない</a>」ので機能として適切ではありません。ユーザーが東京に集中している場合は関係ないですが、「<a href="https://ja.wikipedia.org/wiki/%E5%A4%A7%E5%AD%97" target="_blank" rel="noopener noreferrer">町字が存在するさいたま市、川崎市、名古屋市、広島市、北九州市、福岡市、熊本市等の政令指定都市</a>」や長野市のように住所が町字の組み合わせで2つ以上存在する都市の場合、使い勝手の悪い機能となります。</p>
+<p data-sourcepos="197:1-197:243">次に「入力後の住所不備について人が目検で確認する前段階で利用」については多少は有効に機能するでしょう。ただし、町字が多い地域では上記同様に使い勝手が悪くなります。</p>
+<p data-sourcepos="199:1-199:394">今回の検証の結果、現状の仕様ではimi-enrichment-addressを使うケースは限定せざるを得ず、一旦使用を見送りとします。とは言え、街区レベル位置参照情報にある町名番地から町字を除けば活用範囲が広がる可能性も確認できました。幸いなことにライブラリはMITライセンスで公開されています。</p>
 </div><style data-emotion-css="k022ln">.css-k022ln > .heading{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;margin-bottom:4.375rem;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.css-k022ln > .heading > .avatar{height:50px;width:50;margin-right:8px;border-radius:21px;}.css-k022ln > .heading > .description > a{color:#58463C;}.css-k022ln > .heading > .description > a:hover{color:#80695F;}</style><div class="css-k022ln ewgr1al0"><div class="heading"><img class="avatar" src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg" alt="nabinno"/><div class="description">Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br/><a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a> / <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a> / <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a> / <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a> / <a href="https://www.wantedly.com/companies/nextinnovation" target="_blank" rel="noopener noreferrer">ネクイノ</a></div></div></div></div><style data-emotion-css="1r17nfx">.css-1r17nfx{box-shadow:none;color:inherit;display:block;-webkit-text-decoration:none;text-decoration:none;}</style><a class="css-1r17nfx" href="/posts/90"><style data-emotion-css="xbv8og">.css-xbv8og{height:100%;background-color:white;border-radius:8px;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;border-bottom:1px solid #eee;padding:20px 12px;}@media (min-width:624px){.css-xbv8og{padding-left:0;padding-right:0;}}.css-xbv8og:hover .title{color:#80695F;}</style><div class="css-xbv8og"><style data-emotion-css="19idom">.css-19idom{margin-bottom:8px;}</style><div class="css-19idom eff00rj1"><style data-emotion-css="lhqszh">.css-lhqszh{line-height:1.4;background-color:white;font-weight:600;display:inline-block;font-size:12px;background-image:linear-gradient( 45deg,#58463C 0px,#80695F 100% );color:white;text-transform:capitalize;-webkit-letter-spacing:0.2px;-moz-letter-spacing:0.2px;-ms-letter-spacing:0.2px;letter-spacing:0.2px;border-style:solid;border-color:rgb(221,221,221);border-image:initial;margin:0px 8px 4px 0px;padding:4px 6px;border-radius:3px;border-width:0px;}</style><div class="css-lhqszh eff00rj0">blog/backend</div><style data-emotion-css="jsyva2">.css-jsyva2{margin-bottom:1px;font-size:18px;line-height:1.48;color:#1a202c;}</style><h3 class="title css-jsyva2 eff00rj2">yubinbango-dataをどうやって生成するか</h3><style data-emotion-css="1p4gbp4">.css-1p4gbp4{color:#1a202c;opacity:0.6;font-size:14px;line-height:1.6;word-break:break-all;overflow-y:hidden;max-height:67.2px;}</style><p class="css-1p4gbp4 eff00rj3">郵便番号から住所を補完するライブラリ「yubinbango」を継続的に利用するにあたり、当該ライブラリが参照している郵便データ「yubinbango-data」を自前でメンテナンスできるか確認します。</p></div><style data-emotion-css="8xl60i">.css-8xl60i{margin-top:auto;}</style><div class="css-8xl60i eff00rj4"><style data-emotion-css="2qp2g2">.css-2qp2g2{font-size:12px;font-weight:700;color:#666;}.css-2qp2g2:after{content:' ';width:1px;height:100%;background-color:#ddd;display:inline-block;}</style><time class="css-2qp2g2 eff00rj5">2021/07/24</time><style data-emotion-css="om1c75">.css-om1c75{font-size:12px;margin-left:4px;}.css-om1c75:before{content:'#';}</style><span class="css-om1c75 eff00rj6">yubinbango</span><span class="css-om1c75 eff00rj6">ken_all.csv</span><span class="css-om1c75 eff00rj6">jq</span><span class="css-om1c75 eff00rj6">trdsql</span></div></div></a><a class="css-1r17nfx" href="/posts/80"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">AWS Organizationsを別のAWSアカウントに移行する</h3><p class="css-1p4gbp4 eff00rj3">最近のAWSはCDKの発表に代表されるようにインフラ以外の開発者が触りやすい環境が整ってきています。ただ、こうした機能やリソースを存分に享受するにはIAM管理だけでは不足しており、AWSアカウントの管</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2021/05/13</time><span class="css-om1c75 eff00rj6">aws-organizations</span></div></div></a><a class="css-1r17nfx" href="/posts/55"><div class="css-xbv8og"><div class="css-19idom eff00rj1"><div class="css-lhqszh eff00rj0">blog/backend</div><h3 class="title css-jsyva2 eff00rj2">PositiveSSLをHerokuに適用する</h3><p class="css-1p4gbp4 eff00rj3">年に1回のSSL更新のイベントです。毎年同じことをすれば良いかというとそうでもなく、販社と卸の都合でSSLの購入方法が微妙に変わります。とは言え、毎年一から調べ直すのも手間なので備忘として記しておきま</p></div><div class="css-8xl60i eff00rj4"><time class="css-2qp2g2 eff00rj5">2017/04/23</time></div></div></a></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script>
   
   
