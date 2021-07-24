@@ -53,7 +53,7 @@
     | map({ (.value.zip): [1, .value.city, .value.town, .value.building] })
     | add
   '</span> <span class="se">\</span>
-  | <span class="nb">sed</span> <span class="nt">-E</span> <span class="s1">'s/(.+?)/$yubin(\1)/g'</span> <span class="se">\</span>
+  | <span class="nb">sed</span> <span class="nt">-E</span> <span class="s1">'s/(.+?)/$yubin(\1);/g'</span> <span class="se">\</span>
   <span class="o">&gt;</span><span class="nv">$i</span>.js<span class="p">;</span>
 <span class="k">done</span>
 </code></pre></div></div>
