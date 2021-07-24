@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 23 Jul 2021 19:19:26 GMT</lastBuildDate><item><title><![CDATA[imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか]]></title><description><![CDATA[コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-addressが住所のバリデーションチェックでどの程度使えるか検証してみました。
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 24 Jul 2021 17:18:34 GMT</lastBuildDate><item><title><![CDATA[yubinbango-dataをどうやって生成するか]]></title><description><![CDATA[郵便番号から住所を補完するライブラリ「yubinbango」を継続的に利用するにあたり、当該ライブラリが参照している郵便データ「yubinbango-data」を自前でメンテナンスできるか確認します。   > PROBLEMPROBLEM 
+
+- 「yubinbango/yubinbango」を利用するにあたり「yubinbango/yubinbango-data」の更新が継続的に行われるかサービス継続性の懸念がある そこで自前でメンテナンスをする場合の対処方法を事前に知っておきたい 
+- そこで自前でメンテナンスをする場合の対処方法を事前に知っておきたい  > SOLUTIONSOLUTION 
+
+というわけで、yubinbango-dataの中身であるken_all.csvとjigyosyo.csvを安定して変換する方法を確認します。  > ken_all.csvを正規化するken_all.csvを正規化する 
+
+yubinbango-dataのken_all.csvの部分はアイビスが提供しているzipcloudを参照しているようなので、そちらに合わせて利用します。 sh
+
+sudo apt install nkf { curl -sSL "http://zipcloud.ibsnet.co.jp/zipcodedata/download?di=1625040649647" -o ./x_ken_all.zip; unzip -p x_ken_all.zip | nkf -w; rm x_ken_all.zip } >ken_all.csv  
+
+zipcloudを使うことに抵抗がある場合はgokenallもありますが、正規化によって一つの郵便番号に複数の町名番地が存在するため郵便番号をキーとするyubinbango-dataに変換する際には工夫が必要です。 sh
+
+go get github.com/oirik/gokenall/cmd/kenall { kenall download -x | kenall normalize } >ken_all.csv   > jigyosyo.csvを取得するjigyosyo.csvを取得する 
+
+jigyosyo.csvは特に正規化は必要ないです。 sh
+
+{ curl -sSL https://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip -o ./jigyosyo.zip; unzip -p jigyosyo.zip | nkf -w; rm jigyosyo.zip } >jigyosyo.csv   > yubinbango-dataを生成するyubinbango-dataを生成する 
+
+ken_all.csvとjigyosyo.csvをUNIONしてjqで郵便番号をキーとしたオブジェクトに変換します。一部buildingカラムがnullを持っていたり、$yubin関数としてオブジェクトを保持していなかったりyubinbango-dataとして異なる部分はありますが、大凡同等の状態にまで持っていくことが出来ました。 sh
+
+for i in {001..999}; do trdsql -ojson " SELECT * FROM ( SELECT c3 zip, c8 city, c9 town, NULL building FROM ken_all.csv UNION SELECT c8 zip, c5 city, c6 town, c7 building FROM jigyosyo.csv ) WHERE SUBSTRING(zip,0,4) = '$i' ORDER BY zip ASC " \ | jq --compact-output ' . | to_entries | map({ (.value.zip): [1, .value.city, .value.town, .value.building] }) | add ' >$i.js; done   > WRAPUPWRAPUP 
+
+昔から何かと話題に上がるken_all.csvですが、正規化のサービスに加えCSV用SQLクライアントとjqの登場により思った以上に簡単に変換することができました。]]></description><link>https://nabinno.github.io/posts/90</link><guid isPermaLink="false">90</guid><pubDate>Sat, 24 Jul 2021 17:16:48 GMT</pubDate></item><item><title><![CDATA[imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか]]></title><description><![CDATA[コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回はOSSライブラリimi-enrichment-addressが住所のバリデーションチェックでどの程度使えるか検証してみました。
    > PROBLEMPROBLEM 
 
 - 住所の不備が至るところで起きている 特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい 可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい まずはOSSのライブラリをで検証したい 
