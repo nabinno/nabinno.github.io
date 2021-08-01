@@ -1,4 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 25 Jul 2021 03:11:06 GMT</lastBuildDate><item><title><![CDATA[yubinbango-dataをどうやって生成するか]]></title><description><![CDATA[郵便番号から住所を補完するライブラリ「yubinbango」を継続的に利用するにあたり、当該ライブラリが参照している郵便データ「yubinbango-data」を自前でメンテナンスできるか確認します。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 01 Aug 2021 07:58:45 GMT</lastBuildDate><item><title><![CDATA[Hardware-Accelerated GPU Scheduling機能を使ったWSL2はどのくらいパフォーマンスが向上するか]]></title><description><![CDATA[新しいPC端末を購入したところ「Hardware-Accerlarated GPU Scheduling」機能があることに気づきました。使用したところ気持ち速くなったように感じたのでどのくらいパフォーマンスが向上したか調べてみました。
+   > PROBLEMPROBLEM 
+
+- システム設定で「Hardware-Accerlarated GPU Scheduling（HAGS）」機能を使ったところWSL2のパフォーマンスが体感的に速くなったように感じた 他の端末にもHAGSを展開していきたいので実際にどのらくらいパフォーマンスが向上するか検証したい 
+- 他の端末にもHAGSを展開していきたいので実際にどのらくらいパフォーマンスが向上するか検証したい  > SOLUTIONSOLUTION 
+
+と言うわけで、以前Phoronixによって書かれた「WSLとWSL2とのベンチマーク比較の記事」を参考にPhoronix Test SuiteでHAGSのオン・オフのベンチマーク比較を行います。  > 検証端末の環境検証端末の環境    Item Content     Processor AMD Ryzen 9 5900X 12-Core (12 Cores / 24 Threads)   Memory 52 GB   Disk 2 x 275GB Virtual Disk   OS Ubuntu 20.04   Kernel 5.4.72-microsoft-standard-WSL2 (x86_64)   Display Server X Server   Compiler GCC 9.3.0   File System ext4   System Layer wsl     > Phoronix Test SuiteをインストールするPhoronix Test Suiteをインストールする sh
+
+brew install phoronix-test-suite sudo apt install php php-gd php-xml php-curl   > 実行するベンチマークテストを選定する実行するベンチマークテストを選定する 
+
+まず実行可能なテストとテストスーツを確認します、テストスーツは関連テストのグループになります。 sh
+
+phoronix-test-suite list-available-tests phoronix-test-suite list-available-suite  
+
+今回は開発する際に関係がある下記のテストを選定しました。テストスーツは数時間では完了しないケースがあったので今回の対象から外しています。 
+
+- pts/build-gcc
+- pts/compress-gzip
+- pts/system-decompress-gzip
+- pts/gnupg
+- pts/mutex
+- pts/openssl
+- pts/git
+- pts/pybench
+- pts/nginx
+- pts/node-web-tooling  > ベンチマーク結果ベンチマーク結果    Item HAGSオン HAGSオフ     pts/build-gcc 717.39 sec 715.56 sec   pts/compress-gzip 29.10 sec 29.36 sec   pts/system-decompress-gzip 2.397 sec 2.427 sec   pts/mutex Lock Shared 15.2 sec 15.2 sec   pts/mutex Unlock spinlock 33.1 sec 33.4 sec   pts/mutex Unlock std::mutex 14.8 sec 14.7 sec   pts/mutex Semaphore Release And Acquire 8.44 sec 8.36 sec   pts/mutex Unlock pthread_mutex 8.45 sec 8.34 sec   pts/openssl 3704.3 sign/sec 3694 sign/sec   pts/git 39.01 sec 38.85 sec   pts/pybench 869 msec 877 msec   pts/nginx 70124.29 req/sec 71919.70 req/sec   pts/node-web-tooling 16.71 sec 17.01 sec     > WRAPUPWRAPUP 
+
+残念ながらベンチマーク結果からHAGSのオンとオフの間に大きなパフォーマンスの変化は見られませんでした。通常の開発の場合はほぼ恩恵を受けられないと言って問題ないでしょう。 
+
+結論として、他の端末へのHAGSの展開はお薦めしません。不具合等の口コミも散見されるので使用端末との相性を見ながら導入するのが良さそうです。個人的にはChromeのハードウェアアクセラレーション機能との相性を見つつしばらく運用しようと思います。]]></description><link>https://nabinno.github.io/posts/91</link><guid isPermaLink="false">91</guid><pubDate>Sun, 01 Aug 2021 00:00:00 GMT</pubDate></item><item><title><![CDATA[yubinbango-dataをどうやって生成するか]]></title><description><![CDATA[郵便番号から住所を補完するライブラリ「yubinbango」を継続的に利用するにあたり、当該ライブラリが参照している郵便データ「yubinbango-data」を自前でメンテナンスできるか確認します。   > PROBLEMPROBLEM 
 
 - 「yubinbango/yubinbango」を利用するにあたり「yubinbango/yubinbango-data」の更新が継続的に行われるかサービス継続性の懸念がある そこで自前でメンテナンスをする場合の対処方法を事前に知っておきたい 
 - そこで自前でメンテナンスをする場合の対処方法を事前に知っておきたい  > SOLUTIONSOLUTION 
