@@ -1,4 +1,155 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 01 Aug 2021 08:16:38 GMT</lastBuildDate><item><title><![CDATA[Hardware-Accelerated GPU Scheduling機能を使ったWSL2はどのくらいパフォーマンスが向上するか]]></title><description><![CDATA[新しいPC端末を購入したところ「Hardware-Accerlarated GPU Scheduling」機能があることに気づきました。使用したところ気持ち速くなったように感じたのでどのくらいパフォーマンスが向上したか調べてみました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 14 Aug 2021 16:33:31 GMT</lastBuildDate><item><title><![CDATA[AWS CloudTrail用のコスパの良いSIEMを探す]]></title><description><![CDATA[IT統制において証跡管理の充実という観点から、また、ゼロトラストの強化という観点からSIEMの導入が必要になってきた。今回はAWS CloudTrail用のSIEMについてざっと調べました。   > PROBLEMPROBLEM 
+
+- AWS CloudTrailのログをセキュリティアカウントに集約しているが、深く監視しきれていない 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい 可能ならCloudTrail以外のIaaSリソースを監視対象にしたい NewRelicのように人のコストをかけずに管理したい 
+- 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい
+- 可能ならCloudTrail以外のIaaSリソースを監視対象にしたい NewRelicのように人のコストをかけずに管理したい 
+- NewRelicのように人のコストをかけずに管理したい  > SOLUTIONSOLUTION 
+
+と言うわけで、コスパが良いと噂のSumo LogicとAzure Sentinelを比較評価します。  > Azure SentinelAzure Sentinel  > 料金料金 
+
+- Azure Sentinel の価格 | Microsoft Azure
+- 価格 - Azure Monitor | Microsoft Azure  > SIEMからCloudTrailへの接続方法SIEMからCloudTrailへの接続方法 
+
+1. 下記設定でLog Analyticsワークスペースを作成 サブスクリプション 無料試用版 リソース グループ production 名前 prod-sentinel 地域 東日本 
+2. サブスクリプション 無料試用版
+3. リソース グループ production
+4. 名前 prod-sentinel
+5. 地域 東日本
+6. [ワークスペースprod-sentinel - データコネクタ] にて [アマゾンウェブサービス] コネクタページを開く
+7. [AWSアカウント - IAM - ロール] にて下記設定で [別のAWSアカウント] を作成 アカウントID {Microsoft account ID} オプション 外部IDが必要 をチェック 外部ID {外部ID (ワークスペースID)} パーミッションポリシーを適用 AWSCloudTrailReadOnlyAccess ロール名 AzureSentinel ※ Cf. AWS CloudTrail を Azure Sentinel に接続する | Microsoft Docs アマゾン ウェブ サービス (AWS) のための MCAS と Azure Sentinel - Azure Solution Ideas | Microsoft Docs Security-JAWS 第21回レポート #secjaws #secjaws21 #jawsug | DevelopersIO 
+8. アカウントID {Microsoft account ID}
+9. オプション 外部IDが必要 をチェック 外部ID {外部ID (ワークスペースID)} 
+10. 外部IDが必要 をチェック
+11. 外部ID {外部ID (ワークスペースID)}
+12. パーミッションポリシーを適用 AWSCloudTrailReadOnlyAccess
+13. ロール名 AzureSentinel
+14. ※ Cf. AWS CloudTrail を Azure Sentinel に接続する | Microsoft Docs アマゾン ウェブ サービス (AWS) のための MCAS と Azure Sentinel - Azure Solution Ideas | Microsoft Docs Security-JAWS 第21回レポート #secjaws #secjaws21 #jawsug | DevelopersIO 
+15. AWS CloudTrail を Azure Sentinel に接続する | Microsoft Docs
+16. アマゾン ウェブ サービス (AWS) のための MCAS と Azure Sentinel - Azure Solution Ideas | Microsoft Docs
+17. Security-JAWS 第21回レポート #secjaws #secjaws21 #jawsug | DevelopersIO  > SIEM機能 (AWS CloudTrail)SIEM機能 (AWS CloudTrail) 
+
+- デフォルト監視対象 時間経過に伴うイベントアラート 悪意ある可能性があるイベント 最近のインシデント データソースの異常 
+- 時間経過に伴うイベントアラート
+- 悪意ある可能性があるイベント
+- 最近のインシデント
+- データソースの異常
+- ログクエリ Audit Network Security 
+- Audit
+- Network
+- Security
+- 脅威管理 インシデント ブック ... 簡易な分析情報を提供 AWSネットワークアクティビティ ... SG、ネットワークACL、IGW、ELB、VPC、サブネット、NIの作成・更新・削除など、AWS ネットワーク関連のリソースアクティビティに関する分析情報を得ます。 AWSユーザーアクティビティ ... 失敗したサインイン試行、IP アドレス、リージョン、ユーザー エージェント、ID の種類、また想定されたロールを持つ悪意のある可能性があるユーザー アクティビティなど、AWS ユーザー アクティビティに関する分析情報を得ます。 ハンティング ... 脅威判定となるログクエリを提供 Changes made to AWS IAM policy Tracking Privileged Account Rare Activity Exploit and Pentest Framework User Agent IAM Privilege Escalation by Instance Profile attachment Privileged role attached to Instance Suspicious credential token access of valid IAM Roles Unused or Unsupported Cloud Regions ノートブック ... Jupyter Notebookによる分析を提供 
+- インシデント
+- ブック ... 簡易な分析情報を提供 AWSネットワークアクティビティ ... SG、ネットワークACL、IGW、ELB、VPC、サブネット、NIの作成・更新・削除など、AWS ネットワーク関連のリソースアクティビティに関する分析情報を得ます。 AWSユーザーアクティビティ ... 失敗したサインイン試行、IP アドレス、リージョン、ユーザー エージェント、ID の種類、また想定されたロールを持つ悪意のある可能性があるユーザー アクティビティなど、AWS ユーザー アクティビティに関する分析情報を得ます。 
+- AWSネットワークアクティビティ ... SG、ネットワークACL、IGW、ELB、VPC、サブネット、NIの作成・更新・削除など、AWS ネットワーク関連のリソースアクティビティに関する分析情報を得ます。
+- AWSユーザーアクティビティ ... 失敗したサインイン試行、IP アドレス、リージョン、ユーザー エージェント、ID の種類、また想定されたロールを持つ悪意のある可能性があるユーザー アクティビティなど、AWS ユーザー アクティビティに関する分析情報を得ます。
+- ハンティング ... 脅威判定となるログクエリを提供 Changes made to AWS IAM policy Tracking Privileged Account Rare Activity Exploit and Pentest Framework User Agent IAM Privilege Escalation by Instance Profile attachment Privileged role attached to Instance Suspicious credential token access of valid IAM Roles Unused or Unsupported Cloud Regions 
+- Changes made to AWS IAM policy
+- Tracking Privileged Account Rare Activity
+- Exploit and Pentest Framework User Agent
+- IAM Privilege Escalation by Instance Profile attachment
+- Privileged role attached to Instance
+- Suspicious credential token access of valid IAM Roles
+- Unused or Unsupported Cloud Regions
+- ノートブック ... Jupyter Notebookによる分析を提供
+- ソリューション ... 外部のエンドポイントセキュリティツールと連携することが可能 Trend Micro Apex One McAfee Network Security Platform 
+- Trend Micro Apex One
+- McAfee Network Security Platform  > Sumo LogicSumo Logic  > 料金料金 
+
+- Sumo Logic 料金表  > SIEMからCloudTrailへの接続方法SIEMからCloudTrailへの接続方法 
+
+1. [AWSアカウントSecurity - S3] にてバケット cloudtrail-accumulativelogs-{account-id} を下記設定にて作成 パブリックアクセスをすべてブロック オフ バケットポリシー json{ "Version": "2012-10-17", "Statement": [ { "Sid": "AWSCloudTrailAclCheck20150319", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "s3:GetBucketAcl", "Resource": "arn:aws:s3:::cloudtrail-accumulativelogs-{account-id}" }, { "Sid": "AWSCloudTrailWrite20150319", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:::cloudtrail-accumulativelogs-{account-id}/AWSLogs/{organization-id}/*", "Condition": { "StringEquals": { "s3:x-amz-acl": "bucket-owner-full-control" } } } ] } 
+2. パブリックアクセスをすべてブロック オフ
+3. バケットポリシー json{ "Version": "2012-10-17", "Statement": [ { "Sid": "AWSCloudTrailAclCheck20150319", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "s3:GetBucketAcl", "Resource": "arn:aws:s3:::cloudtrail-accumulativelogs-{account-id}" }, { "Sid": "AWSCloudTrailWrite20150319", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "s3:PutObject", "Resource": "arn:aws:s3:::cloudtrail-accumulativelogs-{account-id}/AWSLogs/{organization-id}/*", "Condition": { "StringEquals": { "s3:x-amz-acl": "bucket-owner-full-control" } } } ] } 
+4. [親AWSアカウント - KMS] にて下記設定でKSMを作成 キーのタイプ 対称 キーマテリアルオリジン KMS リージョンごと 単一リージョン エイリアス名 cloudtrail-kms キーポリシー json{ "Version": "2012-10-17", "Id": "Key policy created by CloudTrail", "Statement": [ { "Sid": "Enable IAM User Permissions", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": "kms:*", "Resource": "*" }, { "Sid": "Allow CloudTrail to encrypt logs", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "kms:GenerateDataKey*", "Resource": "*", "Condition": { "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } }, { "Sid": "Allow CloudTrail to describe key", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "kms:DescribeKey", "Resource": "*" }, { "Sid": "Allow principals in the account to decrypt log files", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": [ "kms:Decrypt", "kms:ReEncryptFrom" ], "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}" }, "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } }, { "Sid": "Allow alias creation during setup", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": "kms:CreateAlias", "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}", "kms:ViaService": "ec2.ap-northeast-1.amazonaws.com" } } }, { "Sid": "Enable cross account log decryption", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": [ "kms:Decrypt", "kms:ReEncryptFrom" ], "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}" }, "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } } ] } 
+5. キーのタイプ 対称
+6. キーマテリアルオリジン KMS
+7. リージョンごと 単一リージョン
+8. エイリアス名 cloudtrail-kms
+9. キーポリシー json{ "Version": "2012-10-17", "Id": "Key policy created by CloudTrail", "Statement": [ { "Sid": "Enable IAM User Permissions", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": "kms:*", "Resource": "*" }, { "Sid": "Allow CloudTrail to encrypt logs", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "kms:GenerateDataKey*", "Resource": "*", "Condition": { "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } }, { "Sid": "Allow CloudTrail to describe key", "Effect": "Allow", "Principal": { "Service": "cloudtrail.amazonaws.com" }, "Action": "kms:DescribeKey", "Resource": "*" }, { "Sid": "Allow principals in the account to decrypt log files", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": [ "kms:Decrypt", "kms:ReEncryptFrom" ], "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}" }, "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } }, { "Sid": "Allow alias creation during setup", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": "kms:CreateAlias", "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}", "kms:ViaService": "ec2.ap-northeast-1.amazonaws.com" } } }, { "Sid": "Enable cross account log decryption", "Effect": "Allow", "Principal": { "AWS": "*" }, "Action": [ "kms:Decrypt", "kms:ReEncryptFrom" ], "Resource": "*", "Condition": { "StringEquals": { "kms:CallerAccount": "{account-id}" }, "StringLike": { "kms:EncryptionContext:aws:cloudtrail:arn": "arn:aws:cloudtrail:*:{account-id}:trail/*" } } } ] } 
+10. [親AWSアカウント - CloudTrail] にて下記設定で証跡を作成 全般的な詳細 証跡名 cloudtrail-logs 組織に証跡を適用 はい ストレージの場所 既存のS3バケットを使用する 証跡ログバケット名 cloudtrail-accumulativelogs-{account-id} ログファイルのSSE-KMS暗号化 有効 カスタマー管理のAWS KMSキー 新規 AWS KMSエイリアス arn:aws:kms:{region}:{account-id}:key/{kms-id} ログファイルの検証 有効 管理イベント APIアクティビティ すべて 
+11. 全般的な詳細 証跡名 cloudtrail-logs 組織に証跡を適用 はい ストレージの場所 既存のS3バケットを使用する 証跡ログバケット名 cloudtrail-accumulativelogs-{account-id} ログファイルのSSE-KMS暗号化 有効 カスタマー管理のAWS KMSキー 新規 AWS KMSエイリアス arn:aws:kms:{region}:{account-id}:key/{kms-id} ログファイルの検証 有効 
+12. 証跡名 cloudtrail-logs
+13. 組織に証跡を適用 はい
+14. ストレージの場所 既存のS3バケットを使用する
+15. 証跡ログバケット名 cloudtrail-accumulativelogs-{account-id}
+16. ログファイルのSSE-KMS暗号化 有効
+17. カスタマー管理のAWS KMSキー 新規
+18. AWS KMSエイリアス arn:aws:kms:{region}:{account-id}:key/{kms-id}
+19. ログファイルの検証 有効
+20. 管理イベント APIアクティビティ すべて 
+21. APIアクティビティ すべて
+22. [Sumo Logic - Setup Wizard - Start streaming data to Sumo Logic - CloudTrail] にて下記設定でCloudTrailデータタイプを作成 Source Category aws/cloudtrail S3 Bucket S3 Bucket Name cloudtrail-accumulativelogs-{account-id} Path Expression AWSLogs/{organization-id}/* S3 Region Asia Pacific (Tokyo) How do you want the user to access the S3 Bucket? Role-based access 指定されたCFnテンプレートでIAMロールを作成 
+23. Source Category aws/cloudtrail
+24. S3 Bucket S3 Bucket Name cloudtrail-accumulativelogs-{account-id} Path Expression AWSLogs/{organization-id}/* S3 Region Asia Pacific (Tokyo) How do you want the user to access the S3 Bucket? Role-based access 指定されたCFnテンプレートでIAMロールを作成 
+25. S3 Bucket Name cloudtrail-accumulativelogs-{account-id}
+26. Path Expression AWSLogs/{organization-id}/*
+27. S3 Region Asia Pacific (Tokyo)
+28. How do you want the user to access the S3 Bucket? Role-based access 指定されたCFnテンプレートでIAMロールを作成 
+29. 指定されたCFnテンプレートでIAMロールを作成  > SIEM機能 (AWS CloudTrail)SIEM機能 (AWS CloudTrail) 
+
+デフォルト監視対象 
+
+- Console Logins Geo Location of All Users Login Events By User Logins Over Time Logins from Multiple IP Logins from Outside the USA Outlier - Success Login Outlier - Failed Login Login Results - One Day Time Comparison Logins without MFA 
+- Geo Location of All Users
+- Login Events By User
+- Logins Over Time
+- Logins from Multiple IP
+- Logins from Outside the USA
+- Outlier - Success Login
+- Outlier - Failed Login
+- Login Results - One Day Time Comparison
+- Logins without MFA
+- Network and Security Authorization Failures from All Countries Network and Security Events Over Time Authorization Failures Over Time Network ACL with All Allowed Ingress/Egress Recent Authorization Failures Recent Security Group and Network ACL Changes Created and Deleted Network and Security Events Short Lived Critical Operations 
+- Authorization Failures from All Countries
+- Network and Security Events Over Time
+- Authorization Failures Over Time
+- Network ACL with All Allowed Ingress/Egress
+- Recent Authorization Failures
+- Recent Security Group and Network ACL Changes
+- Created and Deleted Network and Security Events
+- Short Lived Critical Operations
+- Operations Action Events Requested AWS Services Over Time Events by AWS Region Recent Elastic IP Address Operations Created Resources Over Time Deleted Resources Over Time 
+- Action Events
+- Requested AWS Services Over Time
+- Events by AWS Region
+- Recent Elastic IP Address Operations
+- Created Resources Over Time
+- Deleted Resources Over Time
+- Overview Geo Location of All Users Created Resources Deleted Resources Over Time Top 10 Users Failed Logins Created and Deleted Network and Security Events 
+- Geo Location of All Users
+- Created Resources
+- Deleted Resources Over Time
+- Top 10 Users
+- Failed Logins
+- Created and Deleted Network and Security Events
+- S3 Public Objects and Buckets New Public Objects New Public Object by Object-Bucket New Public Objects Table Public Buckets Public Buckets Table Modified Public Objects Modified Public Objects by Object-Buket Modified Public Objects Table 
+- New Public Objects
+- New Public Object by Object-Bucket
+- New Public Objects Table
+- Public Buckets
+- Public Buckets Table
+- Modified Public Objects
+- Modified Public Objects by Object-Buket
+- Modified Public Objects Table
+- User Monitoring Geo Location of All Users Top 10 Users Launched and Terminated Instances by User Administrative Activities Over Time Top 10 Activities by Administrative User Recent Activity by Administrative Users 
+- Geo Location of All Users
+- Top 10 Users
+- Launched and Terminated Instances by User
+- Administrative Activities Over Time
+- Top 10 Activities by Administrative User
+- Recent Activity by Administrative Users  > 総評総評  > 使用コスト使用コスト 
+
+初期導入の段階ではSumo LogicよりAzure Sentinelの方が倍のコストがかかります。    ログ取込量/日 Azure Sentinel月額 Sumo Logic月額     100MB 2,396 JPY 0 USD   500MB 11,978 JPY 0 USD   3GB 71,870 JPY 332 USD    
+
+※ Azure Sentinelの内訳は「 ((GB当たりのAzure Sentinel取込量347.20円) + (GB当たりのLog Analytics取込量451.36円) * 取込量GB 」  > 導入コスト導入コスト 
+
+一度の設定で完了するSumo Logicの方が導入コストが低いです。Azure SentinelはIAMロールのみで済むという点で導入は楽ですがAWSアカウントごとに設定する必要があるので手離れが悪いです。  > SIEM機能SIEM機能 
+
+Azure Sentinelの方が分析機能が充実しています。Sumo Logicが大まかな脅威をログクエリからしか拾えないのに対し、Azure Sentinelは細かな脅威判定をログクエリで提供しているのに加え、Jupyter Notebookや外部のエンドポイントセキュリティツールを提供しています。また、デフォルトの監視対象も時間経過に伴うイベントアラート、悪意ある可能性があるイベント、最近のインシデント等必要十分な情報を提供しています。 
+
+また、対象のデータソースはAzure SentinelがAWS CloudTrail、Google Workspace、Office 365、Azure AD等と幅広く用意しているのに対し、Sumo LogicはSIEMという観点では実質AWS CloudTrail専用のツールに落ち着いています。  > WRAPUPWRAPUP 
+
+メインプロダクトがまだ2-3しかない状況でSIEMをAWSだけに限定する場合はSumo Logicで十分でしょう。使用コスト、導入コストともに低く抑えることができるので、しばらくはSumo Logicで運用し、プロダクトがスケールする段階でAzure Sentinelを移行するのが現実的だと思いました。]]></description><link>https://nabinno.github.io/posts/93</link><guid isPermaLink="false">93</guid><pubDate>Sun, 15 Aug 2021 00:00:00 GMT</pubDate></item><item><title><![CDATA[Hardware-Accelerated GPU Scheduling機能を使ったWSL2はどのくらいパフォーマンスが向上するか]]></title><description><![CDATA[新しいPC端末を購入したところ「Hardware-Accerlarated GPU Scheduling」機能があることに気づきました。使用したところ気持ち速くなったように感じたのでどのくらいパフォーマンスが向上したか調べてみました。   > PROBLEMPROBLEM 
 
 - システム設定で「Hardware-Accerlarated GPU Scheduling（HAGS）」機能を使ったところWSL2のパフォーマンスが体感的に速くなったように感じた 他の端末にもHAGSを展開していきたいので実際にどのらくらいパフォーマンスが向上するか検証したい 
 - 他の端末にもHAGSを展開していきたいので実際にどのらくらいパフォーマンスが向上するか検証したい  > SOLUTIONSOLUTION 
