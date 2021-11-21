@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 21 Nov 2021 10:31:18 GMT</lastBuildDate><item><title><![CDATA[踏み台をSSM Session ManagerとAWS SSOで実現する]]></title><description><![CDATA[踏み台のユーザーが増えてきたため公開鍵管理や監視と運用負荷が上がってきました。オペミスが発生しやすい上 監査的な意味で無視できない状況になってきたので重い腰を上げることにしました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 21 Nov 2021 11:53:33 GMT</lastBuildDate><item><title><![CDATA[踏み台をSSM Session ManagerとAWS SSOで実現する]]></title><description><![CDATA[踏み台のユーザーが増えてきたため公開鍵管理や監視と運用負荷が上がってきました。オペミスが発生しやすい上 監査的な意味で無視できない状況になってきたので重い腰を上げることにしました。   > PROBLEMPROBLEM 
 
 - EC2インスタンスの踏み台運用がつらい 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 監視運用がつらい 定期的に踏み台がブルートフォース攻撃を受けており、脅威が低いとは言えストレスがかかる 踏み台アクセスへの監査ログが不十分 
 - 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 
@@ -41,7 +41,7 @@
 パブリックサブネット上の踏み台に慣れている方は馴染みのない方法に戸惑うかも知れませんが、踏み台資産を流用できるという意味で導入のコストもそれほどかかりませんし、ユーザーとしても利用の敷居は高くありませんでした。後々の管理コストを心配している方は一度検討してみてはいかがでしょうか。  
 
 1. AmazonEC2RoleforSSM は非推奨のため適用しないように注意します。 ↩ 
-2. 今回はメンテナンスコストを避けるためSSH over SSMの関連ツール ssh-ssm.sh ssm-tool は使わない方針でいます。 ↩]]></description><link>https://nabinno.github.io/posts/119</link><guid isPermaLink="false">119</guid><pubDate>Sun, 21 Nov 2021 10:29:44 GMT</pubDate></item><item><title><![CDATA[AWS CloudTrail用のコスパの良いSIEMを探す]]></title><description><![CDATA[IT統制において証跡管理の充実という観点から、また、ゼロトラストの強化という観点からSIEMの導入が必要になってきました。今回はAWS CloudTrail用のSIEMについてざっと調べました。   > PROBLEMPROBLEM 
+2. 今回はメンテナンスコストを避けるためSSH over SSMの関連ツール ssh-ssm.sh ssm-tool は使わない方針でいます。 ↩]]></description><link>https://nabinno.github.io/posts/119</link><guid isPermaLink="false">119</guid><pubDate>Sun, 21 Nov 2021 00:00:00 GMT</pubDate></item><item><title><![CDATA[AWS CloudTrail用のコスパの良いSIEMを探す]]></title><description><![CDATA[IT統制において証跡管理の充実という観点から、また、ゼロトラストの強化という観点からSIEMの導入が必要になってきました。今回はAWS CloudTrail用のSIEMについてざっと調べました。   > PROBLEMPROBLEM 
 
 - AWS CloudTrailのログをセキュリティアカウントに集約しているが、深く監視しきれていない 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい 可能ならCloudTrail以外のIaaSリソースを監視対象にしたい NewRelicのように人のコストをかけずに管理したい 
 - 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい
