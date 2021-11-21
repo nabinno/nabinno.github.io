@@ -30,7 +30,7 @@
 <h1 data-sourcepos="15:1-15:10" id="2-0-0" name="2-0-0"><a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
 <p data-sourcepos="16:1-16:93">というわけで、Session ManagerとSSOでアクセス管理の効率化を狙います。</p>
 <h2 data-sourcepos="18:1-18:33" id="2-1-0" name="2-1-0"><a class="anchor" id="踏み台サーバーの設定" name="踏み台サーバーの設定" href="#踏み台サーバーの設定" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="踏み台サーバーの設定"> &gt; 踏み台サーバーの設定</span></a>踏み台サーバーの設定</h2>
-<p data-sourcepos="19:1-19:517">データフローとしては下記の図の通りで、今回はプライベートサブネット上にEC2を置いて素のSession ManagerでDBへの接続することにします。当該インスタンスは <code>AmazonSSMManagedInstanceCore</code> ポリシー<sup class="footnote-ref"><a href="#fn-1" id="fnref-1" data-footnote-ref="">1</a></sup>を含んだロールを適用しています。なお、ECS ExecではSession Managerでポートフォワーディングを実現でき無かったことに加え、既存の踏み台資産を流用するため今回の実装対象から外しました。</p>
+<p data-sourcepos="19:1-19:511">まず、データフローとしては下記の図の通りで、今回はプライベートサブネット上にEC2を置いて素のSession ManagerでDBへの接続することにします。当該インスタンスは <code>AmazonSSMManagedInstanceCore</code> ポリシー<sup class="footnote-ref"><a href="#fn-1" id="fnref-1" data-footnote-ref="">1</a></sup>を含んだロールを適用。なお、ECS ExecではSession Managerでポートフォワーディングを実現でき無かったことに加え、既存の踏み台資産を流用するため今回の実装対象から外しました。</p>
 <div class="code-block" data-sourcepos="23:1-47:3"><p class="plantuml"><a href="data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxv
 bmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9z
 dmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5r
@@ -1402,7 +1402,7 @@ OyIvPjwvZz48L3N2Zz4=
 </span></code></pre></div></div>
 </details>
 <h2 data-sourcepos="136:1-136:48" id="2-3-0" name="2-3-0"><a class="anchor" id="セッションを張るための事前準備" name="セッションを張るための事前準備" href="#セッションを張るための事前準備" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="セッションを張るための事前準備"> &gt; セッションを張るための事前準備</span></a>セッションを張るための事前準備</h2>
-<p data-sourcepos="137:1-137:176">セッションを張るためには下記3つの手順が必要になります。SSO経由のセッション設定が2通りありますが、CLI方式をお薦めします。</p>
+<p data-sourcepos="137:1-137:275">セッションを張るためには下記3つの手順が必要になります。SSO経由のセッション設定が2通りありますが、クレデンシャル方式はセッションが切れる毎に変更する手間があるため、CLI方式をお薦めします。</p>
 <ol data-sourcepos="139:1-144:0">
 <li data-sourcepos="139:1-139:111"><a href="https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/install-cliv2.html" target="_blank" rel="noopener noreferrer">AWS CLI v2をインストール</a></li>
 <li data-sourcepos="140:1-142:119">下記いずれかの方式でSSO経由のセッション設定を行う
@@ -1441,7 +1441,7 @@ OyIvPjwvZz48L3N2Zz4=
 </li>
 </ol>
 <h1 data-sourcepos="170:1-170:8" id="3-0-0" name="3-0-0"><a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
-<p data-sourcepos="171:1-171:360">パブリックサブネット上の踏み台に慣れている方は馴染みのない方法に戸惑うかも知れませんが、踏み台資産を流用できるという意味で導入のコストもそれほどかかりませんし、ユーザーとしても利用の敷居は高くありません。一度検討してみてはいかがでしょうか。</p>
+<p data-sourcepos="171:1-171:420">パブリックサブネット上の踏み台に慣れている方は馴染みのない方法に戸惑うかも知れませんが、踏み台資産を流用できるという意味で導入のコストもそれほどかかりませんし、ユーザーとしても利用の敷居は高くありませんでした。後々の管理コストを心配している方は一度検討してみてはいかがでしょうか。</p>
 <section class="footnotes" data-footnotes="">
 <ol>
 <li id="fn-1">
