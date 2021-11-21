@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 01 Nov 2021 04:27:31 GMT</lastBuildDate><item><title><![CDATA[AWS CloudTrail用のコスパの良いSIEMを探す]]></title><description><![CDATA[IT統制において証跡管理の充実という観点から、また、ゼロトラストの強化という観点からSIEMの導入が必要になってきました。今回はAWS CloudTrail用のSIEMについてざっと調べました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 21 Nov 2021 10:08:52 GMT</lastBuildDate><item><title><![CDATA[踏み台をSSM Session ManagerとAWS SSOで実現する]]></title><description><![CDATA[踏み台のユーザーが増えてきたため公開鍵管理や監視と運用負荷が上がってきました。オペミスが発生しやすい上 監査的な意味で無視できない状況になってきたので重い腰を上げることにしました。   > PROBLEMPROBLEM 
+
+- EC2インスタンスの踏み台運用がつらい 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 監視運用がつらい 定期的に踏み台がブルートフォース攻撃を受けており、脅威が低いとは言えストレスがかかる 踏み台アクセスへの監査ログが不十分 
+- 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 
+- 提出・設定・確認ともに運用コストがかかる
+- AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される
+- インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する
+- 監視運用がつらい 定期的に踏み台がブルートフォース攻撃を受けており、脅威が低いとは言えストレスがかかる 踏み台アクセスへの監査ログが不十分 
+- 定期的に踏み台がブルートフォース攻撃を受けており、脅威が低いとは言えストレスがかかる
+- 踏み台アクセスへの監査ログが不十分  > SOLUTIONSOLUTION 
+
+というわけで、Session ManagerとSSOでアクセス管理の効率化を狙います。  > 踏み台サーバーの設定踏み台サーバーの設定 
+
+データフローとしては下記の図の通りで、今回はプライベートサブネット上にEC2を置いて素のSession ManagerでDBへの接続することにします。当該インスタンスは AmazonSSMManagedInstanceCore ポリシー1を含んだロールを適用しています。なお、ECS ExecではSession Managerでポートフォワーディングを実現でき無かったことに加え、既存の踏み台資産を流用するため今回の実装対象から外しました。 
+
+  > SSOの設定SSOの設定 
+
+踏み台サーバーの設定が終わったら、次に当該インスタンスへ接続するためにSSOで渡すロールをアクセス権限セットに設定します。下記カスタムポリシーはEC2インスタンスにアクセスするための必要最低限のものになります。 カスタムポリシー json
+
+{ "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Action": [ "cloudwatch:PutMetricData", "ds:CreateComputer", "ds:DescribeDirectories", "ec2:DescribeInstanceStatus", "logs:*", "ssm:*", "ec2messages:*" ], "Resource": "*" }, { "Effect": "Allow", "Action": [ "ssm:StartSession" ], "Resource": [ "arn:aws:ssm:*:*:session/<EC2インスタンスID>", "arn:aws:ec2:*:*:instance/<EC2インスタンスID>" ] }, { "Effect": "Deny", "Action": [ "ssm:Describe*", "ssm:Get*", "ssm:List*", "logs:Describe*", "logs:Get*", "logs:List*" ], "Resource": "*" }, { "Effect": "Allow", "Action": "iam:CreateServiceLinkedRole", "Resource": "arn:aws:iam::*:role/aws-service-role/ssm.amazonaws.com/AWSServiceRoleForAmazonSSM*", "Condition": { "StringLike": { "iam:AWSServiceName": "ssm.amazonaws.com" } } }, { "Effect": "Allow", "Action": "iam:CreateServiceLinkedRole", "Resource": "arn:aws:iam::*:role/aws-service-role/ssm.amazonaws.com/AWSServiceRoleForAmazonSSM*", "Condition": { "StringLike": { "iam:AWSServiceName": "ssm.amazonaws.com" } } }, { "Effect": "Allow", "Action": [ "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ], "Resource": "arn:aws:iam::*:role/aws-service-role/ssm.amazonaws.com/AWSServiceRoleForAmazonSSM*" }, { "Effect": "Allow", "Action": [ "ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel", "ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel" ], "Resource": "*" } ] }    > セッションを張るための事前準備セッションを張るための事前準備 
+
+セッションを張るためには下記3つの手順が必要になります。SSO経由のセッション設定が2通りありますが、CLI方式をお薦めします。 
+
+1. AWS CLI v2をインストール
+2. 下記いずれかの方式でSSO経由のセッション設定を行う クレデンシャル方式 CLI（ aws sso login ）方式 
+3. クレデンシャル方式
+4. CLI（ aws sso login ）方式
+5. Session Manager プラグインをインストール  > DBクライアントの設定DBクライアントの設定 
+
+最後に、DBクライアントについて3つの手順を踏んで接続を試みます2。なお、ローカル環境でポートフォワーディングを都度行うのを省略したい方は、DataGripを利用すると良いでしょう。 
+
+1. ローカル環境にて ~/.ssh/config ファイルを編集 Session Managerにproxyと対象RDSのエンドポイントを記載 configHost <任意のhost名> HostName <※ 指定しなければlocalhostになる> User ec2-user ProxyCommand sh -c "aws ssm start-session --target <接続する踏み台のインスタンスID> --document-name AWS-StartSSHSession --parameters 'portNumber=%p' --region ap-northeast-1 --profile <プロフィール>" LocalForward <任意のポート> <RDSエンドポイント>:<RDSポート> IdentityFile ~/.ssh/<EC2に接続する秘密鍵> 設定したhost名でセッションマネージャー越しにssh接続できるかを確認 sh$ ssh <設定したhost名> 
+2. Session Managerにproxyと対象RDSのエンドポイントを記載 configHost <任意のhost名> HostName <※ 指定しなければlocalhostになる> User ec2-user ProxyCommand sh -c "aws ssm start-session --target <接続する踏み台のインスタンスID> --document-name AWS-StartSSHSession --parameters 'portNumber=%p' --region ap-northeast-1 --profile <プロフィール>" LocalForward <任意のポート> <RDSエンドポイント>:<RDSポート> IdentityFile ~/.ssh/<EC2に接続する秘密鍵> 
+3. 設定したhost名でセッションマネージャー越しにssh接続できるかを確認 sh$ ssh <設定したhost名> 
+4. 手順1で設定したsshで接続することでポートフォワーディング
+5. DBクライアントで下記のように接続情報を設定し接続する Host: <手順1のconfigファイルにて任意指定したホスト名> Port: <手順4のconfigファイルにて任意指定したポート> 他項目: DB接続情報 
+6. Host: <手順1のconfigファイルにて任意指定したホスト名>
+7. Port: <手順4のconfigファイルにて任意指定したポート>
+8. 他項目: DB接続情報  > WRAPUPWRAPUP 
+
+パブリックサブネット上の踏み台に慣れている方は馴染みのない方法に戸惑うかも知れませんが、踏み台資産を流用できるという意味で導入のコストもそれほどかかりませんし、ユーザーとしても利用の敷居は高くありません。一度検討してみてはいかがでしょうか。  
+
+1. AmazonEC2RoleforSSM は非推奨のため適用しないように注意します。 ↩ 
+2. 今回はメンテナンスコストを避けるためSSH over SSMの関連ツール ssh-ssm.sh ssm-tool は使わない方針でいます。 ↩]]></description><link>https://nabinno.github.io/posts/119</link><guid isPermaLink="false">119</guid><pubDate>Sun, 21 Nov 2021 10:07:20 GMT</pubDate></item><item><title><![CDATA[AWS CloudTrail用のコスパの良いSIEMを探す]]></title><description><![CDATA[IT統制において証跡管理の充実という観点から、また、ゼロトラストの強化という観点からSIEMの導入が必要になってきました。今回はAWS CloudTrail用のSIEMについてざっと調べました。   > PROBLEMPROBLEM 
 
 - AWS CloudTrailのログをセキュリティアカウントに集約しているが、深く監視しきれていない 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい 可能ならCloudTrail以外のIaaSリソースを監視対象にしたい NewRelicのように人のコストをかけずに管理したい 
 - 可能ならアカウントが不審な操作をした場合にアラートを飛ばしたい
