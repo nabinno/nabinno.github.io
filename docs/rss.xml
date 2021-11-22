@@ -1,4 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 21 Nov 2021 11:53:33 GMT</lastBuildDate><item><title><![CDATA[踏み台をSSM Session ManagerとAWS SSOで実現する]]></title><description><![CDATA[踏み台のユーザーが増えてきたため公開鍵管理や監視と運用負荷が上がってきました。オペミスが発生しやすい上 監査的な意味で無視できない状況になってきたので重い腰を上げることにしました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 22 Nov 2021 20:12:22 GMT</lastBuildDate><item><title><![CDATA[Increment Pは住所のバリデーションチェックでどの程度使えるか]]></title><description><![CDATA[7月に調査した「imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか」の続きになります。コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回は商用サービスIncrement Pが住所のバリデーションチェックでどの程度使えるか検証してみました。   > PROBLEMPROBLEM 
+
+- 住所の不備が至るところで起きている 特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい 可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい imi-enrichment-addressで精度が思わしくなかったので今回は商用サービスで検証したい 
+- 特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい
+- 可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい imi-enrichment-addressで精度が思わしくなかったので今回は商用サービスで検証したい 
+- imi-enrichment-addressで精度が思わしくなかったので今回は商用サービスで検証したい  > SOLUTIONSOLUTION 
+
+というわけで、住所のバリデーションチェックで商用版「Increment P」がどの程度使えるか検証します。  > Increment PとはIncrement Pとは 
+
+住所をAPIを介すことで正規化することができます。APIの返値に解析レベル・解析ログを返すことでより柔軟な検証をおこなうことができるようになっています。 
+
+解析レベルとは、対象住所のマッチ度合いを都道府県・市区町村・町域・丁目・番地・号というレベルで分けたものです。APIの結果が解析レベル5「番地・番」以上になっていれば配送が確実に為されると言うように、配送の確実性を前提にして住所の入力者とやりとりを実現します。また、解析ログメッセージとは、住所の正規化を試みた際のログであり、バリデーションを調整する際に頻繁に確認するものです。詳細は「ドキュメント」をご覧下さい。    解析レベル レベルの数字 説明     都道府県 1 県レベルでマッチしました   市区町村 2 市区町村レベルでマッチしました   町域 (大字) 3 町域レベルでマッチしました   丁目 / 小字 4 丁目または小字レベルでマッチしました   番地（番） 5 番地（番）レベルでマッチしました   号情報が存在しない番地 7 番地（番）レベルでマッチしました（号情報が存在しない地域）   号 8 号レベルでマッチしました   不明 -1 不明    
+
+試しにIncrement Pを実行してみましょう。正確な住所を渡したときと不正確な住所を渡したときで解析レベルが5と3と異なった結果を返すことが見て取れます。 sh
+
+$ curl "https://api-anorm.mapfan.com/v1/$(echo -n 長野県長野市大字長野旭町1108 | jq -sRr @uri).json" \ -H 'x-api-key: <api-key>' \ -H 'Content-Type: application/json' | jq -r { "type": "FeatureCollection", "query": [ "長野県長野市大字長野旭町1108" ], "features": [ { "type": "Feature", "geometry": null, "properties": { "query": "長野県長野市大字長野旭町1108", "place_name": "長野県長野市長野旭町 1108", "pref": "長野県", "pref_kana": "ナガノケン", "city": "長野市", "city_kana": "ナガノシ", "area": "長野", "area_kana": "ナガノ", "koaza_chome": "旭町", "koaza_chome_kana": "アサヒマチ", "banchi_go": "1108", "building": "", "building_number": "", "zipcode": "3800846", "geocoding_level": 5, "geocoding_level_desc": "番地（番）レベルでマッチしました(5)", "log": "RM002:[大字(字)]の文字を除去しました", "not_normalized": "" } } ], "attribution": "(c) INCREMENT P CORPORATION" } $ curl "https://api-anorm.mapfan.com/v1/$(echo -n 長野県長野市旭町1108 | jq -sRr @uri).json" \ -H 'x-api-key: <api-key>' \ -H 'Content-Type: application/json' | jq -r { "type": "FeatureCollection", "query": [ "長野県長野市旭町1108" ], "features": [ { "type": "Feature", "geometry": null, "properties": { "query": "長野県長野市旭町1108", "place_name": "長野県長野市旭町", "pref": "長野県", "pref_kana": "ナガノケン", "city": "長野市", "city_kana": "ナガノシ", "area": "旭町", "area_kana": "アサヒマチ", "koaza_chome": "", "koaza_chome_kana": "", "banchi_go": "", "building": "", "building_number": "", "zipcode": "3800846", "geocoding_level": 3, "geocoding_level_desc": "町域レベルでマッチしました(3)", "log": "NT001:正規化処理状況が建物名正規化処理の必要条件を満たさないので建物名正規化は行われません", "not_normalized": "1108" } } ], "attribution": "(c) INCREMENT P CORPORATION" }  
+
+なお、上記結果を見て分かるとおり、Increment Pは大字省略には強そうですが町域自体の省略は苦手なようです。
+ imi-enrichment-addressより柔軟ですが、基本は街区レベル位置参照情報を利用しているように推察されます。  > 検証用データ検証用データ 
+
+さて、検証用データですが、imi-enrichment-addressの検証データと合わせて住所.jpを使います。今回はトライアルが1000件と制限があるので、imi-enrichment-addressで無効割合が54.42%と一番多かった青森県と住所の登録数が多い東京・愛知・北海道・大阪・福岡・神奈川、さらに通りが独特な京都、町字の組み合わせで住所が2つ以上存在する長野に対象を絞ります。各々100件ずつの検証になります。 sh
+
+$ { curl -sSL http://jusyo.jp/downloads/new/csv/csv_zenkoku.zip -o csv_zenkoku.zip; unzip -p csv_zenkoku.zip | nkf -w; rm csv_zenkoku.zip } >zenkoku.csv $ brew install noborus/tap/trdsql $ trdsql " SELECT COUNT(*) FROM zenkoku.csv WHERE c21 <> '' " 22431 $ trdsql -otbln " SELECT c8, count(*) cn FROM zenkoku.csv WHERE c21 != '' GROUP BY c8 ORDER BY cn DESC" | 都道府県 | count(*) | | --- | --- | | 東京都 | 4734 | | 愛知県 | 1541 | | 北海道 | 1251 | | 大阪府 | 884 | | 福岡県 | 845 | | 神奈川県 | 820 | [..] | 長野県 | 594 | [..] | 京都府 | 255 | [..] | 青森県 | 216 |   > Increment Pで検証用データを確認するIncrement Pで検証用データを確認する sh
+
+$ for p in 東京都 愛知県 北海道 大阪府 福岡県 神奈川県 青森県 京都府 長野県; do for a in $(trdsql " SELECT c8||c10||c21 FROM zenkoku.csv WHERE c21 != '' AND c8 = '$p' ORDER BY RANDOM() LIMIT 100 "); do curl -w'\n' "https://api-anorm.mapfan.com/v1/$(echo -n $a | jq -sRr @uri).json" \ -H 'x-api-key: <api-key>' \ -H 'Content-Type: application/json' >>output.jsonl; done & done &   > 解析結果を確認する解析結果を確認する 
+
+Increment Pの解析結果を確認したところ、imi-enrichment-addressと比べると大方改善しました。特に青森県、北海道の改善率は高く字・条・線に対して有効に機能していることが伺えます。一方、京都や長野のように特殊な住所がある府県については改善が思うように行かないケースもあるようです。 sh
+
+$ cat output.jsonl \ | jq -r '[ .features[].properties.pref, .features[].properties.query, .features[].properties.geocoding_level, .features[].properties.log ] | @csv' \ | trdsql -otbln " SELECT c1, COUNT(*) cn FROM - WHERE c3 >= 5 GROUP BY c1 ORDER BY cn DESC "  
+
+解析レベル5「番地・番」以上の場合（※ 参考値はimi-enrichment-addressの有効割合）    都道府県 有効割合 参考値     東京都 100 99.11   大阪府 100 96.72   福岡県 95 91   神奈川県 95 98.28   愛知県 92 92.6   青森県 90 45.58   長野県 84 55.72   北海道 80 86.24   京都府 79 63.14    
+
+解析レベル4「丁目/小字」以上の場合（※ 参考値はimi-enrichment-addressの有効割合）    都道府県 有効割合 参考値     東京都 100 99.11   大阪府 100 96.72   北海道 98 86.24   愛知県 97 92.6   福岡県 96 91   神奈川県 95 98.28   青森県 93 45.58   長野県 84 55.72   京都府 79 63.14     > WRAPUPWRAPUP 
+
+青森県の有効率が45.58%だったimi-enrichment-addressと比べると、Increment Pは調査した大凡の都道府県で改善し70%以上の有効割合を出していました。バリデーションチェックで使えるのかというと全ての都道府県で100%になっていないため心許ない状況ではあるものの、解析レベル4「丁目/小字」以下の住所については最終確認を促すフローを入れる等ひと手間加えれば実用に耐えうると考えます。]]></description><link>https://nabinno.github.io/posts/124</link><guid isPermaLink="false">124</guid><pubDate>Tue, 23 Nov 2021 00:00:00 GMT</pubDate></item><item><title><![CDATA[踏み台をSSM Session ManagerとAWS SSOで実現する]]></title><description><![CDATA[踏み台のユーザーが増えてきたため公開鍵管理や監視と運用負荷が上がってきました。オペミスが発生しやすい上 監査的な意味で無視できない状況になってきたので重い腰を上げることにしました。   > PROBLEMPROBLEM 
 
 - EC2インスタンスの踏み台運用がつらい 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 監視運用がつらい 定期的に踏み台がブルートフォース攻撃を受けており、脅威が低いとは言えストレスがかかる 踏み台アクセスへの監査ログが不十分 
 - 公開鍵管理がつらい 提出・設定・確認ともに運用コストがかかる AWSアカウント数 x ユーザー数で指数関数的に運用コストが増していくことが想定される インフラ管理が分散していると、提出側・設定側ともに重複コストが発生する 
