@@ -146,11 +146,10 @@
   <span class="s2">"attribution"</span>: <span class="s2">"(c) INCREMENT P CORPORATION"</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p data-sourcepos="108:1-109:172">なお、上記結果を見て分かるとおり、Increment Pは大字省略には強そうですが町域自体の省略は苦手なようです。<br>
-imi-enrichment-addressより柔軟ですが、基本は<a href="https://nlftp.mlit.go.jp/isj/" target="_blank" rel="noopener noreferrer">街区レベル位置参照情報</a>を利用しているように推察されます。</p>
-<h2 data-sourcepos="111:1-111:21" id="2-2-0" name="2-2-0"><a class="anchor" id="検証用データ" name="検証用データ" href="#検証用データ" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="検証用データ"> &gt; 検証用データ</span></a>検証用データ</h2>
-<p data-sourcepos="112:1-112:540">さて、検証用データですが、imi-enrichment-addressの検証データと合わせて<a href="http://jusyo.jp/" target="_blank" rel="noopener noreferrer">住所.jp</a>を使います。今回はトライアルが1000件と制限があるので、imi-enrichment-addressで無効割合が54.42%と一番多かった青森県と住所の登録数が多い東京・愛知・北海道・大阪・福岡・神奈川、さらに通りが独特な京都、町字の組み合わせで住所が2つ以上存在する長野に対象を絞ります。各々100件ずつの検証になります。</p>
-<div class="code-block" data-sourcepos="114:1-149:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="o">{</span>
+<p data-sourcepos="108:1-108:321">なお、上記結果を見て分かるとおり、Increment Pは大字省略には強そうですが町域自体の省略は苦手なようです。imi-enrichment-addressより柔軟ですが、基本は<a href="https://nlftp.mlit.go.jp/isj/" target="_blank" rel="noopener noreferrer">街区レベル位置参照情報</a>を利用しているように推察されます。</p>
+<h2 data-sourcepos="110:1-110:21" id="2-2-0" name="2-2-0"><a class="anchor" id="検証用データ" name="検証用データ" href="#検証用データ" data-position="2-2-0"><i class="fa fa-link"></i><span class="hidden" data-text="検証用データ"> &gt; 検証用データ</span></a>検証用データ</h2>
+<p data-sourcepos="111:1-111:540">さて、検証用データですが、imi-enrichment-addressの検証データと合わせて<a href="http://jusyo.jp/" target="_blank" rel="noopener noreferrer">住所.jp</a>を使います。今回はトライアルが1000件と制限があるので、imi-enrichment-addressで無効割合が54.42%と一番多かった青森県と住所の登録数が多い東京・愛知・北海道・大阪・福岡・神奈川、さらに通りが独特な京都、町字の組み合わせで住所が2つ以上存在する長野に対象を絞ります。各々100件ずつの検証になります。</p>
+<div class="code-block" data-sourcepos="113:1-148:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="o">{</span>
     curl <span class="nt">-sSL</span> http://jusyo.jp/downloads/new/csv/csv_zenkoku.zip <span class="nt">-o</span> csv_zenkoku.zip<span class="p">;</span>
     unzip <span class="nt">-p</span> csv_zenkoku.zip | nkf <span class="nt">-w</span><span class="p">;</span>
     <span class="nb">rm </span>csv_zenkoku.zip
@@ -185,8 +184,8 @@ imi-enrichment-addressより柔軟ですが、基本は<a href="https://nlftp.ml
 <span class="o">[</span>..]
 | 青森県 | 216 |
 </code></pre></div></div>
-<h2 data-sourcepos="151:1-151:50" id="2-3-0" name="2-3-0"><a class="anchor" id="Increment Pで検証用データを確認する" name="Increment Pで検証用データを確認する" href="#Increment Pで検証用データを確認する" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="Increment Pで検証用データを確認する"> &gt; Increment Pで検証用データを確認する</span></a>Increment Pで検証用データを確認する</h2>
-<div class="code-block" data-sourcepos="152:1-166:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="k">for </span>p <span class="k">in </span>東京都 愛知県 北海道 大阪府 福岡県 神奈川県 青森県 京都府 長野県<span class="p">;</span> <span class="k">do
+<h2 data-sourcepos="150:1-150:50" id="2-3-0" name="2-3-0"><a class="anchor" id="Increment Pで検証用データを確認する" name="Increment Pで検証用データを確認する" href="#Increment Pで検証用データを確認する" data-position="2-3-0"><i class="fa fa-link"></i><span class="hidden" data-text="Increment Pで検証用データを確認する"> &gt; Increment Pで検証用データを確認する</span></a>Increment Pで検証用データを確認する</h2>
+<div class="code-block" data-sourcepos="151:1-165:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="k">for </span>p <span class="k">in </span>東京都 愛知県 北海道 大阪府 福岡県 神奈川県 青森県 京都府 長野県<span class="p">;</span> <span class="k">do
     for </span>a <span class="k">in</span> <span class="si">$(</span>trdsql <span class="s2">"
         SELECT c8||c10||c21
         FROM zenkoku.csv
@@ -200,9 +199,9 @@ imi-enrichment-addressより柔軟ですが、基本は<a href="https://nlftp.ml
     <span class="k">done</span> &amp;
 <span class="k">done</span> &amp;
 </code></pre></div></div>
-<h2 data-sourcepos="168:1-168:30" id="2-4-0" name="2-4-0"><a class="anchor" id="解析結果を確認する" name="解析結果を確認する" href="#解析結果を確認する" data-position="2-4-0"><i class="fa fa-link"></i><span class="hidden" data-text="解析結果を確認する"> &gt; 解析結果を確認する</span></a>解析結果を確認する</h2>
-<p data-sourcepos="169:1-169:393">Increment Pの解析結果を確認したところ、imi-enrichment-addressと比べると大方改善しました。特に青森県、北海道の改善率は高く字・条・線に対して有効に機能していることが伺えます。一方、京都や長野のように特殊な住所がある府県については改善が思うように行かないケースもあるようです。</p>
-<div class="code-block" data-sourcepos="171:1-186:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cat </span>output.jsonl <span class="se">\</span>
+<h2 data-sourcepos="167:1-167:30" id="2-4-0" name="2-4-0"><a class="anchor" id="解析結果を確認する" name="解析結果を確認する" href="#解析結果を確認する" data-position="2-4-0"><i class="fa fa-link"></i><span class="hidden" data-text="解析結果を確認する"> &gt; 解析結果を確認する</span></a>解析結果を確認する</h2>
+<p data-sourcepos="168:1-168:393">Increment Pの解析結果を確認したところ、imi-enrichment-addressと比べると大方改善しました。特に青森県、北海道の改善率は高く字・条・線に対して有効に機能していることが伺えます。一方、京都や長野のように特殊な住所がある府県については改善が思うように行かないケースもあるようです。</p>
+<div class="code-block" data-sourcepos="170:1-185:3"><div class="code-filename"><i class="fa fa-file-code-o"></i>sh</div><div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cat </span>output.jsonl <span class="se">\</span>
     | jq <span class="nt">-r</span> <span class="s1">'[
         .features[].properties.pref,
         .features[].properties.query,
@@ -218,122 +217,122 @@ imi-enrichment-addressより柔軟ですが、基本は<a href="https://nlftp.ml
     "</span>
 </code></pre></div></div>
 <p data-sourcepos="0:0-0:0">解析レベル5「番地・番」以上の場合（※ 参考値はimi-enrichment-addressの有効割合）</p>
-<table data-sourcepos="188:1-199:26">
+<table data-sourcepos="187:1-198:26">
 <thead>
-<tr data-sourcepos="188:1-188:152">
-<th data-sourcepos="188:111-188:124">都道府県</th>
-<th data-sourcepos="188:126-188:139">有効割合</th>
-<th data-sourcepos="188:141-188:151">参考値</th>
+<tr data-sourcepos="187:1-187:152">
+<th data-sourcepos="187:111-187:124">都道府県</th>
+<th data-sourcepos="187:126-187:139">有効割合</th>
+<th data-sourcepos="187:141-187:151">参考値</th>
 </tr>
 </thead>
 <tbody>
+<tr data-sourcepos="190:1-190:27">
+<td data-sourcepos="190:2-190:12">東京都</td>
+<td data-sourcepos="190:14-190:18">100</td>
+<td data-sourcepos="190:20-190:26">99.11</td>
+</tr>
 <tr data-sourcepos="191:1-191:27">
-<td data-sourcepos="191:2-191:12">東京都</td>
+<td data-sourcepos="191:2-191:12">大阪府</td>
 <td data-sourcepos="191:14-191:18">100</td>
-<td data-sourcepos="191:20-191:26">99.11</td>
+<td data-sourcepos="191:20-191:26">96.72</td>
 </tr>
-<tr data-sourcepos="192:1-192:27">
-<td data-sourcepos="192:2-192:12">大阪府</td>
-<td data-sourcepos="192:14-192:18">100</td>
-<td data-sourcepos="192:20-192:26">96.72</td>
+<tr data-sourcepos="192:1-192:23">
+<td data-sourcepos="192:2-192:12">福岡県</td>
+<td data-sourcepos="192:14-192:17">95</td>
+<td data-sourcepos="192:19-192:22">91</td>
 </tr>
-<tr data-sourcepos="193:1-193:23">
-<td data-sourcepos="193:2-193:12">福岡県</td>
-<td data-sourcepos="193:14-193:17">95</td>
-<td data-sourcepos="193:19-193:22">91</td>
+<tr data-sourcepos="193:1-193:29">
+<td data-sourcepos="193:2-193:15">神奈川県</td>
+<td data-sourcepos="193:17-193:20">95</td>
+<td data-sourcepos="193:22-193:28">98.28</td>
 </tr>
-<tr data-sourcepos="194:1-194:29">
-<td data-sourcepos="194:2-194:15">神奈川県</td>
-<td data-sourcepos="194:17-194:20">95</td>
-<td data-sourcepos="194:22-194:28">98.28</td>
+<tr data-sourcepos="194:1-194:25">
+<td data-sourcepos="194:2-194:12">愛知県</td>
+<td data-sourcepos="194:14-194:17">92</td>
+<td data-sourcepos="194:19-194:24">92.6</td>
 </tr>
-<tr data-sourcepos="195:1-195:25">
-<td data-sourcepos="195:2-195:12">愛知県</td>
-<td data-sourcepos="195:14-195:17">92</td>
-<td data-sourcepos="195:19-195:24">92.6</td>
+<tr data-sourcepos="195:1-195:26">
+<td data-sourcepos="195:2-195:12">青森県</td>
+<td data-sourcepos="195:14-195:17">90</td>
+<td data-sourcepos="195:19-195:25">45.58</td>
 </tr>
 <tr data-sourcepos="196:1-196:26">
-<td data-sourcepos="196:2-196:12">青森県</td>
-<td data-sourcepos="196:14-196:17">90</td>
-<td data-sourcepos="196:19-196:25">45.58</td>
+<td data-sourcepos="196:2-196:12">長野県</td>
+<td data-sourcepos="196:14-196:17">84</td>
+<td data-sourcepos="196:19-196:25">55.72</td>
 </tr>
 <tr data-sourcepos="197:1-197:26">
-<td data-sourcepos="197:2-197:12">長野県</td>
-<td data-sourcepos="197:14-197:17">84</td>
-<td data-sourcepos="197:19-197:25">55.72</td>
+<td data-sourcepos="197:2-197:12">北海道</td>
+<td data-sourcepos="197:14-197:17">80</td>
+<td data-sourcepos="197:19-197:25">86.24</td>
 </tr>
 <tr data-sourcepos="198:1-198:26">
-<td data-sourcepos="198:2-198:12">北海道</td>
-<td data-sourcepos="198:14-198:17">80</td>
-<td data-sourcepos="198:19-198:25">86.24</td>
-</tr>
-<tr data-sourcepos="199:1-199:26">
-<td data-sourcepos="199:2-199:12">京都府</td>
-<td data-sourcepos="199:14-199:17">79</td>
-<td data-sourcepos="199:19-199:25">63.14</td>
+<td data-sourcepos="198:2-198:12">京都府</td>
+<td data-sourcepos="198:14-198:17">79</td>
+<td data-sourcepos="198:19-198:25">63.14</td>
 </tr>
 </tbody>
 </table>
 <p data-sourcepos="0:0-0:0">解析レベル4「丁目/小字」以上の場合（※ 参考値はimi-enrichment-addressの有効割合）</p>
-<table data-sourcepos="201:1-212:26">
+<table data-sourcepos="200:1-211:26">
 <thead>
-<tr data-sourcepos="201:1-201:153">
-<th data-sourcepos="201:112-201:125">都道府県</th>
-<th data-sourcepos="201:127-201:140">有効割合</th>
-<th data-sourcepos="201:142-201:152">参考値</th>
+<tr data-sourcepos="200:1-200:153">
+<th data-sourcepos="200:112-200:125">都道府県</th>
+<th data-sourcepos="200:127-200:140">有効割合</th>
+<th data-sourcepos="200:142-200:152">参考値</th>
 </tr>
 </thead>
 <tbody>
+<tr data-sourcepos="203:1-203:27">
+<td data-sourcepos="203:2-203:12">東京都</td>
+<td data-sourcepos="203:14-203:18">100</td>
+<td data-sourcepos="203:20-203:26">99.11</td>
+</tr>
 <tr data-sourcepos="204:1-204:27">
-<td data-sourcepos="204:2-204:12">東京都</td>
+<td data-sourcepos="204:2-204:12">大阪府</td>
 <td data-sourcepos="204:14-204:18">100</td>
-<td data-sourcepos="204:20-204:26">99.11</td>
+<td data-sourcepos="204:20-204:26">96.72</td>
 </tr>
-<tr data-sourcepos="205:1-205:27">
-<td data-sourcepos="205:2-205:12">大阪府</td>
-<td data-sourcepos="205:14-205:18">100</td>
-<td data-sourcepos="205:20-205:26">96.72</td>
+<tr data-sourcepos="205:1-205:26">
+<td data-sourcepos="205:2-205:12">北海道</td>
+<td data-sourcepos="205:14-205:17">98</td>
+<td data-sourcepos="205:19-205:25">86.24</td>
 </tr>
-<tr data-sourcepos="206:1-206:26">
-<td data-sourcepos="206:2-206:12">北海道</td>
-<td data-sourcepos="206:14-206:17">98</td>
-<td data-sourcepos="206:19-206:25">86.24</td>
+<tr data-sourcepos="206:1-206:25">
+<td data-sourcepos="206:2-206:12">愛知県</td>
+<td data-sourcepos="206:14-206:17">97</td>
+<td data-sourcepos="206:19-206:24">92.6</td>
 </tr>
-<tr data-sourcepos="207:1-207:25">
-<td data-sourcepos="207:2-207:12">愛知県</td>
-<td data-sourcepos="207:14-207:17">97</td>
-<td data-sourcepos="207:19-207:24">92.6</td>
+<tr data-sourcepos="207:1-207:23">
+<td data-sourcepos="207:2-207:12">福岡県</td>
+<td data-sourcepos="207:14-207:17">96</td>
+<td data-sourcepos="207:19-207:22">91</td>
 </tr>
-<tr data-sourcepos="208:1-208:23">
-<td data-sourcepos="208:2-208:12">福岡県</td>
-<td data-sourcepos="208:14-208:17">96</td>
-<td data-sourcepos="208:19-208:22">91</td>
+<tr data-sourcepos="208:1-208:29">
+<td data-sourcepos="208:2-208:15">神奈川県</td>
+<td data-sourcepos="208:17-208:20">95</td>
+<td data-sourcepos="208:22-208:28">98.28</td>
 </tr>
-<tr data-sourcepos="209:1-209:29">
-<td data-sourcepos="209:2-209:15">神奈川県</td>
-<td data-sourcepos="209:17-209:20">95</td>
-<td data-sourcepos="209:22-209:28">98.28</td>
+<tr data-sourcepos="209:1-209:26">
+<td data-sourcepos="209:2-209:12">青森県</td>
+<td data-sourcepos="209:14-209:17">93</td>
+<td data-sourcepos="209:19-209:25">45.58</td>
 </tr>
 <tr data-sourcepos="210:1-210:26">
-<td data-sourcepos="210:2-210:12">青森県</td>
-<td data-sourcepos="210:14-210:17">93</td>
-<td data-sourcepos="210:19-210:25">45.58</td>
+<td data-sourcepos="210:2-210:12">長野県</td>
+<td data-sourcepos="210:14-210:17">84</td>
+<td data-sourcepos="210:19-210:25">55.72</td>
 </tr>
 <tr data-sourcepos="211:1-211:26">
-<td data-sourcepos="211:2-211:12">長野県</td>
-<td data-sourcepos="211:14-211:17">84</td>
-<td data-sourcepos="211:19-211:25">55.72</td>
-</tr>
-<tr data-sourcepos="212:1-212:26">
-<td data-sourcepos="212:2-212:12">京都府</td>
-<td data-sourcepos="212:14-212:17">79</td>
-<td data-sourcepos="212:19-212:25">63.14</td>
+<td data-sourcepos="211:2-211:12">京都府</td>
+<td data-sourcepos="211:14-211:17">79</td>
+<td data-sourcepos="211:19-211:25">63.14</td>
 </tr>
 </tbody>
 </table>
-<h1 data-sourcepos="214:1-214:8" id="3-0-0" name="3-0-0"><a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
-<p data-sourcepos="215:1-215:522">青森県の有効率が45.58%だったimi-enrichment-addressと比べると、Increment Pは調査した大凡の都道府県で改善し70%以上の有効割合を出していました。バリデーションチェックで使えるのかというと全ての都道府県で100%になっていないため心許ない状況ではあるものの、解析レベル4「丁目/小字」以下の住所については最終確認を促すフローを入れる等ひと手間加えれば実用に耐えうると考えます。</p>
-<div class="code-block" data-sourcepos="217:1-241:3"><p class="plantuml"><a href="data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxv
+<h1 data-sourcepos="213:1-213:8" id="3-0-0" name="3-0-0"><a class="anchor" id="WRAPUP" name="WRAPUP" href="#WRAPUP" data-position="3-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="WRAPUP"> &gt; WRAPUP</span></a>WRAPUP</h1>
+<p data-sourcepos="214:1-214:522">青森県の有効率が45.58%だったimi-enrichment-addressと比べると、Increment Pは調査した大凡の都道府県で改善し70%以上の有効割合を出していました。バリデーションチェックで使えるのかというと全ての都道府県で100%になっていないため心許ない状況ではあるものの、解析レベル4「丁目/小字」以下の住所については最終確認を促すフローを入れる等ひと手間加えれば実用に耐えうると考えます。</p>
+<div class="code-block" data-sourcepos="216:1-240:3"><p class="plantuml"><a href="data:image/svg+xml;charset=utf-8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxv
 bmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9z
 dmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5r
 IiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIg
