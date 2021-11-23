@@ -18,7 +18,7 @@
 <h1 data-sourcepos="11:1-11:10" id="2-0-0" name="2-0-0"><a class="anchor" id="SOLUTION" name="SOLUTION" href="#SOLUTION" data-position="2-0-0"><i class="fa fa-link"></i><span class="hidden" data-text="SOLUTION"> &gt; SOLUTION</span></a>SOLUTION</h1>
 <p data-sourcepos="12:1-12:166">というわけで、住所のバリデーションチェックで商用版「<a href="https://anorm.mapfan.com/" target="_blank" rel="noopener noreferrer">Increment P</a>」がどの程度使えるか検証します。</p>
 <h2 data-sourcepos="14:1-14:20" id="2-1-0" name="2-1-0"><a class="anchor" id="Increment Pとは" name="Increment Pとは" href="#Increment Pとは" data-position="2-1-0"><i class="fa fa-link"></i><span class="hidden" data-text="Increment Pとは"> &gt; Increment Pとは</span></a>Increment Pとは</h2>
-<p data-sourcepos="15:1-15:216">住所をAPIを介すことで正規化することができます。APIの返値に解析レベル・解析ログを返すことでより柔軟な検証をおこなうことができるようになっています。</p>
+<p data-sourcepos="15:1-15:219">住所をAPIを介すことで正規化することができます。APIの返値に解析レベル・解析ログを加えることでより柔軟な検証をおこなうことができるようになっています。</p>
 <p data-sourcepos="17:1-17:652">解析レベルとは、対象住所のマッチ度合いを都道府県・市区町村・町域・丁目・番地・号というレベルで分けたものです。APIの結果が解析レベル5「番地・番」以上になっていれば配送が確実に為されると言うように、配送の確実性を前提にして住所の入力者とやりとりを実現します。また、解析ログメッセージとは、住所の正規化を試みた際のログであり、バリデーションを調整する際に頻繁に確認するものです。詳細は「<a href="https://anorm.mapfan.com/documents/" target="_blank" rel="noopener noreferrer">ドキュメント</a>」をご覧下さい。</p>
 <table data-sourcepos="19:1-28:24">
 <thead>

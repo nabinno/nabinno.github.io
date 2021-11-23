@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 22 Nov 2021 22:06:13 GMT</lastBuildDate><item><title><![CDATA[Increment Pは住所のバリデーションチェックでどの程度使えるか]]></title><description><![CDATA[7月に調査した「imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか」の続きになります。コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回は商用サービスIncrement Pが住所のバリデーションチェックでどの程度使えるか検証してみました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 23 Nov 2021 03:42:44 GMT</lastBuildDate><item><title><![CDATA[Increment Pは住所のバリデーションチェックでどの程度使えるか]]></title><description><![CDATA[7月に調査した「imi-enrichment-addressは住所のバリデーションチェックでどの程度使えるか」の続きになります。コロナ禍であらゆる流通がオンラインに移行する中、正しい住所を使うことはいっそう求められています。ユーザーが配送用に住所を入力する時そのデータが正しいとどうやって判定するのでしょうか。今回は商用サービスIncrement Pが住所のバリデーションチェックでどの程度使えるか検証してみました。   > PROBLEMPROBLEM 
 
 - 住所の不備が至るところで起きている 特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい 可能ならユーザーの入力時点でFEあるいはBE側でバリデーションチェックしたい imi-enrichment-addressで精度が思わしくなかったので今回は商用サービスで検証したい 
 - 特に町名番地の抜けもれや不備が多くこの点をどうにか拾いたい
@@ -7,7 +7,7 @@
 
 というわけで、住所のバリデーションチェックで商用版「Increment P」がどの程度使えるか検証します。  > Increment PとはIncrement Pとは 
 
-住所をAPIを介すことで正規化することができます。APIの返値に解析レベル・解析ログを返すことでより柔軟な検証をおこなうことができるようになっています。 
+住所をAPIを介すことで正規化することができます。APIの返値に解析レベル・解析ログを加えることでより柔軟な検証をおこなうことができるようになっています。 
 
 解析レベルとは、対象住所のマッチ度合いを都道府県・市区町村・町域・丁目・番地・号というレベルで分けたものです。APIの結果が解析レベル5「番地・番」以上になっていれば配送が確実に為されると言うように、配送の確実性を前提にして住所の入力者とやりとりを実現します。また、解析ログメッセージとは、住所の正規化を試みた際のログであり、バリデーションを調整する際に頻繁に確認するものです。詳細は「ドキュメント」をご覧下さい。    解析レベル レベルの数字 説明     都道府県 1 県レベルでマッチしました   市区町村 2 市区町村レベルでマッチしました   町域 (大字) 3 町域レベルでマッチしました   丁目 / 小字 4 丁目または小字レベルでマッチしました   番地（番） 5 番地（番）レベルでマッチしました   号情報が存在しない番地 7 番地（番）レベルでマッチしました（号情報が存在しない地域）   号 8 号レベルでマッチしました   不明 -1 不明    
 
