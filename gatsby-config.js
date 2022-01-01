@@ -154,7 +154,7 @@ module.exports = {
                 //       }
                 //     }
                 //   }
-                }
+                // }
               }
             `,
             output: '/rss.xml',
