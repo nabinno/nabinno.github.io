@@ -66,7 +66,8 @@ module.exports = {
         feeds: [
           {
             serialize: ({
-              query: { site, allEsaPost, allExternalPostsYaml },
+              query: { site, allEsaPost },
+              // query: { site, allEsaPost, allExternalPostsYaml },
             }) => {
               // return [...allEsaPost.edges, ...allExternalPostsYaml.edges]
               return [...allEsaPost.edges]
@@ -135,24 +136,24 @@ module.exports = {
                     }
                   }
                 }
-                allExternalPostsYaml {
-                  edges {
-                    node {
-                      link
-                      fields {
-                        title
-                        excerpt
-                        category
-                      }
-                      childPublishedDate {
-                        published_on
-                        published_on_unix
-                      }
-                      internal {
-                        type
-                      }
-                    }
-                  }
+                // allExternalPostsYaml {
+                //   edges {
+                //     node {
+                //       link
+                //       fields {
+                //         title
+                //         excerpt
+                //         category
+                //       }
+                //       childPublishedDate {
+                //         published_on
+                //         published_on_unix
+                //       }
+                //       internal {
+                //         type
+                //       }
+                //     }
+                //   }
                 }
               }
             `,
