@@ -19,6 +19,13 @@ module.exports = {
         q: `in:blog wip:false`,
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `posts`,
+        path: `${__dirname}/data/external-posts.yml`,
+      },
+    },
     `gatsby-transformer-yaml`,
     `gatsby-plugin-emotion`,
     {
