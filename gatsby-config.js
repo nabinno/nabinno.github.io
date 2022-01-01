@@ -19,13 +19,13 @@ module.exports = {
         q: `in:blog wip:false`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `posts`,
-        path: `${__dirname}/data/external-posts.yml`,
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `posts`,
+    //     path: `${__dirname}/data/external-posts.yml`,
+    //   },
+    // },
     `gatsby-transformer-yaml`,
     `gatsby-plugin-emotion`,
     {
@@ -96,20 +96,20 @@ module.exports = {
                         description: node.fields.excerpt,
                       }
                     }
-                    case 'ExternalPostsYaml': {
-                      return {
-                        date: dayjs(
-                          node.childPublishedDate.published_on,
-                        ).toISOString(),
-                        pubDate: dayjs(
-                          node.childPublishedDate.published_on,
-                        ).toISOString(),
-                        url: node.link,
-                        guid: node.link,
-                        title: node.fields.title,
-                        description: node.fields.excerpt.substring(0, 512),
-                      }
-                    }
+                    // case 'ExternalPostsYaml': {
+                    //   return {
+                    //     date: dayjs(
+                    //       node.childPublishedDate.published_on,
+                    //     ).toISOString(),
+                    //     pubDate: dayjs(
+                    //       node.childPublishedDate.published_on,
+                    //     ).toISOString(),
+                    //     url: node.link,
+                    //     guid: node.link,
+                    //     title: node.fields.title,
+                    //     description: node.fields.excerpt.substring(0, 512),
+                    //   }
+                    // }
                     default: {
                       throw `${node.internal.type} is unknown type`
                     }
