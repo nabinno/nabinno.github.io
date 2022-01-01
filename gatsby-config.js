@@ -136,25 +136,6 @@ module.exports = {
                     }
                   }
                 }
-                // allExternalPostsYaml {
-                //   edges {
-                //     node {
-                //       link
-                //       fields {
-                //         title
-                //         excerpt
-                //         category
-                //       }
-                //       childPublishedDate {
-                //         published_on
-                //         published_on_unix
-                //       }
-                //       internal {
-                //         type
-                //       }
-                //     }
-                //   }
-                // }
               }
             `,
             output: '/rss.xml',
