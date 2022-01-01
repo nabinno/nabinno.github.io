@@ -68,7 +68,8 @@ module.exports = {
             serialize: ({
               query: { site, allEsaPost, allExternalPostsYaml },
             }) => {
-              return [...allEsaPost.edges, ...allExternalPostsYaml.edges]
+              // return [...allEsaPost.edges, ...allExternalPostsYaml.edges]
+              return [...allEsaPost.edges]
                 .sort((a, b) => {
                   const bDate = b.node.pubDate
                     ? new Date(b.node.pubDate)
