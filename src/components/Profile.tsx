@@ -9,7 +9,7 @@ const Profile = () => {
       <div className="heading">
         <img
           className="avatar"
-          src="https://pbs.twimg.com/profile_images/1342772423859392512/fMR9l4Sv_400x400.jpg"
+          src="https://pbs.twimg.com/profile_images/1520749534460088320/3suYdv6a_400x400.jpg"
           alt="nabinno"
         />
         <div className="description">
