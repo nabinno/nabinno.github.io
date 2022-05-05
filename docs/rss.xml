@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 05 May 2022 07:43:03 GMT</lastBuildDate><item><title><![CDATA[提供していない決済方法を業務で取り扱う際に気をつけること]]></title><description><![CDATA[ECプロダクトを扱っている際にどうしても出てくる銀行振込。プロダクト立ち上げ時は、銀行振込が第一にあるターゲット層を除いて、コストの高い銀行振込は実装せずに裏メニューとして扱うのが通例だと思います。今回は、当該ケースの課題を取り上げて、その解決策を示します。単純な話なのですが、時間が経つにつれて業務が硬直化してスケーリングに影響してくるので事前に手を打っておくと良いと思います。   > PROBLEMPROBLEM 
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[On Blahfe]]></title><description><![CDATA[Emacsianでアート好き、ランニング好きなnabinnoが書いているブログです]]></description><link>https://nabinno.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 05 May 2022 07:53:30 GMT</lastBuildDate><item><title><![CDATA[提供していない決済方法を業務で取り扱う際に気をつけること]]></title><description><![CDATA[ECプロダクトを扱っている際にどうしても出てくる銀行振込。プロダクト立ち上げ時は、銀行振込が第一にあるターゲット層を除いて、コストの高い銀行振込は実装せずに裏メニューとして扱うのが通例だと思います。今回は、当該ケースの課題を取り上げて、その解決策を示します。単純な話なのですが、時間が経つにつれて業務が硬直化してスケーリングに影響してくるので事前に手を打っておくと良いと思います。   > PROBLEMPROBLEM 
 
 - 銀行振込を通常決済方法でしか提供していないケースの場合 人力でトランザクションをはる必要があり、その処理の隙間で想定外の支払い、あるいは、二重決済が行われる可能性がある また、不整合処理を実施するCSあるいはそれに付随する担当に権限が集中しすぎ、統制上難しい運用になる 
 - 人力でトランザクションをはる必要があり、その処理の隙間で想定外の支払い、あるいは、二重決済が行われる可能性がある
@@ -2427,18 +2427,18 @@ Erlangの型
 
 -module(cards). -export([kind/1, main/0]). -type suit() :: spades | clubs | hearts | diamonds. -type value() :: 1..10 | j | q | k. -type card() :: {suit(), value()}. -spec kind(card()) -> 'face' | 'number'. % 注釈をくわえることでdialyzerに警告させる kind({_, A}) when A >= 1, A =< 10 -> number; kind(_) -> face. main() -> number = kind({spades, 7}), face = kind({hearts, k}), number = kind({rubies, 4}), % タプルの中の型が違う  face = kind({clubs, q}).     erlang 
 
--module(convert). -export([main/0]). %% 注釈をつけないとdialyzerは下記のように判定する % -spec convert(list() | tuple()) -> list() | tuple(). -spec convert(tuple()) -> list(); (list()) -> tuple(). main() -> [_, _] = convert({a, b}), {_, _} = convert([a, b]), [_, _] = convert([a, b]), {_, _} = convert({a, b}). %% private convert(Tup) when is_tuple(Tup) -> tuple_to_list(Tup); convert(L=[_|_]) -> list_to_tuple(L).]]></description><link>https://nabinno.github.io/posts/65</link><guid isPermaLink="false">65</guid><pubDate>Sat, 29 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[PositiveSSLをHerokuに適用する]]></title><description><![CDATA[年に1回のSSL更新のイベントです。毎年同じことをすれば良いかというとそうでもなく、販社と卸の都合でSSLの購入方法が微妙に変わります。とは言え、毎年一から調べ直すのも手間なので備忘として記しておきます。   > PROBLEMPROBLEM 
+-module(convert). -export([main/0]). %% 注釈をつけないとdialyzerは下記のように判定する % -spec convert(list() | tuple()) -> list() | tuple(). -spec convert(tuple()) -> list(); (list()) -> tuple(). main() -> [_, _] = convert({a, b}), {_, _} = convert([a, b]), [_, _] = convert([a, b]), {_, _} = convert({a, b}). %% private convert(Tup) when is_tuple(Tup) -> tuple_to_list(Tup); convert(L=[_|_]) -> list_to_tuple(L).]]></description><link>https://nabinno.github.io/posts/65</link><guid isPermaLink="false">65</guid><pubDate>Sat, 29 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[PositiveSSLをHerokuに適用する]]></title><description><![CDATA[年に1回のSSL更新のイベントです。毎年同じことをすれば良いかというとそうでもなく、販社と卸の都合でSSLの購入方法が微妙に変わります。とは言え、毎年一から調べ直すのも手間なので備忘として記しておきます。  > PROBLEMPROBLEM 
 
-- HerokuのSSLの期限がきた   > SOLUTIONSOLUTION 
+- HerokuのSSLの期限がきた  > SOLUTIONSOLUTION 
 
-- というわけで、いつも使っているSSL販売代理店SSLs.com（NameCheap社）でPositiveSSL（運用Comodo社）を購入しHerokuに適用します。   > HOWTOHOWTO 
+- というわけで、いつも使っているSSL販売代理店SSLs.com（NameCheap社）でPositiveSSL（運用Comodo社）を購入しHerokuに適用します。  > HOWTOHOWTO 
 
 1. 証明書を購入する SSL販売代理店であればどこでもいいのですが、昔から使っているので 
 2. SSL販売代理店であればどこでもいいのですが、昔から使っているので
 3. 秘密鍵と署名リクエストをつくる 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 署名リクエスト openssl req -new -key server.key -out server.csr ※ 最近このあたりの署名情報は、SSL販売代理店側で生成しているケースが増えてきました 
-4. 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048 
-5. 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key 
-6. 署名リクエスト openssl req -new -key server.key -out server.csr 
+4. 秘密鍵 openssl genrsa -des3 -out server.orig.key 2048
+5. 秘密鍵パスワードなしopenssl rsa -in server.orig.key -out server.key
+6. 署名リクエスト openssl req -new -key server.key -out server.csr
 7. ※ 最近このあたりの署名情報は、SSL販売代理店側で生成しているケースが増えてきました
 8. 証明書発行を申請する SSL販売代理店より署名リクエストserver.csrと関連情報を送信します 
 9. SSL販売代理店より署名リクエストserver.csrと関連情報を送信します
@@ -2447,15 +2447,24 @@ Erlangの型
 12. 証明方法はメールを受信する、あるいは、Webサイトにプレーンテキストを設置するかの2択になります
 13. Heroku用の証明書をつくる 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
 14. 証明タスクをこなししばらくすると、Comodo社より複数の証明書が送られてきます
-15. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt 
+15. Heroku用に証明書をつくる cat www_example_com.crt COMODORSADomainValidationSecureServerCA.crt COMODORSAAddTrustCA.crt AddTrustExternalCARoot.crt > server.crt
 16. Herokuに証明書を適用する 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
 17. 新規で適用する場合は次のコマンドを実行します heroku addons:add ssl:endpoint heroku certs:add server.crt server.key 
 18. heroku addons:add ssl:endpoint
 19. heroku certs:add server.crt server.key
 20. 更新する場合は次のコマンドを実行します heroku certs:update server.crt server.key 
-21. heroku certs:update server.crt server.key   > WRAPUPWRAPUP 
+21. heroku certs:update server.crt server.key  > WRAPUPWRAPUP 
 
-このあたりが自動化されれば良いと思いつつ、自動化されたらこのあたりを調べるモチベーションがなくなるので年に一回のリハビリイベントとして位置づけておきます、はい。]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sun, 23 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[Xamarinに手を出し始めたのは良いのですが、その開発環境がどうにも手になじまず試行錯誤しています。今回の記事で解決できるかというと微妙ではありますが、やれるだけのことはやってみようと思います。   > PROBLEMPROBLEM 
+このあたりが自動化されれば良いと思いつつ、自動化されたらこのあたりを調べるモチベーションがなくなるので年に一回のリハビリイベントとして位置づけておきます、はい。  > 後日談後日談 
+
+現在はAutomated Certificate Management (ACM) 機能が用意されています。そちらを使う方が手間・実費ともにリーズナブルで、リハビリさえもいらなくなりました。以下適用方法。 
+
+1. ACMを有効化します。有効化するまでしばし時間がかかるので watch コマンドをつけて様子見します watch heroku certs:auto:enable 
+2. watch heroku certs:auto:enable
+3. 手動で追加した証明書があるか確認します heroku certs 
+4. heroku certs
+5. もし手動で追加した証明書がある場合は当該証明書を削除します heroku certs:remove --name foo-bar 
+6. heroku certs:remove --name foo-bar]]></description><link>https://nabinno.github.io/posts/55</link><guid isPermaLink="false">55</guid><pubDate>Sun, 23 Apr 2017 00:00:00 GMT</pubDate></item><item><title><![CDATA[Xamarin開発環境をととのえる]]></title><description><![CDATA[Xamarinに手を出し始めたのは良いのですが、その開発環境がどうにも手になじまず試行錯誤しています。今回の記事で解決できるかというと微妙ではありますが、やれるだけのことはやってみようと思います。   > PROBLEMPROBLEM 
 
 - Xamarin開発環境がサーバー側のそれとかい離している Visual Studio Community 2015の動作がもっさりしている 適切な開発フローがわからない 適切なアプリケーションフレームワークがわからない 適切なXAMLプレビュワーがわからない 適切なAndroidエミュレーターがわからない 
 - Visual Studio Community 2015の動作がもっさりしている
