@@ -14,7 +14,6 @@ const Profile = () => {
         />
         <div className="description">
           Emacsianでアート好き、ランニング好きな@nabinnoが書いています<br />
-          <a href="https://utagaki.com/nabinno" target="_blank" rel="noopener noreferrer">Utagaki</a>&nbsp;/&nbsp;
           <a href="https://github.com/nabinno" target="_blank" rel="noopener noreferrer">GitHub</a>&nbsp;/&nbsp;
           <a href="https://twitter.com/nabinno" target="_blank" rel="noopener noreferrer">Twitter</a>&nbsp;/&nbsp;
           <a href="https://linkedin.com/in/nabinno" target="_blank" rel="noopener noreferrer">LinkedIn</a>&nbsp;/&nbsp;
