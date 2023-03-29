@@ -46,6 +46,7 @@ const IndexPage = ({ pageContext, location }: any) => {
             'Emacsianでアート好き、ランニング好きなnabinnoが記事を書いています。'
           }
         />
+        <link rel="author" href="http://www.hatena.ne.jp/nabinno/" />
       </Helmet>
       <Container>
         <MainColumn>

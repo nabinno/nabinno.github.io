@@ -91,6 +91,7 @@ const PostTemplate = (props: any) => {
         <meta name="twitter:image" content={image} />
 
         <link rel="canonical" href={url} />
+        <link rel="author" href="http://www.hatena.ne.jp/nabinno/" />
       </Helmet>
 
       <Container>
