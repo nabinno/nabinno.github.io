@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",
-    "axios": "^0.21.1",
+    "axios": "^0.30.0",
     "cheerio": "^1.0.0-rc.2",
     "dayjs": "^1.7.7",
     "framer-motion": "^2.4.2",
