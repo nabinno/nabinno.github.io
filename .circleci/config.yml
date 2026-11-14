@@ -1,5 +1,9 @@
 version: 2.1
 
+# The Gatsby 2 toolchain is frozen. package.json is package.json.snapshot
+# and the lockfile was removed. GitHub Pages serves docs/ and does not run a build.
+# This workflow ignores every branch. Restore the snapshot before re-enabling it.
+
 jobs:
   build_deploy:
     docker:
@@ -30,4 +34,4 @@ workflows:
       - build_deploy:
           filters:
             branches:
-              only: master
+              ignore: /.*/

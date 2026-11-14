@@ -1,3 +1,5 @@
+> Published site. GitHub Pages serves `docs/`. The Gatsby 2 toolchain is frozen: `package.json` is `package.json.snapshot` and `package-lock.json` was removed. Do not run `npm install` or commit a lockfile. CircleCI no longer builds on push. Restore the snapshot before any rebuild.
+
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 <p align="center">
   <a href="https://www.gatsbyjs.com">
